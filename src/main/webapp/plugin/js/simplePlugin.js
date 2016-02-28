@@ -130,9 +130,18 @@ var Simple = (function(Simple) {
    * service from hawtioCore
    *
    */
-  Simple.SimpleController = function($scope, jolokia) {
+  Simple.SimpleController = function($scope, jolokia, $http) {
     $scope.hello = "Hello world!";
     $scope.cpuLoad = "0";
+    $scope.getJobNames = function(){
+        $http({
+            url: 'jobs/names',
+            method: 'GET'
+//            Probably don't need the succes function'
+        }).success(function(data){
+           $scope.jobNames = data; 
+        });
+    };
 
     // register a watch with jolokia on this mbean to
     // get updated metrics
