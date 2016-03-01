@@ -133,14 +133,25 @@ var Simple = (function(Simple) {
   Simple.SimpleController = function($scope, jolokia, $http) {
     $scope.hello = "Hello world!";
     $scope.cpuLoad = "0";
-    $scope.getJobNames = function(){
-        $http({
-            url: 'jobs/names',
-            method: 'GET'
-//            Probably don't need the succes function'
-        }).success(function(data){
-           $scope.jobNames = data; 
+    $scope.jobNames = "def";
+    $scope.jobs = "bklblb";
+    function getJobNames($scope, $http){
+        $http.get('http://localhost:8080/simple-plugin/jobs/test/names').success(function(data){
+            $scope.jobNames = data; 
         });
+//        $http({
+//            url: 'http://localhost:8080/simple-plugin/jobs/test/names',
+//            method: 'GET'
+////            Probably don't need the succes function'
+//        }).success(function(data){
+//           $scope.jobNames = data; 
+//        });
+    };
+    $scope.jobs = function(){
+       $http({
+            url: 'http://localhost:8080/simple-plugin/jobs/test.json',
+            method: 'GET' 
+    });    
     };
 
     // register a watch with jolokia on this mbean to
@@ -148,7 +159,7 @@ var Simple = (function(Simple) {
     Core.register(jolokia, $scope, {
       type: 'read', mbean: 'java.lang:type=OperatingSystem',
       arguments: []
-    }, onSuccess(render));
+    }, onSuccess(getJobNames));
 
     // update display of metric
     function render(response) {
