@@ -25,6 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -48,7 +49,7 @@ public class JobResource extends Application{
 	}
     
     @GET
-    @Path("/dummy")
+    @Path("dummy")
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getDummy() {
         List<String> dummyList = new ArrayList<>();
@@ -56,5 +57,11 @@ public class JobResource extends Application{
         dummyList.add("Str2");
         dummyList.add("Str3");
         return dummyList;
+    }
+    @GET
+    @Path("/dummys")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDummys() {        
+        return Response.ok("Dummmm").build();
     }
 }
