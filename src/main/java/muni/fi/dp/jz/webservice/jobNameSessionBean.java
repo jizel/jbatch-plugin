@@ -13,55 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package muni.fi.dp.jz.jbatchmanager;
+package muni.fi.dp.jz.webservice;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import muni.fi.dp.jz.jobservice.JobService;
 
 /**
  *
- * @author Zorz
+ * @author jzelezny
  */
-
 @Stateless
+@LocalBean
 @ApplicationPath("/jobs")
-//subclassing Application and using ApplicationPath -> no web.xml conf needed (https://issues.jboss.org/browse/AS7-1674)
-public class JobResource extends Application{
-    
+//TODO - rename
+public class jobNameSessionBean extends Application{
+
     @EJB
-    private BatchExecutionBean batchExecutor;
-    
-    @GET
-    @Path("/names")
-    @Produces(MediaType.APPLICATION_JSON)
+    private JobService jobService;
+//    private BatchExecutionBean batchExecutor;
+        
     public List<String> getJobNames() {
-		List<String> jobNameList = new ArrayList<>(batchExecutor.getJobNames());
+		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
 		return jobNameList;
 	}
     
-    @GET
-    @Path("dummy")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getDummy() {
-        List<String> dummyList = new ArrayList<>();
-        dummyList.add("Str1");
-        dummyList.add("Str2");
-        dummyList.add("Str3");
-        return dummyList;
-    }
-    @GET
-    @Path("/dummys")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getDummys() {        
-        return Response.ok("Dummmm").build();
+    public String getDummys() {        
+        return "Dummmmyyy";
     }
 }
