@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package muni.fi.dp.jz.jbatchmanager;
+package muni.fi.dp.jz.jbatch.batchapi;
 
 import org.jboss.as.cli.CliInitializationException;
 import org.jboss.as.cli.CommandContext;

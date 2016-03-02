@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package muni.fi.dp.jz.jbatchmanager;
+package muni.fi.dp.jz.jbatch.batchapi;
 
 import java.util.List;
 import java.util.Properties;

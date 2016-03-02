@@ -33,7 +33,7 @@
   </context-param>
 
   <listener>
-    <listener-class>muni.fi.dp.jz.hawtio.PluginContextListener</listener-class>
+    <listener-class>muni.fi.dp.jz.jbatch.hawtio.PluginContextListener</listener-class>
   </listener>
 
 

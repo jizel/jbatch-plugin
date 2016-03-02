@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package muni.fi.dp.jz.jobservice;
+package muni.fi.dp.jz.jbatch.jobservice;
 
 import java.util.List;
 import java.util.Set;

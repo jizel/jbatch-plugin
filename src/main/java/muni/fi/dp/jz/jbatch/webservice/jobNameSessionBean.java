@@ -13,42 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package muni.fi.dp.jz.webservice;
+package muni.fi.dp.jz.jbatch.webservice;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Application;
+import muni.fi.dp.jz.jbatch.jobservice.JobService;
 
 /**
  *
  * @author jzelezny
  */
 @Stateless
-@Path("test")
-public class testRest {
-    
-    @EJB private jobNameSessionBean jobNameSB;
-    
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    
-    public String getNames(){
-        return jobNameSB.getDummys();
-    }
-    
-    @GET    
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("names")
-    public List<String> getRealNames() {
-        List<String> jobNames = jobNameSB.getJobNames();
-        jobNames.add("WooHoo");
-        return jobNames;
-}
+@LocalBean
+@ApplicationPath("/jobs")
+//TODO - rename
+public class jobNameSessionBean extends Application{
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @EJB
+    private JobService jobService;
+//    private BatchExecutionBean batchExecutor;
+        
+    public List<String> getJobNames() {
+		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
+		return jobNameList;
+	}
+    
+    public String getDummys() {        
+        return "Dummmmyyy";
+    }
 }

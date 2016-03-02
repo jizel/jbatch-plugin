@@ -1,4 +1,4 @@
-package muni.fi.dp.jz.hawtio;
+package muni.fi.dp.jz.jbatch.hawtio;
 
 import io.hawt.web.plugin.HawtioPlugin;
 import org.slf4j.Logger;
