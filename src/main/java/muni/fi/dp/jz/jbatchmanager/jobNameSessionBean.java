@@ -23,6 +23,7 @@ import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import muni.fi.dp.jz.jobservice.JobService;
 
 /**
  *
@@ -33,10 +34,11 @@ import javax.ws.rs.Produces;
 public class jobNameSessionBean {
 
     @EJB
-    private BatchExecutionBean batchExecutor;
+    private JobService jobService;
+//    private BatchExecutionBean batchExecutor;
         
     public List<String> getJobNames() {
-		List<String> jobNameList = new ArrayList<>(batchExecutor.getJobNames());
+		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
 		return jobNameList;
 	}
     
