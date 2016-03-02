@@ -49,7 +49,7 @@ var Simple = (function(Simple) {
    * workspace, viewRegistry and layoutFull used by the
    * run function
    */
-  Simple.module = angular.module('simple_plugin', ['hawtioCore'])
+  Simple.module = angular.module('simple_plugin', ['hawtioCore', 'ngResource'])
       .config(function($routeProvider) {
 
         /**
@@ -130,14 +130,16 @@ var Simple = (function(Simple) {
    * service from hawtioCore
    *
    */
-  Simple.SimpleController = function($scope, jolokia, $http) {
+  
+    
+  Simple.SimpleController = function($scope, jolokia, $http, $resource) {
     $scope.hello = "Hello world!";
     $scope.cpuLoad = "0";
-    $scope.jobNames = "def";
-    $scope.jobs = "bklblb";
+    $scope.jobNames = $resource('/jobs/test/names');
+    $scope.jobs = "";
     function getJobNames($scope, $http){
         $http.get('http://localhost:8080/simple-plugin/jobs/test/names').success(function(data){
-            $scope.jobNames = data; 
+//            $scope.jobNames = data; 
         });
 //        $http({
 //            url: 'http://localhost:8080/simple-plugin/jobs/test/names',
@@ -147,25 +149,28 @@ var Simple = (function(Simple) {
 //           $scope.jobNames = data; 
 //        });
     };
-    $scope.jobs = function(){
-       $http({
-            url: 'http://localhost:8080/simple-plugin/jobs/test.json',
-            method: 'GET' 
-    });    
-    };
+    $http.get("http://localhost:8080/simple-plugin/jobs/test/names").then(function(resp){
+        $scope.jobs = resp.data;
+    });
 
     // register a watch with jolokia on this mbean to
     // get updated metrics
     Core.register(jolokia, $scope, {
       type: 'read', mbean: 'java.lang:type=OperatingSystem',
       arguments: []
-    }, onSuccess(getJobNames));
+    }, onSuccess(render));
 
     // update display of metric
     function render(response) {
       $scope.cpuLoad = response.value['ProcessCpuLoad'];
       Core.$apply($scope);
     }
+    function getJobs($scope, $http){
+        $http.get('http://localhost:8080/simple-plugin/jobs/test/names').success(function(data){
+           return data; 
+        });
+    }
+    
   };
 
   return Simple;
