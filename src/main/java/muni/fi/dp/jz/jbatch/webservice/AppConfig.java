@@ -15,38 +15,21 @@
  */
 package muni.fi.dp.jz.jbatch.webservice;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Application;
-import muni.fi.dp.jz.jbatch.jobservice.JobService;
 
 /**
  *
  * @author jzelezny
  */
 @Stateless
-@LocalBean
-@ApplicationPath("/jobs")
-//TODO - rename
-public class jobNameSessionBean extends Application{
+@ApplicationPath("/rest")
+public class AppConfig extends Application{
 
-    @EJB
-    private JobService jobService;
-//    private BatchExecutionBean batchExecutor;
-        
-    public List<String> getJobNames() {
-		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
-		return jobNameList;
-	}
-    
-    public String getDummys() {        
-        return "Dummmmyyy";
+    @Override
+    public Set<Class<?>> getClasses() {
+        return super.getClasses(); //To change body of generated methods, choose Tools | Templates.
     }
 }

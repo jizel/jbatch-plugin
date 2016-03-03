@@ -34,6 +34,8 @@ public class JobServiceImpl implements JobService{
     @EJB
     BatchExecutionBean batchExecutor;
     
+//    TODO - catch exceptions
+    
     @Override
     public long submitJob(String jobName) {
         return batchExecutor.submitJob(jobName);

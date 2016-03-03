@@ -135,12 +135,12 @@ var Simple = (function(Simple) {
   Simple.SimpleController = function($scope, jolokia, $http, $resource) {
     $scope.hello = "Hello world!";
     $scope.cpuLoad = "0";
-    $scope.jobNames = $resource('/jobs/test/names');
+//    $scope.jobNames = $resource('/jobs/test/names');
     $scope.jobs = "";
-    function getJobNames($scope, $http){
-        $http.get('http://localhost:8080/simple-plugin/jobs/test/names').success(function(data){
+//    function getJobNames($scope, $http){
+//        $http.get('http://localhost:8080/simple-plugin/rest/jobs/names').success(function(data){
 //            $scope.jobNames = data; 
-        });
+//        });
 //        $http({
 //            url: 'http://localhost:8080/simple-plugin/jobs/test/names',
 //            method: 'GET'
@@ -148,8 +148,8 @@ var Simple = (function(Simple) {
 //        }).success(function(data){
 //           $scope.jobNames = data; 
 //        });
-    };
-    $http.get("http://localhost:8080/simple-plugin/jobs/test/names").then(function(resp){
+//    };
+    $http.get("http://localhost:8080/simple-plugin/rest/jobs/names").then(function(resp){
         $scope.jobs = resp.data;
     });
 
