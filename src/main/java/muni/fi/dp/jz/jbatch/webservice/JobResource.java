@@ -49,7 +49,7 @@ public class JobResource {
     @Path("names")
     public Response getJobNames() {
 		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
-                return Response.ok(jobNameList, MediaType.APPLICATION_JSON).build();		
+                return Response.ok(jobNameList, MediaType.APPLICATION_JSON).build();		                   
 	}
     
     @GET    

@@ -15,6 +15,8 @@
  */
 package muni.fi.dp.jz.jbatch.webservice;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.ws.rs.ApplicationPath;
@@ -30,6 +32,6 @@ public class AppConfig extends Application{
 
     @Override
     public Set<Class<?>> getClasses() {
-        return super.getClasses(); //To change body of generated methods, choose Tools | Templates.
+        return new HashSet<Class<?>>(Arrays.asList(JobResource.class));
     }
 }
