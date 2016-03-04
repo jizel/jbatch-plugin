@@ -1,11 +1,10 @@
 /**
- * @module Simple
- * @mail Simple
+ * @module JBatch
  *
- * The main entry point for the Simple module
+ * The main entry point for the JBatch module
  *
  */
-var Simple = (function(Simple) {
+var JBatch = (function(JBatch) {
 
   /**
    * @property pluginName
@@ -13,7 +12,7 @@ var Simple = (function(Simple) {
    *
    * The name of this plugin
    */
-  Simple.pluginName = 'simple_plugin';
+  JBatch.pluginName = 'jbatch_plugin';
 
   /**
    * @property log
@@ -21,7 +20,7 @@ var Simple = (function(Simple) {
    *
    * This plugin's logger instance
    */
-  Simple.log = Logger.get('Simple');
+  JBatch.log = Logger.get('JBatch');
 
   /**
    * @property contextPath
@@ -30,7 +29,7 @@ var Simple = (function(Simple) {
    * The top level path of this plugin on the server
    *
    */
-  Simple.contextPath = "/simple-plugin/";
+  JBatch.contextPath = "/jbatch-plugin/";
 
   /**
    * @property templatePath
@@ -38,7 +37,7 @@ var Simple = (function(Simple) {
    *
    * The path to this plugin's partials
    */
-  Simple.templatePath = Simple.contextPath + "plugin/html/";
+  JBatch.templatePath = JBatch.contextPath + "plugin/html/";
 
   /**
    * @property module
@@ -49,7 +48,7 @@ var Simple = (function(Simple) {
    * workspace, viewRegistry and layoutFull used by the
    * run function
    */
-  Simple.module = angular.module('simple_plugin', ['hawtioCore', 'ngResource'])
+  JBatch.module = angular.module('jbatch_plugin', ['hawtioCore', 'ngResource'])
       .config(function($routeProvider) {
 
         /**
@@ -59,8 +58,8 @@ var Simple = (function(Simple) {
          * routeProvider has been configured with.
          */
         $routeProvider.
-            when('/simple_plugin', {
-              templateUrl: Simple.templatePath + 'simple.html'
+            when('/jbatch_plugin', {
+              templateUrl: JBatch.templatePath + 'simple.html'
             });
       });
 
@@ -77,15 +76,15 @@ var Simple = (function(Simple) {
    *     plugin.  This is just a matter of adding to the workspace's
    *     topLevelTabs array.
    */
-  Simple.module.run(function(workspace, viewRegistry, layoutFull) {
+  JBatch.module.run(function(workspace, viewRegistry, layoutFull) {
 
-    Simple.log.info(Simple.pluginName, " loaded");
+    JBatch.log.info(JBatch.pluginName, " loaded");
 
-    Core.addCSS(Simple.contextPath + "plugin/css/simple.css");
+    Core.addCSS(JBatch.contextPath + "plugin/css/simple.css");
 
     // tell the app to use the full layout, also could use layoutTree
     // to get the JMX tree or provide a URL to a custom layout
-    viewRegistry["simple_plugin"] = layoutFull;
+    viewRegistry["jbatch_plugin"] = layoutFull;
 
     /* Set up top-level link to our plugin.  Requires an object
        with the following attributes:
@@ -112,17 +111,17 @@ var Simple = (function(Simple) {
     workspace.topLevelTabs.push({
       id: "jbatch",
       content: "JBatch",
-      title: "Simple plugin loaded dynamically",
+      title: "JBatch plugin loaded dynamically",
       isValid: function(workspace) { return true; },
-      href: function() { return "#/simple_plugin"; },
-      isActive: function(workspace) { return workspace.isLinkActive("simple_plugin"); }
+      href: function() { return "#/jbatch_plugin"; },
+      isActive: function(workspace) { return workspace.isLinkActive("jbatch_plugin"); }
 
     });
 
   });
 
   /**
-   * @function SimpleController
+   * @function JBatchController
    * @param $scope
    * @param jolokia
    *
@@ -132,7 +131,7 @@ var Simple = (function(Simple) {
    */
   
     
-  Simple.SimpleController = function($scope, jolokia, $http, $resource) {
+  JBatch.SimpleController = function($scope, jolokia, $http, $resource) {
     $scope.hello = "Hello world!";
     $scope.cpuLoad = "0";
 //    $scope.jobNames = $resource('/jobs/test/names');
@@ -149,7 +148,7 @@ var Simple = (function(Simple) {
 //           $scope.jobNames = data; 
 //        });
 //    };
-    $http.get("http://localhost:8080/simple-plugin/rest/jobs/names").then(function(resp){
+    $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/names").then(function(resp){
         $scope.jobs = resp.data;
     });
 
@@ -166,17 +165,17 @@ var Simple = (function(Simple) {
       Core.$apply($scope);
     }
     function getJobs($scope, $http){
-        $http.get('http://localhost:8080/simple-plugin/jobs/test/names').success(function(data){
+        $http.get('http://localhost:8080/jbatch-plugin/jobs/test/names').success(function(data){
            return data; 
         });
     }
     
   };
 
-  return Simple;
+  return JBatch;
 
-})(Simple || {});
+})(JBatch || {});
 
 // tell the hawtio plugin loader about our plugin so it can be
 // bootstrapped with the rest of angular
-hawtioPluginLoader.addModule(Simple.pluginName);
+hawtioPluginLoader.addModule(JBatch.pluginName);

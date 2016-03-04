@@ -8,9 +8,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>simple-plugin</artifactId>
-    <name>jbatch-simple-plugin</name>
-    <description>hawtio :: hawtio Simple plugin example</description>
+    <artifactId>jbatch-plugin</artifactId>
+    <name>jbatch-plugin</name>
+    <description>hawtio :: hawtio plugin for managing batch jobs in jsr352 api</description>
 
     <!-- hawtio plugins are almost always war files -->
     <packaging>war</packaging>
@@ -20,7 +20,7 @@
         as we build that dynamically using maven-antrun-plugin below. -->
         <!-- plugin-context is what context this plugin will handle requests on
         in the application server -->
-        <plugin-context>/simple-plugin</plugin-context>
+        <plugin-context>/jbatch-plugin</plugin-context>
 
         <!-- plugin-name is the name of our plugin, affects the name used for
         the plugin's mbean -->
@@ -111,7 +111,7 @@
 
     <build>
   
-        <finalName>simple-plugin</finalName>
+        <finalName>jbatch-plugin</finalName>
 
         <!-- we want to ensure src/main/resources/WEB-INF/web.xml is being filtered
         so that it picks up all of our javascript files -->
