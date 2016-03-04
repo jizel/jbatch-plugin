@@ -136,21 +136,27 @@ var JBatch = (function(JBatch) {
     $scope.cpuLoad = "0";
 //    $scope.jobNames = $resource('/jobs/test/names');
     $scope.jobs = "";
-//    function getJobNames($scope, $http){
-//        $http.get('http://localhost:8080/simple-plugin/rest/jobs/names').success(function(data){
-//            $scope.jobNames = data; 
-//        });
-//        $http({
-//            url: 'http://localhost:8080/simple-plugin/jobs/test/names',
-//            method: 'GET'
-////            Probably don't need the succes function'
-//        }).success(function(data){
-//           $scope.jobNames = data; 
-//        });
-//    };
+
     $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/names").then(function(resp){
         $scope.jobs = resp.data;
     });
+    
+    $http.get("http://localhost:8080/jbatch-plugin/rest/count/, {params: {jobname:jobname}}").then(function(resp){
+        $scope.jobcount2 = resp.data;
+    });
+      
+      $scope.jobcount = jobCount($scope.jobs);
+    function jobCount(jobname){
+    $http({
+            url: "http://localhost:8080/jbatch-plugin/rest/count/",
+            method: "GET",
+            params: {jobname: jobname}
+    }).then(function(resp){
+//        $scope.jobcount = resp.data;
+          return resp.data;
+    });
+    
+    };
 
     // register a watch with jolokia on this mbean to
     // get updated metrics
