@@ -16,10 +16,13 @@
 package muni.fi.dp.jz.jbatch.webservice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.batch.runtime.JobExecution;
+import javax.batch.runtime.JobInstance;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
@@ -29,6 +32,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.jobservice.JobService;
 
 /**
@@ -44,6 +48,22 @@ public class JobResource {
 //    private BatchExecutionBean batchExecutor;
     private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );
         
+    @GET    
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("tst")
+    public Response getAllJobs() {
+		Map<String,List<JobInstanceDto>> allJobInstances = new HashMap<>(jobService.getAllJobInstances());
+                return Response.ok(allJobInstances, MediaType.APPLICATION_JSON).build();		                   
+	}
+    
+    @GET    
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("tst2")
+    public Response getAllInstances() {
+		List<JobInstanceDto> allInstances = new ArrayList<>(jobService.getAllInstances());
+                return Response.ok(allInstances, MediaType.APPLICATION_JSON).build();		                   
+	}
+    
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("names")
@@ -84,4 +104,13 @@ public class JobResource {
         }
 	}
     
+    @GET    
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("counts")
+    public Response getJobCounts() {
+		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
+                Map<String, Integer> jobCounts = new HashMap<>();
+                for (String job:jobNameList) jobCounts.put(job,jobService.getJobInstanceCount(job));
+                return Response.ok(jobCounts, MediaType.APPLICATION_JSON).build();		                   
+	}
 }

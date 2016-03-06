@@ -16,11 +16,13 @@
 package muni.fi.dp.jz.jbatch.jobservice;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
 import javax.batch.runtime.StepExecution;
 import javax.ejb.Stateless;
+import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 
 /**
  *
@@ -46,4 +48,8 @@ public interface JobService {
     public List<JobExecution> getJobExecutions(JobInstance instance);
 
     public List<StepExecution> getStepExecutions(long jobExecutionId);
+    
+    public Map<String,List<JobInstanceDto>> getAllJobInstances();
+    
+    public List<JobInstanceDto> getAllInstances();
 }

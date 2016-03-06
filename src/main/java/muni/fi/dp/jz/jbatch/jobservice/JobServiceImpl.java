@@ -15,7 +15,10 @@
  */
 package muni.fi.dp.jz.jbatch.jobservice;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
@@ -23,6 +26,8 @@ import javax.batch.runtime.StepExecution;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.batchapi.BatchExecutionBean;
+import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
+import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
 
 /**
  *
@@ -79,6 +84,38 @@ public class JobServiceImpl implements JobService{
     @Override
     public List<StepExecution> getStepExecutions(long jobExecutionId) {
         return batchExecutor.getStepExecutions(jobExecutionId);
+    }
+
+    @Override
+    public Map<String,List<JobInstanceDto>> getAllJobInstances() {
+        Set<String> allJobs = getJobNames();
+        
+        Map<String,List<JobInstanceDto>> allJobInstances = new HashMap<>();
+        
+        
+        for(String job:allJobs){
+            List<JobInstance> jobInstances = getJobInstances(job);
+            List<JobInstanceDto> jobInstanceDtos = new ArrayList<>();
+            for(JobInstance jobInstance:jobInstances){
+                jobInstanceDtos.add(JobInstanceToDto.createDtoFromJobInstace(jobInstance));
+            }
+            allJobInstances.put(job, jobInstanceDtos);
+        }
+        System.out.println(allJobInstances);
+        return allJobInstances;
+    }
+
+    @Override
+    public List<JobInstanceDto> getAllInstances() {
+       Set<String> allJobs = getJobNames();
+       List<JobInstanceDto> jobInstanceDtos = new ArrayList<>();
+        for(String job:allJobs){
+            List<JobInstance> jobInstances = getJobInstances(job);            
+            for(JobInstance jobInstance:jobInstances){
+                jobInstanceDtos.add(JobInstanceToDto.createDtoFromJobInstace(jobInstance));
+            }            
+        }        
+        return jobInstanceDtos;
     }
     
 }

@@ -86,6 +86,13 @@
             <version>7.0</version>
             <type>jar</type>
         </dependency>
+        
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-resource</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+
     
         <!--        
             <dependency>
