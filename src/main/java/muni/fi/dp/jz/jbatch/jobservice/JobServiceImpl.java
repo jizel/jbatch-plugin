@@ -72,8 +72,13 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public List<JobInstance> getJobInstances(String jobName) {
-        return batchExecutor.getJobInstances(jobName);
+    public List<JobInstanceDto> getJobInstances(String jobName) {
+        List<JobInstance> jobInstances = batchExecutor.getJobInstances(jobName);
+        List<JobInstanceDto> jobInstanceDtos = new ArrayList<>();
+        for(JobInstance jobInstance:jobInstances){
+                jobInstanceDtos.add(JobInstanceToDto.createDtoFromJobInstace(jobInstance));
+            }
+        return jobInstanceDtos;
     }
 
     @Override
@@ -94,12 +99,9 @@ public class JobServiceImpl implements JobService{
         
         
         for(String job:allJobs){
-            List<JobInstance> jobInstances = getJobInstances(job);
-            List<JobInstanceDto> jobInstanceDtos = new ArrayList<>();
-            for(JobInstance jobInstance:jobInstances){
-                jobInstanceDtos.add(JobInstanceToDto.createDtoFromJobInstace(jobInstance));
-            }
-            allJobInstances.put(job, jobInstanceDtos);
+            List<JobInstanceDto> jobInstances = getJobInstances(job);
+            
+            allJobInstances.put(job, jobInstances);
         }
         System.out.println(allJobInstances);
         return allJobInstances;
@@ -107,15 +109,13 @@ public class JobServiceImpl implements JobService{
 
     @Override
     public List<JobInstanceDto> getAllInstances() {
-       Set<String> allJobs = getJobNames();
-       List<JobInstanceDto> jobInstanceDtos = new ArrayList<>();
+       Set<String> allJobs = getJobNames();  
+       List<JobInstanceDto> jobInstances = new ArrayList<>();
         for(String job:allJobs){
-            List<JobInstance> jobInstances = getJobInstances(job);            
-            for(JobInstance jobInstance:jobInstances){
-                jobInstanceDtos.add(JobInstanceToDto.createDtoFromJobInstace(jobInstance));
-            }            
+            jobInstances = getJobInstances(job);            
+                        
         }        
-        return jobInstanceDtos;
+        return jobInstances;
     }
     
 }

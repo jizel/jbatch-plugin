@@ -2,32 +2,36 @@
 
 
     <div class="row-fluid">
-        <div class="span6 offset3">
+        
 
-            <h3> Jobs on server: </h3>
-            <!--{{jobs}}-->  
-            <table ng-repeat="(jobname,inst) in allInstances">
-<!--                <tr ng-repeat="job in alljobs">
-                    <td>Job: {{job}}</td>                         
-                </tr>-->
+            <h3> Jobs on server:</h3>
+            {{jobs}} 
+            <br>
+            <table>
                 <tr>
-                    <td>{{jobname}}</td>
-                    <td>{{inst}}</td>
+                <th>Job Name</th>
+                <th>Job Instance count</th>
                 </tr>
-                <tr>
+                <tr ng-repeat="(jobname,count) in jobCounts" ng-click="getInstances(jobname)">
+                    <td ng-click="getInstances(jobname)">{{jobname}}</td>
+                    <td>{{count}}
+                    <button ng-click="getInstances(jobname)">getInstances</button>
+                    </td>
                     
-                    <!--<td>JobCount: {{jobcount}}</td>-->                    
-                    <!--<td>Jobcount2: {{jobcount2}}</td>-->
-                     <!--<td>Jobcount3: {{jobcount3}}</td>-->
-                </tr>
-                <tr>
-                    <!--<td >Job: {{inst.jobName}}, inst id: {{inst.jobInstanceId}}<td/>-->
-                    
-                    <!--<td>Instances: {{inst.jobInstanceId}}</td>-->
-<!--                    <td ng-repeat="inst in job">JobInstances: {{inst.jobName}}</td>
-                     <td ng-repeat="inst in job">JobInstanceId: {{inst.jobInstanceId}}</td>-->
                 </tr>
             </table>
-        </div>
+            
+            <div class="span6 offset3">        
+            <table>
+                <tr>
+                    <th>
+                        Job Instances
+                    </th>                    
+                </tr>
+                <tr>
+                    <td>{{curr_instances}}</td>
+                </tr>
+            </table>
+            </div>
     </div>
 </div>

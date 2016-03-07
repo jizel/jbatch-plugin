@@ -43,7 +43,7 @@ public interface JobService {
 
     public List<Long> getRunningExecutions(String jobName);
 
-    public List<JobInstance> getJobInstances(String jobName);
+    public List<JobInstanceDto> getJobInstances(String jobName);
 
     public List<JobExecution> getJobExecutions(JobInstance instance);
 

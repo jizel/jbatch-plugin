@@ -113,4 +113,12 @@ public class JobResource {
                 for (String job:jobNameList) jobCounts.put(job,jobService.getJobInstanceCount(job));
                 return Response.ok(jobCounts, MediaType.APPLICATION_JSON).build();		                   
 	}
+    
+    @GET    
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("inst/{jobname}")
+    public Response getJobInstances(@PathParam("jobname") String jobName) {
+	List<JobInstanceDto> jobInstances = jobService.getJobInstances(jobName);	        
+        return Response.ok(jobInstances, MediaType.APPLICATION_JSON).build();		                   
+	}
 }
