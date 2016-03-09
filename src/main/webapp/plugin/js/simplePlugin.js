@@ -153,41 +153,41 @@ var JBatch = (function (JBatch) {
         $scope.jobCounts = 0;
         $scope.current_job = "";
         $scope.selected = "";
-        $scope.curr_instances = "";
+        $scope.selected_instances = "";
+        $scope.selected_executions = "";
         
         $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/names").then(function (resp) {
             $scope.jobs = resp.data;
         });
-        angular.forEach($scope.jobs, function(job){
-            
-        });
-        
-//        $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/count/" + 'restReader' ).then(function (resp) {
-//            $scope.jobcount2 = resp.data;
-//        });
         
         $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/counts").then(function (resp) {
             $scope.jobCounts = resp.data;
         });
-
+        
+        $scope.setSelectedInstances = function(jobname){
+            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname).then(function (resp) {
+           $scope.selected_instances = resp.data; 
+           console.log($scope.selected_instances);
+        });
+        };
+        
+        $scope.setSelectedExecutions = function(jobInstanceId){
+            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/executions/inst" + jobInstanceId).then(function (resp) {
+           $scope.selected_instances = resp.data; 
+           console.log($scope.selected_instances);
+        });
+        };
+        
+        angular.forEach($scope.jobs, function(job){
+            
+        });                       
         $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/tst").then(function (resp) {
            $scope.allInstances = resp.data; 
         });
         
         $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/tst2").then(function (resp) {
            $scope.allInstances2 = resp.data; 
-        });
-        
-        $scope.setSelected = function(item) {
-            $scope.selected = item;
-            console.log($scope.selected);
-        };
-        $scope.getInstances = function(jobname){
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname).then(function (resp) {
-           $scope.curr_instances = resp.data; 
-           console.log($scope.curr_instances);
-        });
-        };
+        });                
 
         // register a watch with jolokia on this mbean to
         // get updated metrics

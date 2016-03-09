@@ -31,8 +31,7 @@ public class JobInstanceToDto {
     public static JobInstanceDto createDtoFromJobInstace(JobInstance jobInstance){
         JobInstanceDto jobInstanceDto = new JobInstanceDto();
         jobInstanceDto.setJobName(jobInstance.getJobName());
-        jobInstanceDto.setJobInstanceId(jobInstance.getInstanceId());
-        jobInstanceDto.setJobNameHash(jobInstance.getJobName());
+        jobInstanceDto.setJobInstanceId(jobInstance.getInstanceId());       
 //        Get list of instance's jobexecutions'        
 //        List<JobExecution> jobExecutions = jobService.getJobExecutions(jobInstance);
 //        long[] jobInstanceExecutionsIds = null;

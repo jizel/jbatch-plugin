@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
 import javax.ejb.EJB;
@@ -34,6 +33,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.jobservice.JobService;
+import org.apache.log4j.Logger;
+import org.jboss.as.controller.OperationFailedException;
+import org.jboss.as.server.logging.ServerLogger;
 
 /**
  *
@@ -46,7 +48,7 @@ public class JobResource {
     @EJB
     private JobService jobService;
 //    private BatchExecutionBean batchExecutor;
-    private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );
+    private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );    
         
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
@@ -82,7 +84,7 @@ public class JobResource {
 //                TODO - don't catch the low level exception, do that in service or batchExec class'
         }catch(EJBTransactionRolledbackException ex){
 //            TODO - what to do here? :-)
-            LOG.log( Level.SEVERE, ex.toString(), ex );
+            LOG.error("Exception" + ex);
             System.out.println("exceptiona");
            return null; 
         }
@@ -98,7 +100,7 @@ public class JobResource {
 //                TODO - don't catch the low level exception, do that in service or batchExec class'
         }catch(EJBTransactionRolledbackException ex){
 //            TODO - what to do here? :-)
-            LOG.log( Level.SEVERE, ex.toString(), ex );
+            LOG.error("Exception" + ex);
             System.out.println("exceptiona");
            return null; 
         }
@@ -118,7 +120,13 @@ public class JobResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}")
     public Response getJobInstances(@PathParam("jobname") String jobName) {
-	List<JobInstanceDto> jobInstances = jobService.getJobInstances(jobName);	        
+	List<JobInstanceDto> jobInstances = jobService.getJobInstances(jobName);
+//        This all works and results in standalone/log/server.log
+        System.out.println("Instances: ");
+        System.out.println(jobInstances);        
+        LOG.error("hajajaj");
+        LOG.info(jobName);
+        LOG.warn("Warning!!!");
         return Response.ok(jobInstances, MediaType.APPLICATION_JSON).build();		                   
 	}
 }

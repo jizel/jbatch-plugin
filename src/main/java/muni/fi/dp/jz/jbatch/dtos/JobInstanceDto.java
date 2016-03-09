@@ -9,7 +9,7 @@ public class JobInstanceDto {
 //	private String startTime;
 	private Long jobInstanceId;
 //        private long[] jobInstanceExecutionsIds;
-        private Long jobNameHash;   
+//        private Long jobNameHash;   
         
         
 	
@@ -33,18 +33,7 @@ public class JobInstanceDto {
 //
 //    public void setJobInstanceExecutionsIds(long[] jobInstanceExecutionsIds) {
 //        this.jobInstanceExecutionsIds = jobInstanceExecutionsIds;
-//    }
-
-    public Long getJobNameHash() {
-        return jobNameHash;
-    }
-
-        
-    public void setJobNameHash(String jobName) {
-        Long hash = new Long(7);
-        hash = 17 * hash + Objects.hashCode(jobName);
-        this.jobNameHash = hash;
-    }   
+//    }    
     
 	
     

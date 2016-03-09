@@ -24,13 +24,7 @@ import javax.ejb.Stateless;
 
 @Stateless
 public class BatchExecutionBean {
-
-    public long submitJob() {
-        JobOperator jobOperator = BatchRuntime.getJobOperator();
-        Properties jobPropertis = new Properties();
-        long executionId = jobOperator.start("first-batch-job", jobPropertis);
-        return executionId;
-    }
+    
     public long submitJob(String jobName) {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
         Properties jobPropertis = new Properties();
@@ -39,7 +33,7 @@ public class BatchExecutionBean {
     }
     
     //TODO use jobExecution dto instead of id as param??
-    public JobExecution getJobExecution(long executionId) {
+    public JobExecution getJobExecution(Long executionId) {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
         JobExecution jobExecution = jobOperator.getJobExecution(executionId);
         return jobExecution;
@@ -78,6 +72,7 @@ public class BatchExecutionBean {
     	JobOperator jobOperator = BatchRuntime.getJobOperator();
     	return jobOperator.getJobExecutions(instance);
     }
+     
     public List<StepExecution> getStepExecutions(long jobExecutionId){
     	JobOperator jobOperator = BatchRuntime.getJobOperator();
     	return jobOperator.getStepExecutions(jobExecutionId);

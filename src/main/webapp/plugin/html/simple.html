@@ -1,37 +1,48 @@
+<head>
+     <script src="../js/simplePlugin.js"/>     
+     <LINK href="../css/simple.css" rel="stylesheet" type="text/css"/>
+</head>
+
 <div class="simple-controller" ng-controller="JBatch.SimpleController">
 
 
     <div class="row-fluid">
-        
 
-            <h3> Jobs on server:</h3>
-            {{jobs}} 
-            <br>
-            <table>
+
+        <h3> Jobs on server:</h3>
+        {{jobs}} 
+        <br>
+        <br>
+        <table class="jobs">
+            <thead>
                 <tr>
-                <th>Job Name</th>
-                <th>Job Instance count</th>
+                    <th>Job Name</th>
+                    <th>#Instances</th>
+                    <th></th>
                 </tr>
-                <tr ng-repeat="(jobname,count) in jobCounts" ng-click="getInstances(jobname)">
-                    <td ng-click="getInstances(jobname)">{{jobname}}</td>
-                    <td>{{count}}
-                    <button ng-click="getInstances(jobname)">getInstances</button>
-                    </td>
-                    
+            </thead>
+            <tbody>
+                <tr ng-repeat="(jobname,count) in jobCounts" ng-click="setSelectedInstances(jobname)">
+                    <td>{{jobname}}</td>
+                    <td class="int">{{count}}</td>
+                    <td class="int"><button>Start new</button></td>                    
                 </tr>
-            </table>
-            
-            <div class="span6 offset3">        
-            <table>
+            </tbody>
+        </table>            
+
+        <table class="jobs" >
+            <thead>
                 <tr>
                     <th>
                         Job Instances
                     </th>                    
                 </tr>
-                <tr>
-                    <td>{{curr_instances}}</td>
+            </thead>
+            <tbody>
+                <tr ng-repeat="instance in selected_instances">
+                    <td class="int">ID: {{instance.jobInstanceId}}</td>
                 </tr>
-            </table>
-            </div>
+            </tbody>                
+        </table>            
     </div>
 </div>

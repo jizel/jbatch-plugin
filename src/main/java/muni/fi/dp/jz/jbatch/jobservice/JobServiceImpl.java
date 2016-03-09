@@ -26,6 +26,7 @@ import javax.batch.runtime.StepExecution;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.batchapi.BatchExecutionBean;
+import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
 
@@ -116,6 +117,11 @@ public class JobServiceImpl implements JobService{
                         
         }        
         return jobInstances;
+    }
+
+    @Override
+    public List<JobExecutionDto> getJobExecutions(Long instanceId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
