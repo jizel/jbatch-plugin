@@ -31,6 +31,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.jobservice.JobService;
 import org.apache.log4j.Logger;
@@ -129,4 +130,12 @@ public class JobResource {
         LOG.warn("Warning!!!");
         return Response.ok(jobInstances, MediaType.APPLICATION_JSON).build();		                   
 	}
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("inst/{jobname}/{instId}/executions")
+    public Response getJobExecutionsFromInstance(@PathParam("instId") long instanceId, @PathParam("jobname") String jobName){
+        List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
+        return Response.ok(jobExecutions, MediaType.APPLICATION_JSON).build();
+    }
 }

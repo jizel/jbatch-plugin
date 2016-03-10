@@ -153,6 +153,7 @@ var JBatch = (function (JBatch) {
         $scope.jobCounts = 0;
         $scope.current_job = "";
         $scope.selected = "";
+        $scope.selected_jobname = "";
         $scope.selected_instances = "";
         $scope.selected_executions = "";
         
@@ -165,19 +166,24 @@ var JBatch = (function (JBatch) {
         });
         
         $scope.setSelectedInstances = function(jobname){
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname).then(function (resp) {
-           $scope.selected_instances = resp.data; 
+           $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname).then(function (resp) {
+           $scope.selected_instances = resp.data;
+           $scope.selected_jobname = jobname;
            console.log($scope.selected_instances);
         });
         };
         
-        $scope.setSelectedExecutions = function(jobInstanceId){
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/executions/inst" + jobInstanceId).then(function (resp) {
-           $scope.selected_instances = resp.data; 
-           console.log($scope.selected_instances);
+        $scope.setSelectedExecutions = function(jobName, jobInstanceId){
+           $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobName + "/" + jobInstanceId + "/" + "executions").then(function (resp) {
+           $scope.selected_executions = resp.data; 
+           console.log($scope.selected_executions);
         });
         };
+                
         
+        
+        
+        //test methods 
         angular.forEach($scope.jobs, function(job){
             
         });                       

@@ -7,7 +7,7 @@ public class JobInstanceDto {
 	private String jobName;
 //	private String parameters;
 //	private String startTime;
-	private Long jobInstanceId;
+	private long jobInstanceId;
 //        private long[] jobInstanceExecutionsIds;
 //        private Long jobNameHash;   
         
@@ -20,10 +20,10 @@ public class JobInstanceDto {
 		this.jobName = jobName;
 	}
 	
-	public Long getJobInstanceId() {
+	public long getJobInstanceId() {
 		return jobInstanceId;
 	}
-	public void setJobInstanceId(Long jobInstanceId) {
+	public void setJobInstanceId(long jobInstanceId) {
 		this.jobInstanceId = jobInstanceId;
 	}	
 

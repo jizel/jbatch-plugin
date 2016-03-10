@@ -63,11 +63,16 @@ public class BatchExecutionBean {
     	JobOperator jobOperator = BatchRuntime.getJobOperator();
     	return jobOperator.getRunningExecutions(jobName);
     }
-    //TODO change JobInstance to own implementation
+    
     public List<JobInstance> getJobInstances(String jobName) {
     	JobOperator jobOperator = BatchRuntime.getJobOperator();
-    	return jobOperator.getJobInstances(jobName, 0, 50);
+    	return jobOperator.getJobInstances(jobName, 0, 100);
     }
+    
+    public List<JobInstance> getJobInstances(String jobName, int start, int count) {
+    	JobOperator jobOperator = BatchRuntime.getJobOperator();
+    	return jobOperator.getJobInstances(jobName, start, count);
+    }    
     public List<JobExecution> getJobExecutions(JobInstance instance) {
     	JobOperator jobOperator = BatchRuntime.getJobOperator();
     	return jobOperator.getJobExecutions(instance);
@@ -76,6 +81,13 @@ public class BatchExecutionBean {
     public List<StepExecution> getStepExecutions(long jobExecutionId){
     	JobOperator jobOperator = BatchRuntime.getJobOperator();
     	return jobOperator.getStepExecutions(jobExecutionId);
+    }
+    
+    //Gets parent instance for job execution not instance by id!!!
+    public JobInstance getJobInstance(Long executionId) {
+        JobOperator jobOperator = BatchRuntime.getJobOperator();
+        JobInstance jobInstance = jobOperator.getJobInstance(executionId);
+        return jobInstance;
     }
     
 }

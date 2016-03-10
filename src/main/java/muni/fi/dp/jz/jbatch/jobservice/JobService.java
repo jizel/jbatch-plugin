@@ -46,9 +46,9 @@ public interface JobService {
 
     public List<JobInstanceDto> getJobInstances(String jobName);
 
-    public List<JobExecution> getJobExecutions(JobInstance instance);
+    public List<JobExecutionDto> getJobExecutions(JobInstance instance);
     
-    public List<JobExecutionDto> getJobExecutions(Long instanceId);
+    public List<JobExecutionDto> getJobExecutions(String jobName, long instanceId);
 
     public List<StepExecution> getStepExecutions(long jobExecutionId);
     

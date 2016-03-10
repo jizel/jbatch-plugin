@@ -1,7 +1,7 @@
-<head>
+<!--<head>
      <script src="../js/simplePlugin.js"/>     
      <LINK href="../css/simple.css" rel="stylesheet" type="text/css"/>
-</head>
+</head>-->
 
 <div class="simple-controller" ng-controller="JBatch.SimpleController">
 
@@ -39,10 +39,31 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="instance in selected_instances">
+                <tr ng-repeat="instance in selected_instances" ng-click="setSelectedExecutions(selected_jobname, instance.jobInstanceId)">
                     <td class="int">ID: {{instance.jobInstanceId}}</td>
                 </tr>
             </tbody>                
-        </table>            
+        </table>   
+        
+        <table class="jobs" >
+            <thead>
+                <tr>
+                    <th>
+                        Job Execution ID
+                    </th>               
+                    <th>Batch Status</th>
+                    <th>Exit Status</th>
+                    <th>Parameters</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="execution in selected_executions">
+                    <td>{{execution.jobExecutionId}}</td>
+                    <td>{{execution.batchStatus}}</td>
+                    <td>{{execution.exitStatus}}</td>
+                    <td>{{execution.jobParameters}}</td>
+                </tr>              
+            </tbody>                
+        </table>     
     </div>
 </div>

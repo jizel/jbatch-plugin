@@ -28,6 +28,7 @@ import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.batchapi.BatchExecutionBean;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
+import muni.fi.dp.jz.jbatch.util.JobExecutionToDto;
 import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
 
 /**
@@ -83,10 +84,39 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public List<JobExecution> getJobExecutions(JobInstance instance) {
-        return batchExecutor.getJobExecutions(instance);
+    public List<JobExecutionDto> getJobExecutions(JobInstance instance) {
+        //TODO: implement with Dtos and catch NoSuchJobException
+//        List<JobInstance> jobInstances = batchExecutor.getJobInstances(instance.getJobName(), (int) instance.getJobInstanceId(), 1);        
+//        List<JobExecution> executions = batchExecutor.getJobExecutions(jobInstances.get(0));
+        List<JobExecution> executions = batchExecutor.getJobExecutions(instance);
+        List<JobExecutionDto> jobExecutionDtos = new ArrayList<>();        
+        for(JobExecution jobExec:executions){
+            jobExecutionDtos.add(JobExecutionToDto.createDtoFromJobExecution(jobExec));
+        }
+        return jobExecutionDtos;
     }
 
+    @Override
+    public List<JobExecutionDto> getJobExecutions(String jobName, long instanceId) {
+//TODO: make this work with dtos (after previous method!)
+//       List<JobInstanceDto> allJobInstanceDtos = getJobInstances(jobName);       
+//       JobInstanceDto jobInstance = null;
+//       for(JobInstanceDto instance:allJobInstanceDtos){
+//           if(instance.getJobInstanceId() == instanceId){
+//               jobInstance = instance;
+//           }
+//       }
+        
+        List<JobInstance> allInstances = batchExecutor.getJobInstances(jobName);
+        JobInstance jobInstance = null;
+        for(JobInstance inst: allInstances){
+            if(inst.getInstanceId() == instanceId){
+                jobInstance = inst;
+            }
+        }
+        return getJobExecutions(jobInstance);
+    }
+    
     @Override
     public List<StepExecution> getStepExecutions(long jobExecutionId) {
         return batchExecutor.getStepExecutions(jobExecutionId);
@@ -117,11 +147,6 @@ public class JobServiceImpl implements JobService{
                         
         }        
         return jobInstances;
-    }
-
-    @Override
-    public List<JobExecutionDto> getJobExecutions(Long instanceId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }    
     
 }

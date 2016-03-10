@@ -12,7 +12,10 @@ table.jobs {
 table.jobs tr:nth-child(even) {background: lightblue}
 table.jobs tr:hover {background-color: aqua}
 
-table.jobs th {text-align: center;}
+table.jobs th {
+    text-align: center;
+    padding-right: 20px;
+}
 
 table.jobs td {
     border-left: 1px solid #000;

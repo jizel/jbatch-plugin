@@ -1,6 +1,7 @@
 package muni.fi.dp.jz.jbatch.dtos;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Properties;
 import javax.batch.runtime.BatchStatus;
 
@@ -10,10 +11,10 @@ public class JobExecutionDto {
 	private String jobName;
 //        private JobInstanceDto jobInstance;
 //	private String parameters;
-	private Timestamp createTime;
-	private Timestamp startTime;
-        private Timestamp endTime;
-        private Timestamp lastUpdatedTime;
+	private Date createTime;
+	private Date startTime;
+        private Date endTime;
+        private Date lastUpdatedTime;
 	private BatchStatus batchStatus;
 	private String exitStatus;
 //	private boolean stop = false;
@@ -27,21 +28,37 @@ public class JobExecutionDto {
         return jobName;
     }
 
-    public Timestamp getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public Timestamp getStartTime() {
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getStartTime() {
         return startTime;
     }
 
-    public Timestamp getEndTime() {
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
         return endTime;
     }
 
-    public Timestamp getLastUpdatedTime() {
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Date getLastUpdatedTime() {
         return lastUpdatedTime;
     }
+
+    public void setLastUpdatedTime(Date lastUpdatedTime) {
+        this.lastUpdatedTime = lastUpdatedTime;
+    }    
 
     public BatchStatus getBatchStatus() {
         return batchStatus;
@@ -62,23 +79,7 @@ public class JobExecutionDto {
     public void setJobName(String jobName) {
         this.jobName = jobName;
     }
-
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
-
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
-    }
-
-    public void setLastUpdatedTime(Timestamp lastUpdatedTime) {
-        this.lastUpdatedTime = lastUpdatedTime;
-    }
-
+    
     public void setBatchStatus(BatchStatus batchStatus) {
         this.batchStatus = batchStatus;
     }
