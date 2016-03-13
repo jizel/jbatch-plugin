@@ -9,8 +9,8 @@
     <div class="row-fluid">
 
 
-        <h3> Jobs on server:</h3>
-        {{jobs}} 
+        <h3> Jobs on server:</h3>  
+        <button ng-click="startJobCli()">Start RestReader</button>
         <br>
         <br>
         <table class="jobs">
@@ -22,25 +22,25 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="(jobname,count) in jobCounts" ng-click="setSelectedInstances(jobname)">
-                    <td>{{jobname}}</td>
+                <tr ng-repeat="(jobname,count) in jobCounts" >
+                    <td ng-click="setSelectedInstances(jobname)">{{jobname}}</td>
                     <td class="int">{{count}}</td>
-                    <td class="int"><button>Start new</button></td>                    
-                </tr>
+                    <td class="int"><button ng-click="startJob(jobname)" >Start new</button></td>          
+                </tr>               
             </tbody>
         </table>            
 
         <table class="jobs" >
             <thead>
                 <tr>
-                    <th>
-                        Job Instances
-                    </th>                    
+                    <th>Job Instances</th>    
+                    <th>Restart last execution</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="instance in selected_instances" ng-click="setSelectedExecutions(selected_jobname, instance.jobInstanceId)">
+                <tr ng-repeat="instance in selected_instances|orderBy: '-jobInstanceId'" ng-click="setSelectedExecutions(instance.jobInstanceId)" >
                     <td class="int">ID: {{instance.jobInstanceId}}</td>
+                    <td><button ng-value="Restart" ng-click="restartExecution(selected_executions[selected_executions.length-1].jobExecutionId); setSelectedExecutions(instance.jobInstanceId)">Restart last</button></td>                    
                 </tr>
             </tbody>                
         </table>   
@@ -48,22 +48,48 @@
         <table class="jobs" >
             <thead>
                 <tr>
-                    <th>
-                        Job Execution ID
-                    </th>               
+                    <th>Job Execution ID</th>               
                     <th>Batch Status</th>
                     <th>Exit Status</th>
                     <th>Parameters</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="execution in selected_executions">
+                <tr ng-repeat="execution in selected_executions|orderBy: '-jobExecutionId'" ng-click="setSelectedSteps(execution.jobExecutionId)">
                     <td>{{execution.jobExecutionId}}</td>
                     <td>{{execution.batchStatus}}</td>
                     <td>{{execution.exitStatus}}</td>
-                    <td>{{execution.jobParameters}}</td>
+                    <td>{{execution.jobParameters}}</td>                    
+                </tr>              
+            </tbody>                
+        </table>  
+        
+        <br><br><br><br><br><br>
+        <h4>Steps for job execution ID: {{selected_execution_id}}</h4>
+        <table class="jobs steps" >
+            <thead>
+                <tr>
+                   <th>Step&nbsp;Name</th>
+                    <th>Batch&nbsp;status</th>
+                    <th>Exit&nbsp;Status</th>
+                    <th>Start&nbsp;Time</th>
+                    <th>End&nbsp;Time</th>
+                    <th>Metrics</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="step in selected_steps">                    
+                    <td>{{step.stepName}}</td>
+                    <td>{{step.batchStatus}}</td>
+                    <td>{{step.exitStatus}}</td>
+                    <td class="int">{{step.startTime}}</td>
+                    <td class="int">{{step.endTime}}</td>
+                    <td ng-repeat="metric in step.metrics" class="metric">
+                        {{metric.type}}&nbsp;=&nbsp;{{metric.value}}
+                    </td>
                 </tr>              
             </tbody>                
         </table>     
-    </div>
+    </div>        
 </div>

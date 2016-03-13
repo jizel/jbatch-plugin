@@ -15,6 +15,7 @@
  */
 package muni.fi.dp.jz.jbatch.batchapi;
 
+import javax.ejb.Stateless;
 import org.jboss.as.cli.CliInitializationException;
 import org.jboss.as.cli.CommandContext;
 import org.jboss.as.cli.CommandLineException;
@@ -23,6 +24,7 @@ import org.jboss.as.cli.CommandLineException;
  *
  * @author Zorz
  */
+@Stateless
 public class CliBatchManager {
 
     public CliBatchManager() {

@@ -22,10 +22,13 @@ import java.util.Map;
 
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
+import javax.batch.runtime.StepExecution;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -33,10 +36,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
+import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 import muni.fi.dp.jz.jbatch.jobservice.JobService;
 import org.apache.log4j.Logger;
-import org.jboss.as.controller.OperationFailedException;
-import org.jboss.as.server.logging.ServerLogger;
 
 /**
  *
@@ -51,21 +53,29 @@ public class JobResource {
 //    private BatchExecutionBean batchExecutor;
     private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );    
         
-    @GET    
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("tst")
-    public Response getAllJobs() {
-		Map<String,List<JobInstanceDto>> allJobInstances = new HashMap<>(jobService.getAllJobInstances());
-                return Response.ok(allJobInstances, MediaType.APPLICATION_JSON).build();		                   
-	}
+    @GET
+    @Path("tststart")
+    public Response startJobCli(){
+        jobService.startJob("not_used_now");
+        return Response.ok("RestReader started?", MediaType.APPLICATION_JSON).build();
+        
+    }
     
-    @GET    
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("tst2")
-    public Response getAllInstances() {
-		List<JobInstanceDto> allInstances = new ArrayList<>(jobService.getAllInstances());
-                return Response.ok(allInstances, MediaType.APPLICATION_JSON).build();		                   
-	}
+//    @GET    
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Path("tst")
+//    public Response getAllJobs() {
+//		Map<String,List<JobInstanceDto>> allJobInstances = new HashMap<>(jobService.getAllJobInstances());
+//                return Response.ok(allJobInstances, MediaType.APPLICATION_JSON).build();		                   
+//	}
+//    
+//    @GET    
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Path("tst2")
+//    public Response getAllInstances() {
+//		List<JobInstanceDto> allInstances = new ArrayList<>(jobService.getAllInstances());
+//                return Response.ok(allInstances, MediaType.APPLICATION_JSON).build();		                   
+//	}
     
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
@@ -137,5 +147,49 @@ public class JobResource {
     public Response getJobExecutionsFromInstance(@PathParam("instId") long instanceId, @PathParam("jobname") String jobName){
         List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
         return Response.ok(jobExecutions, MediaType.APPLICATION_JSON).build();
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("inst/{jobname}/{instId}/executions/last")
+    public Response getLastJobExecutionFromInstance(@PathParam("instId") long instanceId, @PathParam("jobname") String jobName){
+        List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
+        JobExecutionDto lastInstanceExecution = jobExecutions.get(jobExecutions.size()-1);
+        return Response.ok(lastInstanceExecution.getJobExecutionId(), MediaType.APPLICATION_JSON).build();
+    }
+    
+    @GET    
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("steps/{execId}")
+    public Response getStepExecutions(@PathParam("execId") long executionId) {
+	List<StepExecutionDto> stepExecutions = jobService.getStepExecutions(executionId);
+//        This all works and results in standalone/log/server.log        
+        return Response.ok(stepExecutions, MediaType.APPLICATION_JSON).build();		                   
+	}
+    
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("restart/{execId}")
+    public Response restartJob(@PathParam("execId") long executionId){
+        long id = jobService.restartJob(executionId);
+        LOG.info("\n");
+        LOG.info("Job restarted");
+        LOG.info("Id" + executionId);
+        LOG.info("\n");
+        return Response.ok(id, MediaType.APPLICATION_JSON).build();
+    }
+    
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("start/{jobname}")
+    public Response startJob(@PathParam("jobname") String jobName){
+        long id = jobService.startJob(jobName);
+        LOG.info("\n");
+        LOG.info("Job Started");
+        LOG.info("Name" + jobName + "Id:" + id);
+        LOG.info("\n");
+        return Response.ok(id, MediaType.APPLICATION_JSON).build();
     }
 }

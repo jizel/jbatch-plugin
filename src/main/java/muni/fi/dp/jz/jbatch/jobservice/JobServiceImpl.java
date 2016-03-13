@@ -25,11 +25,15 @@ import javax.batch.runtime.JobInstance;
 import javax.batch.runtime.StepExecution;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import muni.fi.dp.jz.jbatch.batchapi.BatchExecutionBean;
+import muni.fi.dp.jz.jbatch.batchapi.CliBatchManager;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
+import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 import muni.fi.dp.jz.jbatch.util.JobExecutionToDto;
 import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
+import muni.fi.dp.jz.jbatch.util.StepExecutionToDto;
 
 /**
  *
@@ -39,7 +43,11 @@ import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
 public class JobServiceImpl implements JobService{
 
     @EJB
+    @Inject
     BatchExecutionBean batchExecutor;
+    
+    @EJB
+    CliBatchManager cliManager;
     
 //    TODO - catch exceptions
     
@@ -118,8 +126,13 @@ public class JobServiceImpl implements JobService{
     }
     
     @Override
-    public List<StepExecution> getStepExecutions(long jobExecutionId) {
-        return batchExecutor.getStepExecutions(jobExecutionId);
+    public List<StepExecutionDto> getStepExecutions(long jobExecutionId) {
+        List<StepExecutionDto> stepExecutionDtos = new ArrayList<>();        
+        List<StepExecution> stepExecutions = batchExecutor.getStepExecutions(jobExecutionId);
+        for(StepExecution stepExec:stepExecutions){
+            stepExecutionDtos.add(StepExecutionToDto.createDtoFromStepExecution(stepExec));
+        }
+        return stepExecutionDtos;
     }
 
     @Override
@@ -148,5 +161,13 @@ public class JobServiceImpl implements JobService{
         }        
         return jobInstances;
     }    
+
+    @Override
+    public long startJob(String jobName) {
+          cliManager.startJobCli();
+          return 1;
+//        long id = batchExecutor.submitJob(jobName);
+//        return id;
+    }
     
 }

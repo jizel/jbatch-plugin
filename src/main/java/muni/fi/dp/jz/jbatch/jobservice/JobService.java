@@ -24,6 +24,7 @@ import javax.batch.runtime.StepExecution;
 import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
+import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 
 /**
  *
@@ -50,9 +51,12 @@ public interface JobService {
     
     public List<JobExecutionDto> getJobExecutions(String jobName, long instanceId);
 
-    public List<StepExecution> getStepExecutions(long jobExecutionId);
+    public List<StepExecutionDto> getStepExecutions(long jobExecutionId);
     
     public Map<String,List<JobInstanceDto>> getAllJobInstances();
     
     public List<JobInstanceDto> getAllInstances();
+    
+    public long startJob(String jobName);
+    
 }
