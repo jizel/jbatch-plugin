@@ -82,17 +82,17 @@
             <type>jar</type>
         </dependency>
         
-        <!--        <dependency>
+<!--        <dependency>
             <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-cli</artifactId>
             <version>1.0.2.Final</version>
-                  <type>jar</type>
+            <type>jar</type>
         </dependency>-->
         
-        <dependency>
+                <dependency>
             <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-cli</artifactId>
-            <version>2.0.10.Final</version>
+            <version>2.0.10.Final</version>            
             <exclusions>
                 <exclusion>
                     <artifactId>jconsole</artifactId>
@@ -113,16 +113,23 @@
             <artifactId>angular-resource</artifactId>
             <version>1.5.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jboss.logmanager</groupId>
+            <artifactId>jboss-logmanager</artifactId>
+            <version>2.0.3.Final</version>
+        </dependency>
+
 
     
-        <!--        
-            <dependency>
+                
+<!--        <dependency>
             <groupId>io.hawt</groupId>
             <artifactId>hawtio-web</artifactId>
             <version>2.0.0</version>
             <type>war</type>
-        </dependency>
-        -->
+        </dependency>-->
+        
 
     
         <!--    <dependency>
@@ -154,6 +161,12 @@
         </resources>
 
         <plugins>
+            <plugin>
+		<groupId>org.wildfly.plugins</groupId>
+		<artifactId>wildfly-maven-plugin</artifactId>
+		<version>1.0.2.Final</version>
+            </plugin>
+            
 
             <!-- We use maven-antrun-plugin to build up a list of
             javascript files for our plugin mbean, this means
@@ -165,10 +178,11 @@
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>${maven-antrun-plugin-version}</version>
+                
                 <executions>
 
                     <execution>
-                        <!-- we run this early in the build process before
+<!--                         we run this early in the build process before
                         maven-resources-plugin is run.  We're exporting the
                         plugin-scripts property from here, so we need to
                         use maven-antrun-plugin 1.6 or up -->
@@ -180,27 +194,27 @@
                         <configuration>
                             <target>
                                 <echo>Building plugin javascript file list</echo>
-                                <!-- javascript-files will contain all of the javascript in
-                                our project -->
+                                 javascript-files will contain all of the javascript in
+                                our project 
                                 <fileset id="javascript-files" dir="${basedir}/src/main/webapp">
                                     <include name="**/*.js" />
                                 </fileset>
-                                <!-- we need to strip out the top level path which is
+                                 we need to strip out the top level path which is
                                 our source directory and be sure to change the directory
-                                separators to forward slashes -->
+                                separators to forward slashes 
                                 <pathconvert pathsep="," dirsep="/" property="plugin-scripts" refid="javascript-files">
                                     <map from="${basedir}/src/main/webapp/" to="" />
                                 </pathconvert>
                                 <echo>Files: ${plugin-scripts}</echo>
 
-                                <!--                                
+                                                                
                                 <echo>Copying log4j.properties</echo>
-                                <copy file="src/main/resources/log4j.properties" todir="target/classes" />-->
+                                <copy file="src/main/resources/log4j.properties" todir="target/classes" />
 
                             </target>
-                            <!-- this exports plugin-scripts to the maven build, without
+                             this exports plugin-scripts to the maven build, without
                             this line ${plugin-scripts} in the web.xml file won't be
-                            replaced -->
+                            replaced 
                             <exportAntProperties>true</exportAntProperties>
                         </configuration>
                     </execution>
@@ -210,9 +224,10 @@
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-resources-plugin-version}</version>
+                <!--<version>2.7</version>-->
                 <executions>
                     <execution>
-                        <!-- defining this maven plugin in the same phase as the
+<!--                         defining this maven plugin in the same phase as the
                         maven-antrun-plugin but *after* we've configured the
                         maven-antrun-plugin ensures we filter resources *after*
                         we've discovered the plugin .js files. -->
@@ -228,10 +243,11 @@
             <!-- maven-bundle-plugin config, needed to make this war
             deployable in karaf, defines the context that this bundle
             should handle requests on -->
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>${maven-bundle-plugin-version}</version>
+                <version>3.0.1</version>
+
                 <executions>
                     <execution>
                         <id>bundle-manifest</id>
@@ -269,7 +285,7 @@
                         <Implementation-Version>${project.version}</Implementation-Version>
                     </instructions>
                 </configuration>
-            </plugin>
+            </plugin>-->
 
             <!-- We define the maven-war-plugin here and make sure it uses
             the manifest file generated by the maven-bundle-plugin.  We
@@ -279,13 +295,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${war-plugin-version}</version>
+                <!--<version>2.6</version>-->
                 <configuration>
                     <outputFileNameMapping>@{artifactId}@-@{baseVersion}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
                     <packagingExcludes>**/classes/OSGI-INF/**</packagingExcludes>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <archive>
+                    <!--                    <archive>
                         <manifestFile>${webapp-outdir}/META-INF/MANIFEST.MF</manifestFile>
-                    </archive>
+                    </archive>-->
                     <webResources>
                         <resource>
                             <filtering>true</filtering>

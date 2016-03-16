@@ -41,6 +41,7 @@ public class CliBatchManager {
 
 	            // execute commands and operations
 	            ctx.handle("/deployment=restReader.war/subsystem=batch-jberet:start-job(job-xml-name=restReader)");
+//                    ctx.handle("/deployment=restReader.war/subsystem=batch-jberet:read-resource(recursive=true,include-runtime=true)");
 	        } catch (CommandLineException e) {
 	        	System.out.println("Exception when submitting command to server:" + e.toString());
 	        }
