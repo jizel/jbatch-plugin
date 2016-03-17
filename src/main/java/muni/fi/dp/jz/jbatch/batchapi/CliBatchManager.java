@@ -18,6 +18,7 @@ package muni.fi.dp.jz.jbatch.batchapi;
 import javax.ejb.Stateless;
 import org.jboss.as.cli.CliInitializationException;
 import org.jboss.as.cli.CommandContext;
+import org.jboss.as.cli.CommandContextFactory;
 import org.jboss.as.cli.CommandLineException;
 
 /**
@@ -33,7 +34,7 @@ public class CliBatchManager {
     public void startJobCli() {
 		final CommandContext ctx ;
 	    try {
-	        ctx = org.jboss.as.cli.CommandContextFactory.getInstance().newCommandContext();
+	        ctx = CommandContextFactory.getInstance().newCommandContext();
 	        
 	        try {
 	            // connect to the server controller
@@ -43,10 +44,12 @@ public class CliBatchManager {
 	            ctx.handle("/deployment=restReader.war/subsystem=batch-jberet:start-job(job-xml-name=restReader)");
 //                    ctx.handle("/deployment=restReader.war/subsystem=batch-jberet:read-resource(recursive=true,include-runtime=true)");
 	        } catch (CommandLineException e) {
+//                    CommandLineException not found with scope provided
 	        	System.out.println("Exception when submitting command to server:" + e.toString());
 	        }
 	        
 	    } catch (CliInitializationException e) {
+//               CliInitializationException not found with scope provided
 	        System.out.println("Exception when creating the ctx:" + e.toString());
 	    }
 	}
