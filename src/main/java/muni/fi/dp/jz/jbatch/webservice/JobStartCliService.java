@@ -41,11 +41,11 @@ public class JobStartCliService {
 //    private BatchExecutionBean batchExecutor;
     private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );
     
-    @GET
-    @Path("tst")
-    public Response startJobCli(){
-        String resp = jobService.startJob("not_used_now");
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
-        
-    }
+//    @GET
+//    @Path("tst")
+//    public Response startJobCli(){
+//        String resp = jobService.startJobCli("not_used_now","str");
+//        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+//        
+//    }
 }

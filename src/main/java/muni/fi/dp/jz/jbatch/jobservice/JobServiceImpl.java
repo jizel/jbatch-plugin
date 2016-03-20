@@ -34,6 +34,7 @@ import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 import muni.fi.dp.jz.jbatch.util.JobExecutionToDto;
 import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
 import muni.fi.dp.jz.jbatch.util.StepExecutionToDto;
+import org.json.JSONObject;
 
 /**
  *
@@ -163,15 +164,28 @@ public class JobServiceImpl implements JobService{
     }    
 
     @Override
-    public String startJob(String jobName) {
-          String resp = cliManager.startJobCli();
+    public String startJobCli(String deploymentName, String jobName) {
+          String resp = cliManager.startJobCli(deploymentName,jobName);
           return resp;
 //        long id = batchExecutor.submitJob(jobName);
 //        return id;
     }
+    @Override
      public String getDeploymentInfo(){
          String resp = cliManager.getDeploymentInfo();
+//         JSONObject json = new JSONObject(resp);         
+//         JSONObject result = json.getJSONObject("result");
           return resp;
+     }
+     
+    @Override
+     public String getBatchDeployments(){
+         String resp = cliManager.getBatchDeployments();
+         return resp;
+     }
+     
+     public String getJobsFromDeployment(String deployment){
+         return cliManager.getJobsFromDeployment(deployment);
      }
     
 }

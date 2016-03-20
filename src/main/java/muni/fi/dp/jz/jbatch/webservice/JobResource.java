@@ -46,6 +46,8 @@ import org.apache.log4j.Logger;
  */
 @Stateless
 @Path("jobs")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class JobResource {    
     
     @EJB
@@ -53,11 +55,11 @@ public class JobResource {
     private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );    
         
     @GET
-    @Path("tststart")
-    public Response startJobCli(){
-        jobService.startJob("not_used_now");
-        return Response.ok("RestReader started?", MediaType.APPLICATION_JSON).build();
-        
+    @Path("start/{deployment}/{jobName}")
+    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName){
+        String resp = jobService.startJobCli(deploymentName, jobName);
+        LOG.info("Job " + jobName + " started via cli! Server response returned.\n");
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();        
     }    
     
     @GET    
@@ -163,27 +165,45 @@ public class JobResource {
         return Response.ok(id, MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("start/{jobname}")
-    public Response startJob(@PathParam("jobname") String jobName){
-        String resp = jobService.startJob(jobName);
-        LOG.info("\n");
-        LOG.info("Job Started");
-        LOG.info("Name" + jobName + "Id:" + resp);
-        LOG.info("\n");
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
-    }
-    @GET
-    @Consumes(MediaType.TEXT_PLAIN)
+//    @GET
+//    @Consumes(MediaType.TEXT_PLAIN)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Path("start/{jobname}")
+//    public Response startJob(@PathParam("jobname") String jobName){
+//        String resp = jobService.startJob(jobName);
+//        LOG.info("\n");
+//        LOG.info("Job Started");
+//        LOG.info("Name" + jobName + "Id:" + resp);
+//        LOG.info("\n");
+//        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+//    }
+    @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("deployments")
     public Response getDeploymentInfo(){
-        String resp = jobService.getDeploymentInfo();
+       String resp = jobService.getDeploymentInfo();
         LOG.info("\n");
         LOG.info("Deployments from server requested");        
         LOG.info("\n");
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+    }
+    
+    @GET        
+    @Path("batchDepl")
+    public Response getBatchDeployments(){
+       String resp = jobService.getBatchDeployments();
+        LOG.info("\n");
+        LOG.info("Batch deployments only requested from server");        
+        LOG.info("\n");
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+    }
+    
+    @GET        
+    @Path("deploymentJobs/{deployment}")
+    public Response getBatchDeployments(@PathParam("deployment") String deployment){
+       String resp = jobService.getJobsFromDeployment(deployment);
+//       TODO: Take just the job part from resp
+        LOG.info("\nAll possible jobs for deployment" + deployment + "returned via rest\n");                
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();
     }
 }

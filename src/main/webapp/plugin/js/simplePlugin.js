@@ -155,19 +155,34 @@ var JBatch = (function (JBatch) {
         $scope.selected_execution_id;
         $scope.last_execution_id=0;
         $scope.selected_steps = "";
+        $scope.deployments = "";
+        $scope.batchDeployments = "";
+         
+
         
+//        Functions
         $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/names").then(function (resp) {
             $scope.jobs = resp.data;
         });
         
         $scope.getJobCounts = function(){
-        $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/counts").then(function (resp) {
+            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/counts").then(function (resp) {
             $scope.jobCounts = resp.data;
         });
         };
         
-        $scope.getJobCounts();
+        $scope.getDeployments = function() {
+            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/deployments/").then(function(resp){
+                $scope.deployments = resp.data;
+            });
+        };
         
+        $scope.getBatchDeployments = function() {
+            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/batchDepl/").then(function(resp){
+                $scope.batchDeployments = resp.data;
+            });
+        };
+                
         $scope.setSelectedInstances = function(jobname){
            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname).then(function (resp) {
            $scope.selected_instances = resp.data;
@@ -183,6 +198,7 @@ var JBatch = (function (JBatch) {
            console.log($scope.selected_executions);
          });
         };
+        
         $scope.getLastExecution = function(jobInstanceId){
            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + $scope.selected_jobname + "/" + jobInstanceId + "/" + "executions/last").then(function (resp) {
 //          $scope.last_instance_execution = resp.data;           
@@ -211,26 +227,23 @@ var JBatch = (function (JBatch) {
            $scope.setSelectedExecutions(instanceId);
         };
         
-        $scope.startJob = function(jobName) {
-          $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/start/" + jobName).then(function(resp){
+        $scope.startJobCli = function(deploymentName, jobName) {
+          $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/start/" + deploymentName +"/" + jobName).then(function(resp){
               console.log("Job started: " + jobName + "with id: " + resp.data);
-          });
-        };
-        
-        $scope.startJobCli = function() {
-          $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/tststart").then(function(resp){
-              console.log("Job started: " +  "with id: " + resp.data);
               $scope.getJobCounts();
           });
         };
+        
+        
+        //        Init
+        $scope.getJobCounts();
+        $scope.getDeployments();
+        $scope.getBatchDeployments();
                 
         
         
         
-        //test methods 
-        angular.forEach($scope.jobs, function(job){
-            
-        });                       
+        //test methods                     
 //        $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/tst").then(function (resp) {
 //           $scope.allInstances = resp.data; 
 //        });

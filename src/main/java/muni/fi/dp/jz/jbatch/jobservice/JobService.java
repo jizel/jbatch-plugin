@@ -36,6 +36,8 @@ public interface JobService {
     public long submitJob(String jobName);
 
     public JobExecution getJobExecution(long executionId);
+    
+     public String startJobCli(String deploymentName, String jobName);
 
     public long restartJob(long executionId);
 
@@ -55,10 +57,12 @@ public interface JobService {
     
     public Map<String,List<JobInstanceDto>> getAllJobInstances();
     
-    public List<JobInstanceDto> getAllInstances();
+    public List<JobInstanceDto> getAllInstances();       
     
-    public String startJob(String jobName);
+    public String getDeploymentInfo();
+     
+    public String getBatchDeployments();
     
-     public String getDeploymentInfo();
+     public String getJobsFromDeployment(String deployment);
     
 }
