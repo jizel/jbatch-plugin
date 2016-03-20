@@ -57,6 +57,8 @@ public interface JobService {
     
     public List<JobInstanceDto> getAllInstances();
     
-    public long startJob(String jobName);
+    public String startJob(String jobName);
+    
+     public String getDeploymentInfo();
     
 }

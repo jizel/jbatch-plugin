@@ -163,11 +163,15 @@ public class JobServiceImpl implements JobService{
     }    
 
     @Override
-    public long startJob(String jobName) {
-          cliManager.startJobCli();
-          return 1;
+    public String startJob(String jobName) {
+          String resp = cliManager.startJobCli();
+          return resp;
 //        long id = batchExecutor.submitJob(jobName);
 //        return id;
     }
+     public String getDeploymentInfo(){
+         String resp = cliManager.getDeploymentInfo();
+          return resp;
+     }
     
 }

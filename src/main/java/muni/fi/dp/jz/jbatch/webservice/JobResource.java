@@ -50,7 +50,6 @@ public class JobResource {
     
     @EJB
     private JobService jobService;
-//    private BatchExecutionBean batchExecutor;
     private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );    
         
     @GET
@@ -59,23 +58,7 @@ public class JobResource {
         jobService.startJob("not_used_now");
         return Response.ok("RestReader started?", MediaType.APPLICATION_JSON).build();
         
-    }
-    
-//    @GET    
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("tst")
-//    public Response getAllJobs() {
-//		Map<String,List<JobInstanceDto>> allJobInstances = new HashMap<>(jobService.getAllJobInstances());
-//                return Response.ok(allJobInstances, MediaType.APPLICATION_JSON).build();		                   
-//	}
-//    
-//    @GET    
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("tst2")
-//    public Response getAllInstances() {
-//		List<JobInstanceDto> allInstances = new ArrayList<>(jobService.getAllInstances());
-//                return Response.ok(allInstances, MediaType.APPLICATION_JSON).build();		                   
-//	}
+    }    
     
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
@@ -185,11 +168,22 @@ public class JobResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("start/{jobname}")
     public Response startJob(@PathParam("jobname") String jobName){
-        long id = jobService.startJob(jobName);
+        String resp = jobService.startJob(jobName);
         LOG.info("\n");
         LOG.info("Job Started");
-        LOG.info("Name" + jobName + "Id:" + id);
+        LOG.info("Name" + jobName + "Id:" + resp);
         LOG.info("\n");
-        return Response.ok(id, MediaType.APPLICATION_JSON).build();
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+    }
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("deployments")
+    public Response getDeploymentInfo(){
+        String resp = jobService.getDeploymentInfo();
+        LOG.info("\n");
+        LOG.info("Deployments from server requested");        
+        LOG.info("\n");
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
     }
 }

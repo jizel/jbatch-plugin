@@ -15,11 +15,14 @@
  */
 package muni.fi.dp.jz.jbatch.batchapi;
 
+import java.io.IOException;
 import javax.ejb.Stateless;
 import org.jboss.as.cli.CliInitializationException;
 import org.jboss.as.cli.CommandContext;
 import org.jboss.as.cli.CommandContextFactory;
 import org.jboss.as.cli.CommandLineException;
+import org.jboss.as.controller.client.ModelControllerClient;
+import org.jboss.dmr.ModelNode;
 
 /**
  *
@@ -29,20 +32,30 @@ import org.jboss.as.cli.CommandLineException;
 public class CliBatchManager {
 
     public CliBatchManager() {
+    }        
+    
+    public String startJobCli() {
+	String runJob = "/deployment=restReader.war/subsystem=batch-jberet:start-job(job-xml-name=restReader)";
+//        TODO - if runCommand == null throw exception and return null;
+        return runCommand(runJob);
+	}        
+    
+    public String getDeploymentInfo(){
+       String getInfo = "deployment-info";
+       return runCommand(getInfo);
     }
     
-    public void startJobCli() {
-		final CommandContext ctx ;
+    public String runCommand(String command){
+        final CommandContext ctx ;
 	    try {
 	        ctx = CommandContextFactory.getInstance().newCommandContext();
 	        
 	        try {
 	            // connect to the server controller
 	            ctx.connectController();
-
-	            // execute commands and operations
-	            ctx.handle("/deployment=restReader.war/subsystem=batch-jberet:start-job(job-xml-name=restReader)");
-//                    ctx.handle("/deployment=restReader.war/subsystem=batch-jberet:read-resource(recursive=true,include-runtime=true)");
+	            // execute commands and operations                    
+                    String response = executeCommand(ctx, ctx.buildRequest(command));
+                    return response;                   
 	        } catch (CommandLineException e) {
 //                    CommandLineException not found with scope provided
 	        	System.out.println("Exception when submitting command to server:" + e.toString());
@@ -52,5 +65,24 @@ public class CliBatchManager {
 //               CliInitializationException not found with scope provided
 	        System.out.println("Exception when creating the ctx:" + e.toString());
 	    }
-	}
+            return null;
+    }
+    
+    public static String executeCommand(CommandContext ctx,ModelNode modelNode) {   
+           
+         ModelControllerClient client = ctx.getModelControllerClient();
+         if(client != null) {
+            try {
+                  ModelNode response = client.execute(modelNode);
+                  System.out.println(response);
+                  return (response.toJSONString(true));
+            } catch (IOException e) {
+                System.out.println("IOException thrown when executing command: " + e.toString());
+            }
+         } else {
+              System.out.println("Connection Error! The ModelControllerClient is not available.");
+        }
+         return null;
+    }    
+    
 }

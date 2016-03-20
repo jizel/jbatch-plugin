@@ -44,8 +44,8 @@ public class JobStartCliService {
     @GET
     @Path("tst")
     public Response startJobCli(){
-        jobService.startJob("not_used_now");
-        return Response.ok("RestReader started?", MediaType.APPLICATION_JSON).build();
+        String resp = jobService.startJob("not_used_now");
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
         
     }
 }
