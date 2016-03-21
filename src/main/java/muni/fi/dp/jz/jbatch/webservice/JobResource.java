@@ -201,9 +201,9 @@ public class JobResource {
     @GET        
     @Path("deploymentJobs/{deployment}")
     public Response getBatchDeployments(@PathParam("deployment") String deployment){
-       String resp = jobService.getJobsFromDeployment(deployment);
+       String deploymentJobs = jobService.getJobsFromDeployment(deployment);
 //       TODO: Take just the job part from resp
         LOG.info("\nAll possible jobs for deployment" + deployment + "returned via rest\n");                
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+        return Response.ok(deploymentJobs, MediaType.APPLICATION_JSON).build();
     }
 }

@@ -9,12 +9,16 @@
         <table>
             <thead>
                 <tr>
-                    <th>name</th>                    
+                    <th>Deployment Name</th>
+                    <th>Jobs Available</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="name in batchDeployments">
-                    <td>{{name}}</td>                  
+                <tr ng-repeat="(name,jobs) in batchDeployments">
+                    <td>{{name}}</td>
+                    <td >
+                        {{jobs}}
+                    </td>
                 </tr>             
             </tbody>
         </table>

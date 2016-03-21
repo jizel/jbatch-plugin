@@ -17,9 +17,13 @@ package muni.fi.dp.jz.jbatch.batchapi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
+import muni.fi.dp.jz.jbatch.webservice.JobResource;
+import org.apache.log4j.Logger;
 import org.jboss.as.cli.CliInitializationException;
 import org.jboss.as.cli.CommandContext;
 import org.jboss.as.cli.CommandContextFactory;
@@ -36,6 +40,7 @@ import org.json.JSONObject;
 @Stateless
 public class CliBatchManager {
 
+    private static final Logger LOG = Logger.getLogger( CliBatchManager.class.getName() );
     public CliBatchManager() {
     }        
     
@@ -49,16 +54,17 @@ public class CliBatchManager {
     public String getDeploymentInfo(){
        String getInfo = "deployment-info";
        String resp = runCommand(getInfo);
+//       LOG.info("Resp: " + resp);
        JSONObject json = new JSONObject(resp);         
        JSONObject result = json.getJSONObject("result");
        return result.toString();
     }
     
-    public String getBatchDeployments(){
-        List<String> batchDeploymentsList = new ArrayList<>();
+    public String getBatchDeployments(){        
         String allDeployments = getDeploymentInfo();
         JSONObject json = new JSONObject(allDeployments);
-//        String result = json.getJSONObject("result").get;
+//       Go through json object and filter deployments with batch-jberet subsystem only
+        List<String> batchDeploymentsList = new ArrayList<>();
         Iterator<?> keys = json.keys();
         while( keys.hasNext() ) {
             String key = (String)keys.next();
@@ -67,13 +73,35 @@ public class CliBatchManager {
                 batchDeploymentsList.add(key);
             }
         }
-        JSONArray batchDeployments = new JSONArray(batchDeploymentsList);
-        return batchDeployments.toString();
+//        Pair deployments with their available batch jobs
+        Map<String,String> deploymentsJobsMap = new HashMap<>();
+        for(String batchDeployment:batchDeploymentsList){
+            String jobs = getJobsFromDeployment(batchDeployment);
+            deploymentsJobsMap.put(batchDeployment, jobs);
+        }
+        JSONObject jsonMap = new JSONObject(deploymentsJobsMap);
+        return jsonMap.toString();
     }
     
     public String getJobsFromDeployment(String deployment){
         String getJobs = "/deployment=" + deployment + "/subsystem=batch-jberet:read-resource";
-        return runCommand(getJobs);
+        String jobs = runCommand(getJobs);
+        JSONObject jsonJobs = new JSONObject(jobs);
+//        names() returns JSONArray of keys
+        JSONArray resultJobs = jsonJobs.getJSONObject("result").getJSONObject("job").names(); 
+//        JSONArray arrayResult = new JSONArray(resultJobs.toString());
+        return resultJobs.toString();
+//        return arrayResult.toString();
+        
+//        String jobs = runCommand(getJobs);
+//        LOG.info("Jobs string: ");
+//        LOG.info(jobs);
+//        JSONObject jsonJobs = new JSONObject(jobs);
+//        JSONObject resultJobs = jsonJobs.getJSONObject("result").getJSONObject("job");        
+//        
+//        Map<String,String> deploymentJobs = new HashMap<>();
+//        deploymentJobs.put(deployment, resultJobs.toString());
+//        return deploymentJobs;
     }
     
     //Help methods
