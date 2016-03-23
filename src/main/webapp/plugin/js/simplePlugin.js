@@ -157,6 +157,8 @@ var JBatch = (function (JBatch) {
         $scope.selected_steps = "";
         $scope.deployments = "";
         $scope.batchDeployments = "";
+        $scope.selected_depl="";
+        $scope.run_job="";
          
 
         
@@ -232,6 +234,12 @@ var JBatch = (function (JBatch) {
               console.log("Job started: " + jobName + "with id: " + resp.data);
               $scope.getJobCounts();
           });
+        };
+        
+        $scope.setJob2run = function(deploymentName, jobName){
+            $scope.selected_depl = deploymentName;
+            $scope.run_job = jobName;
+            console.log("Job selected: " + jobName + "from: " + deploymentName);
         };
         
         

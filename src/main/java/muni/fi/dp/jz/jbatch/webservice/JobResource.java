@@ -39,6 +39,7 @@ import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 import muni.fi.dp.jz.jbatch.jobservice.JobService;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 
 /**
  *
@@ -165,18 +166,19 @@ public class JobResource {
         return Response.ok(id, MediaType.APPLICATION_JSON).build();
     }
     
-//    @GET
-//    @Consumes(MediaType.TEXT_PLAIN)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("start/{jobname}")
-//    public Response startJob(@PathParam("jobname") String jobName){
-//        String resp = jobService.startJob(jobName);
-//        LOG.info("\n");
-//        LOG.info("Job Started");
-//        LOG.info("Name" + jobName + "Id:" + resp);
-//        LOG.info("\n");
-//        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
-//    }
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("start/{deploymentname}/{jobname}")
+    public Response startJob(@PathParam("deploymentname") String deploymentName, @PathParam("jobname") String jobName){
+        String resp = jobService.startJobCli(deploymentName, jobName);
+        LOG.info("\n");
+        LOG.info("Job Started");
+        LOG.info("Name" + jobName + "Id:" + resp);
+        LOG.info("\n");
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+    }
+    
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("deployments")
@@ -191,7 +193,7 @@ public class JobResource {
     @GET        
     @Path("batchDepl")
     public Response getBatchDeployments(){
-       String resp = jobService.getBatchDeployments();
+       String resp = jobService.getBatchDeploymentsWithJobs();
         LOG.info("\n");
         LOG.info("Batch deployments only requested from server");        
         LOG.info("\n");

@@ -60,7 +60,7 @@ public class CliBatchManager {
        return result.toString();
     }
     
-    public String getBatchDeployments(){        
+    public String getBatchDeploymentsWithJobs(){        
         String allDeployments = getDeploymentInfo();
         JSONObject json = new JSONObject(allDeployments);
 //       Go through json object and filter deployments with batch-jberet subsystem only
@@ -72,37 +72,30 @@ public class CliBatchManager {
             if(subsystems.has("batch-jberet")){
                 batchDeploymentsList.add(key);
             }
-        }
+        }        
 //        Pair deployments with their available batch jobs
-        Map<String,String> deploymentsJobsMap = new HashMap<>();
+        Map<String,JSONArray> deploymentsJobsMap = new HashMap<>();
         for(String batchDeployment:batchDeploymentsList){
             String jobs = getJobsFromDeployment(batchDeployment);
-            deploymentsJobsMap.put(batchDeployment, jobs);
+            JSONArray jsonJobs = new JSONArray(jobs);
+            deploymentsJobsMap.put(batchDeployment, jsonJobs);
         }
-        JSONObject jsonMap = new JSONObject(deploymentsJobsMap);
-        return jsonMap.toString();
+        JSONObject jsonMap = new JSONObject(deploymentsJobsMap);        
+        return jsonMap.toString();            
     }
     
+    
     public String getJobsFromDeployment(String deployment){
-        String getJobs = "/deployment=" + deployment + "/subsystem=batch-jberet:read-resource";
-        String jobs = runCommand(getJobs);
-        JSONObject jsonJobs = new JSONObject(jobs);
+        String deploymentJobs = runCommand("/deployment=" + deployment + "/subsystem=batch-jberet:read-resource");
+        JSONObject jsonJobs = new JSONObject(deploymentJobs);
 //        names() returns JSONArray of keys
-        JSONArray resultJobs = jsonJobs.getJSONObject("result").getJSONObject("job").names(); 
-//        JSONArray arrayResult = new JSONArray(resultJobs.toString());
-        return resultJobs.toString();
-//        return arrayResult.toString();
+        JSONArray jobNamesArray = jsonJobs.getJSONObject("result").getJSONObject("job").names();                
+        JSONObject res = new JSONObject();
+        res.put(deployment, jobNamesArray);
         
-//        String jobs = runCommand(getJobs);
-//        LOG.info("Jobs string: ");
-//        LOG.info(jobs);
-//        JSONObject jsonJobs = new JSONObject(jobs);
-//        JSONObject resultJobs = jsonJobs.getJSONObject("result").getJSONObject("job");        
-//        
-//        Map<String,String> deploymentJobs = new HashMap<>();
-//        deploymentJobs.put(deployment, resultJobs.toString());
-//        return deploymentJobs;
+        return jobNamesArray.toString();
     }
+    
     
     //Help methods
     public String runCommand(String command){

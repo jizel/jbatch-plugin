@@ -1,7 +1,14 @@
 .simple-controller > .row-fluid {
   margin-top: 4em;
   margin-bottom: 4em;
-  /*display: inline-block;*/
+  display: inline-block;
+}
+.row {
+    display: inline-block;
+    margin-left: 40px;    
+}
+table.depl td{
+    border: 1px solid #000;    
 }
 table.jobs {
     text-align: left;

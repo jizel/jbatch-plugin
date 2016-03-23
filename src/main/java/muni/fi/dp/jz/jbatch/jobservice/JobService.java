@@ -25,6 +25,7 @@ import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
+import org.json.JSONArray;
 
 /**
  *
@@ -61,7 +62,7 @@ public interface JobService {
     
     public String getDeploymentInfo();
      
-    public String getBatchDeployments();
+    public String getBatchDeploymentsWithJobs();
     
      public String getJobsFromDeployment(String deployment);
     

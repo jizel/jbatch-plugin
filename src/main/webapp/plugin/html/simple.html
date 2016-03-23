@@ -3,13 +3,11 @@
 
 
     <div class="row-fluid">
-
-        <h3> Deployments with batch-jberet subsystem on server:</h3>  
-        
-        <table>
+        <div class="row">
+        <table class="row depl">
             <thead>
                 <tr>
-                    <th>Deployment Name</th>
+                    <th>Deployments with batch-jberet subsystem</th>
                     <th>Jobs Available</th>
                 </tr>
             </thead>
@@ -17,28 +15,33 @@
                 <tr ng-repeat="(name,jobs) in batchDeployments">
                     <td>{{name}}</td>
                     <td >
-                        {{jobs}}
+                        <ul ng-repeat="(i,jobname) in jobs">
+                            <li ng-click="setJob2run(name, jobname)">{{jobname}}     
+                        </ul>                        
                     </td>
                 </tr>             
             </tbody>
         </table>
+                        
+        <input class="row" type="text" ng-model="run_job"/>                
+        <button ng-click="startJobCli(selected_depl,run_job)">Run Job</button>
+        <p class="row"><b>Be careful</b> - the job name from deployments table does not have to match the xml name of the job which is needed to run it. Check your job xml names!</p>
+        </div>
         
         <br>
-        <button ng-click="startJobCli()">Start RestReader</button>
+        <br>
         <br>
         <table class="jobs">
             <thead>
                 <tr>
                     <th>Job Name</th>
-                    <th>#Instances</th>
-                    <th></th>
+                    <th>#Instances</th>                    
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="(jobname,count) in jobCounts" >
+                <tr ng-repeat="(jobname,count) in jobCounts track by $index" >
                     <td ng-click="setSelectedInstances(jobname)">{{jobname}}</td>
-                    <td class="int">{{count}}</td>
-                    <td class="int"><button ng-click="startJob(jobname)" >Start new</button></td>          
+                    <td class="int">{{count}}</td>                    
                 </tr>               
             </tbody>
         </table>            
@@ -88,7 +91,14 @@
                     <th>Exit&nbsp;Status</th>
                     <th>Start&nbsp;Time</th>
                     <th>End&nbsp;Time</th>
-                    <th>Metrics</th>
+                    <th>ReadCount</th>
+                    <th>ReadSkipCount</th>
+                    <th>WriteSkipCount</th>
+                    <th>CommitCount</th>
+                    <th>WriteCount</th>
+                    <th>FilterCount</th>
+                    <th>RollbackCount</th>
+                    <th>ProcessSkipCount</th>
                 </tr>
             </thead>
             <tbody>
@@ -99,7 +109,8 @@
                     <td class="int">{{step.startTime}}</td>
                     <td class="int">{{step.endTime}}</td>
                     <td ng-repeat="metric in step.metrics" class="metric">
-                        {{metric.type}}&nbsp;=&nbsp;{{metric.value}}
+                        <!--{{metric.type}}&nbsp;=&nbsp;{{metric.value}}-->
+                        {{metric.value}}
                     </td>
                 </tr>              
             </tbody>                
