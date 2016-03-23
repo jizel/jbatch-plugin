@@ -31,15 +31,13 @@ public class BatchExecutionBean {
         long executionId = jobOperator.start(jobName, jobPropertis);
         return executionId;
     }
-    
-    //TODO use jobExecution dto instead of id as param??
+        
     public JobExecution getJobExecution(Long executionId) {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
         JobExecution jobExecution = jobOperator.getJobExecution(executionId);
         return jobExecution;
     }
- 
-    //TODO use jobExecution dto instead of id as param
+     
     public long restartJob(long executionId) {
         Properties jobProperties = new Properties();
         long newExecutionId = 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package muni.fi.dp.jz.jbatch.jobservice;
+package muni.fi.dp.jz.jbatch.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,15 +27,13 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import muni.fi.dp.jz.jbatch.batchapi.BatchExecutionBean;
-import muni.fi.dp.jz.jbatch.cli.CliBatchManagerBean;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
+import muni.fi.dp.jz.jbatch.service.JobService;
 import muni.fi.dp.jz.jbatch.util.JobExecutionToDto;
 import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
 import muni.fi.dp.jz.jbatch.util.StepExecutionToDto;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  *
@@ -46,10 +44,7 @@ public class JobServiceImpl implements JobService{
 
     @EJB
     @Inject
-    BatchExecutionBean batchExecutor;
-    
-    @EJB
-    CliBatchManagerBean cliManager;
+    BatchExecutionBean batchExecutor;        
     
 //    TODO - catch exceptions
     
@@ -164,29 +159,6 @@ public class JobServiceImpl implements JobService{
         return jobInstances;
     }    
 
-    @Override
-    public String startJobCli(String deploymentName, String jobName) {
-          String resp = cliManager.startJobCli(deploymentName,jobName);
-          return resp;
-//        long id = batchExecutor.submitJob(jobName);
-//        return id;
-    }
-    @Override
-     public String getDeploymentInfo(){
-         String resp = cliManager.getDeploymentInfo();
-//         JSONObject json = new JSONObject(resp);         
-//         JSONObject result = json.getJSONObject("result");
-          return resp;
-     }
-     
-    @Override
-     public String getBatchDeploymentsWithJobs(){
-         String resp = cliManager.getBatchDeploymentsWithJobs();
-         return resp;
-     }
-     
-     public String getJobsFromDeployment(String deployment){
-         return cliManager.getJobsFromDeployment(deployment);
-     }
+    
     
 }

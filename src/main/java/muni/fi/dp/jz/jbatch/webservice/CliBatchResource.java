@@ -24,7 +24,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import muni.fi.dp.jz.jbatch.jobservice.JobService;
+import muni.fi.dp.jz.jbatch.service.CliService;
 import org.apache.log4j.Logger;
 
 /**
@@ -38,22 +38,13 @@ import org.apache.log4j.Logger;
 public class CliBatchResource {
     
     @EJB
-    private JobService jobService;
-//    private BatchExecutionBean batchExecutor;
+    private CliService cliService;
     private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );
-    
-//    @GET
-//    @Path("tst")
-//    public Response startJobCli(){
-//        String resp = jobService.startJobCli("not_used_now","str");
-//        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
-//        
-//    }
     
     @GET
     @Path("start/{deployment}/{jobName}")
     public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName){
-        String resp = jobService.startJobCli(deploymentName, jobName);
+        String resp = cliService.startJobCli(deploymentName, jobName);
         LOG.info("Job " + jobName + " started via cli! Server response returned.\n");
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();        
     }            
@@ -61,7 +52,7 @@ public class CliBatchResource {
     @GET        
     @Path("deployments")
     public Response getDeploymentInfo(){
-       String resp = jobService.getDeploymentInfo();        
+       String resp = cliService.getDeploymentInfo();        
         LOG.info("\nDeployments from server requested\n");                
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();
     }
@@ -69,7 +60,7 @@ public class CliBatchResource {
     @GET        
     @Path("batchDepl")
     public Response getBatchDeployments(){
-       String resp = jobService.getBatchDeploymentsWithJobs();        
+       String resp = cliService.getBatchDeploymentsWithJobs();        
         LOG.info("\nBatch deployments only requested from server\n");                
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();
     }
@@ -77,7 +68,7 @@ public class CliBatchResource {
     @GET        
     @Path("deploymentJobs/{deployment}")
     public Response getBatchDeployments(@PathParam("deployment") String deployment){
-       String deploymentJobs = jobService.getJobsFromDeployment(deployment);
+       String deploymentJobs = cliService.getJobsFromDeployment(deployment);
 //       TODO: Take just the job part from resp??
         LOG.info("\nAll possible jobs for deployment" + deployment + "returned via rest\n");                
         return Response.ok(deploymentJobs, MediaType.APPLICATION_JSON).build();

@@ -20,7 +20,7 @@ import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
 import javax.ejb.EJB;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
-import muni.fi.dp.jz.jbatch.jobservice.JobService;
+import muni.fi.dp.jz.jbatch.service.JobService;
 
 /**
  *

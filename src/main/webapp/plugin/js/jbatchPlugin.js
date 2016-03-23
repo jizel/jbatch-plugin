@@ -143,7 +143,7 @@ var JBatch = (function (JBatch) {
 //        return $resource('http://localhost:8080/jbatch-plugin/rest/jobs/names'); // Note the full endpoint address
 //    });
 
-    JBatch.SimpleController = function ($scope, jolokia, $http) {        
+    JBatch.BatchJobController = function ($scope, jolokia, $http) {        
         $scope.jobs = "";                
         $scope.allInstances = "";
         $scope.allInstances2 = "";

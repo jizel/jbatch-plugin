@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
-import muni.fi.dp.jz.jbatch.jobservice.JobService;
+import muni.fi.dp.jz.jbatch.service.JobService;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 
@@ -52,16 +52,8 @@ import org.json.JSONArray;
 public class JobResource {    
     
     @EJB
-    private JobService jobService;
-    private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );    
-        
-    @GET
-    @Path("start/{deployment}/{jobName}")
-    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName){
-        String resp = jobService.startJobCli(deploymentName, jobName);
-        LOG.info("Job " + jobName + " started via cli! Server response returned.\n");
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();        
-    }    
+    private JobService jobService;    
+    private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );                
     
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
@@ -165,47 +157,5 @@ public class JobResource {
         LOG.info("\n");
         return Response.ok(id, MediaType.APPLICATION_JSON).build();
     }
-    
-    @GET
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("start/{deploymentname}/{jobname}")
-    public Response startJob(@PathParam("deploymentname") String deploymentName, @PathParam("jobname") String jobName){
-        String resp = jobService.startJobCli(deploymentName, jobName);
-        LOG.info("\n");
-        LOG.info("Job Started");
-        LOG.info("Name" + jobName + "Id:" + resp);
-        LOG.info("\n");
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
-    }
-    
-    @GET    
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("deployments")
-    public Response getDeploymentInfo(){
-       String resp = jobService.getDeploymentInfo();
-        LOG.info("\n");
-        LOG.info("Deployments from server requested");        
-        LOG.info("\n");
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
-    }
-    
-    @GET        
-    @Path("batchDepl")
-    public Response getBatchDeployments(){
-       String resp = jobService.getBatchDeploymentsWithJobs();
-        LOG.info("\n");
-        LOG.info("Batch deployments only requested from server");        
-        LOG.info("\n");
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
-    }
-    
-    @GET        
-    @Path("deploymentJobs/{deployment}")
-    public Response getBatchDeployments(@PathParam("deployment") String deployment){
-       String deploymentJobs = jobService.getJobsFromDeployment(deployment);
-//       TODO: Take just the job part from resp
-        LOG.info("\nAll possible jobs for deployment" + deployment + "returned via rest\n");                
-        return Response.ok(deploymentJobs, MediaType.APPLICATION_JSON).build();
-    }
+        
 }

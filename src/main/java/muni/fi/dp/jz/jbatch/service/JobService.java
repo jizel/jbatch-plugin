@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package muni.fi.dp.jz.jbatch.jobservice;
+package muni.fi.dp.jz.jbatch.service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
-import javax.batch.runtime.StepExecution;
 import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
-import org.json.JSONArray;
 
 /**
  *
@@ -36,9 +34,7 @@ public interface JobService {
 
     public long submitJob(String jobName);
 
-    public JobExecution getJobExecution(long executionId);
-    
-     public String startJobCli(String deploymentName, String jobName);
+    public JobExecution getJobExecution(long executionId);         
 
     public long restartJob(long executionId);
 
@@ -58,12 +54,6 @@ public interface JobService {
     
     public Map<String,List<JobInstanceDto>> getAllJobInstances();
     
-    public List<JobInstanceDto> getAllInstances();       
-    
-    public String getDeploymentInfo();
-     
-    public String getBatchDeploymentsWithJobs();
-    
-     public String getJobsFromDeployment(String deployment);
+    public List<JobInstanceDto> getAllInstances();               
     
 }
