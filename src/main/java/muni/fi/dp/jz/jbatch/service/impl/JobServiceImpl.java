@@ -159,6 +159,16 @@ public class JobServiceImpl implements JobService{
         return jobInstances;
     }    
 
+    @Override
+    public void stop(long executionId) {
+        batchExecutor.stop(executionId);
+    }
+
+    @Override
+    public void abandon(long executionId) {
+        batchExecutor.abandon(executionId);
+    }
+
     
     
 }

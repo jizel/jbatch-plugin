@@ -54,6 +54,10 @@ public interface JobService {
     
     public Map<String,List<JobInstanceDto>> getAllJobInstances();
     
-    public List<JobInstanceDto> getAllInstances();               
+    public List<JobInstanceDto> getAllInstances();   
+    
+    public void stop(long executionId);
+    
+    public void abandon(long executionId);
     
 }

@@ -8,7 +8,15 @@ package muni.fi.dp.jz.jbatch.batchapi;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import javax.batch.operations.JobExecutionAlreadyCompleteException;
+import javax.batch.operations.JobExecutionIsRunningException;
+import javax.batch.operations.JobExecutionNotMostRecentException;
+import javax.batch.operations.JobExecutionNotRunningException;
 import javax.batch.operations.JobOperator;
+import javax.batch.operations.JobRestartException;
+import javax.batch.operations.JobSecurityException;
+import javax.batch.operations.JobStartException;
+import javax.batch.operations.NoSuchJobExecutionException;
 import javax.batch.runtime.BatchRuntime;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
@@ -23,7 +31,7 @@ import javax.ejb.Stateless;
  */
 
 @Stateless
-public class BatchExecutionBean {
+public class BatchExecutionBean implements JobOperator{
     
     public long submitJob(String jobName) {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
@@ -82,10 +90,44 @@ public class BatchExecutionBean {
     }
     
     //Gets parent instance for job execution not instance by id!!!
-    public JobInstance getJobInstance(Long executionId) {
+    public JobInstance getJobInstance(long executionId) {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
         JobInstance jobInstance = jobOperator.getJobInstance(executionId);
         return jobInstance;
+    }
+    
+    @Override
+    public void stop(long executionId) throws NoSuchJobExecutionException, JobExecutionNotRunningException, JobSecurityException {
+        JobOperator jobOperator = BatchRuntime.getJobOperator();
+        jobOperator.stop(executionId);
+    }
+
+    @Override
+    public void abandon(long executionId) throws NoSuchJobExecutionException, JobExecutionIsRunningException, JobSecurityException {
+        JobOperator jobOperator = BatchRuntime.getJobOperator();
+        jobOperator.abandon(executionId);
+    }    
+
+    @Override
+    public Properties getParameters(long l) throws NoSuchJobExecutionException, JobSecurityException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public long start(String string, Properties prprts) throws JobStartException, JobSecurityException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public long restart(long l, Properties prprts) throws JobExecutionAlreadyCompleteException, NoSuchJobExecutionException, JobExecutionNotMostRecentException, JobRestartException, JobSecurityException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
+
+    @Override
+    public JobExecution getJobExecution(long l) throws NoSuchJobExecutionException, JobSecurityException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

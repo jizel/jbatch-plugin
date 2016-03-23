@@ -146,16 +146,25 @@ public class JobResource {
 	}
     
     @GET
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("restart/{execId}")
     public Response restartJob(@PathParam("execId") long executionId){
-        long id = jobService.restartJob(executionId);
-        LOG.info("\n");
-        LOG.info("Job restarted");
-        LOG.info("Id" + executionId);
-        LOG.info("\n");
+        long id = jobService.restartJob(executionId);        
+        LOG.info("\nJob with id: " + executionId + " restarted\n");        
         return Response.ok(id, MediaType.APPLICATION_JSON).build();
+    }
+    
+    @GET
+    @Path("stop/{execId}")
+    public Response stopExecution(@PathParam("execId") long executionId){
+        jobService.stop(executionId);
+        return Response.ok("Execution with id: " + executionId + " stopped", MediaType.APPLICATION_JSON).build();
+    }
+    
+    @GET
+    @Path("abandon/{execId}")
+    public Response abandonExecution(@PathParam("execId") long executionId){
+        jobService.abandon(executionId);
+        return Response.ok("Execution with id: " + executionId + " abandoned", MediaType.APPLICATION_JSON).build();
     }
         
 }
