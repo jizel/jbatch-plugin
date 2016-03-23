@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package muni.fi.dp.jz.jbatch.batchapi;
+package muni.fi.dp.jz.jbatch.cli;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,10 +38,10 @@ import org.json.JSONObject;
  * @author Zorz
  */
 @Stateless
-public class CliBatchManager {
+public class CliBatchManagerBean {
 
-    private static final Logger LOG = Logger.getLogger( CliBatchManager.class.getName() );
-    public CliBatchManager() {
+    private static final Logger LOG = Logger.getLogger(CliBatchManagerBean.class.getName() );
+    public CliBatchManagerBean() {
     }        
     
     public String startJobCli(String deploymentName, String jobName) {

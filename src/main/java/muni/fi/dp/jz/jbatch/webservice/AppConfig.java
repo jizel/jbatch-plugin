@@ -32,6 +32,6 @@ public class AppConfig extends Application{
 
     @Override
     public Set<Class<?>> getClasses() {
-        return new HashSet<Class<?>>(Arrays.asList(JobResource.class));
+        return new HashSet<Class<?>>(Arrays.asList(JobResource.class,CliBatchResource.class));
     }
 }

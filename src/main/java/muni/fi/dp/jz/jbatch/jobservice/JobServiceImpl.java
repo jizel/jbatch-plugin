@@ -27,7 +27,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import muni.fi.dp.jz.jbatch.batchapi.BatchExecutionBean;
-import muni.fi.dp.jz.jbatch.batchapi.CliBatchManager;
+import muni.fi.dp.jz.jbatch.cli.CliBatchManagerBean;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
@@ -49,7 +49,7 @@ public class JobServiceImpl implements JobService{
     BatchExecutionBean batchExecutor;
     
     @EJB
-    CliBatchManager cliManager;
+    CliBatchManagerBean cliManager;
     
 //    TODO - catch exceptions
     

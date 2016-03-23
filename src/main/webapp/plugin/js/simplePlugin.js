@@ -174,13 +174,13 @@ var JBatch = (function (JBatch) {
         };
         
         $scope.getDeployments = function() {
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/deployments/").then(function(resp){
+            $http.get("http://localhost:8080/jbatch-plugin/rest/cli/deployments/").then(function(resp){
                 $scope.deployments = resp.data;
             });
         };
         
         $scope.getBatchDeployments = function() {
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/batchDepl/").then(function(resp){
+            $http.get("http://localhost:8080/jbatch-plugin/rest/cli/batchDepl/").then(function(resp){
                 $scope.batchDeployments = resp.data;
             });
         };
@@ -230,7 +230,7 @@ var JBatch = (function (JBatch) {
         };
         
         $scope.startJobCli = function(deploymentName, jobName) {
-          $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/start/" + deploymentName +"/" + jobName).then(function(resp){
+          $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName +"/" + jobName).then(function(resp){
               console.log("Job started: " + jobName + "with id: " + resp.data);
               $scope.getJobCounts();
           });
