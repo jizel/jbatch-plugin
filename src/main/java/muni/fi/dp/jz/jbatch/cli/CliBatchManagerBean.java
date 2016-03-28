@@ -44,8 +44,7 @@ public class CliBatchManagerBean {
     public CliBatchManagerBean() {
     }        
     
-    public String startJobCli(String deploymentName, String jobName) {
-	String runJob = "/deployment=restReader.war/subsystem=batch-jberet:start-job(job-xml-name=restReader)";
+    public String startJobCli(String deploymentName, String jobName) {	
         String startJobCli = "/deployment=" + deploymentName + "/subsystem=batch-jberet:start-job(job-xml-name=" + jobName + ")";
 //        TODO - if runCommand == null throw exception and return null;
         return runCommand(startJobCli);

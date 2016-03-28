@@ -27,11 +27,11 @@ import javax.ejb.Stateless;
  * @author Zorz
  * 
  * Service layer bean for batch job operations
- * Create interface??
+ * Implements JSR352 JobOperator methods
  */
 
 @Stateless
-public class BatchExecutionBean implements JobOperator{
+public class BatchExecutionBean { //implements JobOperator{ - causes weldClassInspector Exception when deploying
     
     public long submitJob(String jobName) {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
@@ -96,38 +96,37 @@ public class BatchExecutionBean implements JobOperator{
         return jobInstance;
     }
     
-    @Override
+    
     public void stop(long executionId) throws NoSuchJobExecutionException, JobExecutionNotRunningException, JobSecurityException {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
         jobOperator.stop(executionId);
     }
-
-    @Override
+    
     public void abandon(long executionId) throws NoSuchJobExecutionException, JobExecutionIsRunningException, JobSecurityException {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
         jobOperator.abandon(executionId);
     }    
 
-    @Override
-    public Properties getParameters(long l) throws NoSuchJobExecutionException, JobSecurityException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    @Override
+//    public Properties getParameters(long l) throws NoSuchJobExecutionException, JobSecurityException {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+//
+//    @Override
+//    public long start(String string, Properties prprts) throws JobStartException, JobSecurityException {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
+//
+//    @Override
+//    public long restart(long l, Properties prprts) throws JobExecutionAlreadyCompleteException, NoSuchJobExecutionException, JobExecutionNotMostRecentException, JobRestartException, JobSecurityException {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }    
+//
+//    @Override
+//    public JobExecution getJobExecution(long l) throws NoSuchJobExecutionException, JobSecurityException {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 
-    @Override
-    public long start(String string, Properties prprts) throws JobStartException, JobSecurityException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public long restart(long l, Properties prprts) throws JobExecutionAlreadyCompleteException, NoSuchJobExecutionException, JobExecutionNotMostRecentException, JobRestartException, JobSecurityException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-
-    @Override
-    public JobExecution getJobExecution(long l) throws NoSuchJobExecutionException, JobSecurityException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
     
 }

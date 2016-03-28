@@ -157,6 +157,7 @@ public class JobResource {
     @Path("stop/{execId}")
     public Response stopExecution(@PathParam("execId") long executionId){
         jobService.stop(executionId);
+        LOG.info("\nJob with id: " + executionId + " stopped\n"); 
         return Response.ok("Execution with id: " + executionId + " stopped", MediaType.APPLICATION_JSON).build();
     }
     
@@ -164,6 +165,7 @@ public class JobResource {
     @Path("abandon/{execId}")
     public Response abandonExecution(@PathParam("execId") long executionId){
         jobService.abandon(executionId);
+        LOG.info("\nJob with id: " + executionId + " abandoned\n"); 
         return Response.ok("Execution with id: " + executionId + " abandoned", MediaType.APPLICATION_JSON).build();
     }
         

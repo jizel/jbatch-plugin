@@ -61,14 +61,14 @@
             </tbody>                
         </table>   
         
-        <table class="jobs" >
+        <table class="jobs" ng-table="executionsTable">
             <thead>
                 <tr>
                     <th>Job Execution ID</th>               
                     <th>Batch Status</th>
                     <th>Exit Status</th>
                     <th>Parameters</th>
-                    <th></th>
+                    <th>Action</th>                    
                 </tr>
             </thead>
             <tbody>
@@ -76,7 +76,14 @@
                     <td>{{execution.jobExecutionId}}</td>
                     <td>{{execution.batchStatus}}</td>
                     <td>{{execution.exitStatus}}</td>
-                    <td>{{execution.jobParameters}}</td>                    
+                    <td>{{execution.jobParameters}}</td>
+                    <td>
+                        <select ng-name="actionSelect" ng-model="action">
+                            <option value="stopExecution" ng-click="stopExecution(execution.jobExecutionId)">Stop</option>
+                            <option value="restartExecution" ng-change="restartExecution(execution.jobExecutionId)">Restart</option>
+                            <option value="abandonExecution" ng-change="abandonExecution(execution.jobExecutionId)">Abandon</option>
+                        </select>
+                    </td>
                 </tr>              
             </tbody>                
         </table>  

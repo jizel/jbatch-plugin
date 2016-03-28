@@ -159,7 +159,8 @@ var JBatch = (function (JBatch) {
         $scope.batchDeployments = "";
         $scope.selected_depl="";
         $scope.run_job="";
-         
+        $scope.actions=["restart","stop","abandon"];  
+        $scope.action="";         
 
         
 //        Functions
@@ -242,6 +243,19 @@ var JBatch = (function (JBatch) {
             console.log("Job selected: " + jobName + "from: " + deploymentName);
         };
         
+        $scope.stopExecution = function(executioId){
+             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/stop/" + executioId).then(function(resp){
+              console.log("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
+              $scope.executionsTable.reload();
+          });
+        };
+        
+        $scope.abandonExecution = function(executioId){
+             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/abandon/" + executioId).then(function(resp){
+              console.log("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
+              $scope.executionsTable.reload();
+          });
+        };
         
         //        Init
         $scope.getJobCounts();
@@ -261,7 +275,7 @@ var JBatch = (function (JBatch) {
 //        });                
 
         // register a watch with jolokia on this mbean to
-        // get updated metrics
+        // get updated metrics        
         Core.register(jolokia, $scope, {
             type: 'read', mbean: 'java.lang:type=OperatingSystem',
             arguments: []

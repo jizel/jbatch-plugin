@@ -43,7 +43,7 @@ import muni.fi.dp.jz.jbatch.util.StepExecutionToDto;
 public class JobServiceImpl implements JobService{
 
     @EJB
-    @Inject
+//    @Inject
     BatchExecutionBean batchExecutor;        
     
 //    TODO - catch exceptions
