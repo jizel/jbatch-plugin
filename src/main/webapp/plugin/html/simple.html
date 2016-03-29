@@ -78,12 +78,11 @@
                     <td>{{execution.exitStatus}}</td>
                     <td>{{execution.jobParameters}}</td>
                     <td>
-                        <select ng-name="actionSelect" ng-model="action">
-                            <option value="stopExecution" ng-click="stopExecution(execution.jobExecutionId)">Stop</option>
-                            <option value="restartExecution" ng-change="restartExecution(execution.jobExecutionId)">Restart</option>
-                            <option value="abandonExecution" ng-change="abandonExecution(execution.jobExecutionId)">Abandon</option>
+                        <select ng-name="actionSelect" ng-options="action for action in actions" ng-model="selectedAction" ng-change="actionCalledOnExec(execution.jobExecutionId, selectedAction)"> 
+                            <!--<option ng-repeat="action in actions">{{action}}</option>-->                           
                         </select>
                     </td>
+                    <td>{{selectedAction}}</td>
                 </tr>              
             </tbody>                
         </table>  

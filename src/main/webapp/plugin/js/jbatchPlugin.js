@@ -159,8 +159,8 @@ var JBatch = (function (JBatch) {
         $scope.batchDeployments = "";
         $scope.selected_depl="";
         $scope.run_job="";
-        $scope.actions=["restart","stop","abandon"];  
-        $scope.action="";         
+        $scope.actions=['restart','stop','abandon'];  
+        $scope.selectedAction = {};         
 
         
 //        Functions
@@ -190,7 +190,7 @@ var JBatch = (function (JBatch) {
            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname).then(function (resp) {
            $scope.selected_instances = resp.data;
            $scope.selected_jobname = jobname;
-           console.log($scope.selected_instances);
+           JBatch.log.info($scope.selected_instances);
         });
         };
         
@@ -198,7 +198,7 @@ var JBatch = (function (JBatch) {
            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + $scope.selected_jobname + "/" + jobInstanceId + "/" + "executions").then(function (resp) {
            $scope.selected_executions = resp.data;
            $scope.selected_instance_id = jobInstanceId;
-           console.log($scope.selected_executions);
+//           JBatch.log.info($scope.selected_executions);
          });
         };
         
@@ -214,14 +214,14 @@ var JBatch = (function (JBatch) {
            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/steps/" + execId).then(function (resp) {
            $scope.selected_steps = resp.data;
            $scope.selected_execution_id = execId;
-           console.log($scope.selected_executions);
+//           JBatch.log.info("Steps selected for execution no: " + execId);
         });
         };
         
         $scope.restartExecution = function(execId){
              $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/restart/" + execId).then(function (resp) {
-                 console.log("Restarting execution #" + execId);
-                 console.log(resp);
+                 JBatch.log.info("Restarting execution #" + execId);
+                 JBatch.log.info(resp);
              });
         };
         $scope.restartLastExecutionOf = function(instanceId){
@@ -232,7 +232,7 @@ var JBatch = (function (JBatch) {
         
         $scope.startJobCli = function(deploymentName, jobName) {
           $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName +"/" + jobName).then(function(resp){
-              console.log("Job started: " + jobName + "with id: " + resp.data);
+              JBatch.log.info("Job started: " + jobName + "with id: " + resp.data);
               $scope.getJobCounts();
           });
         };
@@ -240,21 +240,43 @@ var JBatch = (function (JBatch) {
         $scope.setJob2run = function(deploymentName, jobName){
             $scope.selected_depl = deploymentName;
             $scope.run_job = jobName;
-            console.log("Job selected: " + jobName + "from: " + deploymentName);
+            JBatch.log.info("Job selected: " + jobName + "from: " + deploymentName);
         };
         
         $scope.stopExecution = function(executioId){
              $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/stop/" + executioId).then(function(resp){
-              console.log("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
+              JBatch.log.info("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
               $scope.executionsTable.reload();
           });
         };
         
         $scope.abandonExecution = function(executioId){
              $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/abandon/" + executioId).then(function(resp){
-              console.log("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
+              JBatch.log.info("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
               $scope.executionsTable.reload();
           });
+        };
+        
+        $scope.actionCalledOnExec = function(executionId, action){
+//            $scope.selectedAaction = action;
+            JBatch.log.info("Action passed type: " + Object.prototype.toString.call(action));
+            JBatch.log.info("compare: " + action.localeCompare('Stop'));
+            JBatch.log.info("compare2: " + action.toString() === 'Stop');
+            JBatch.log.info("action: " + action.toString());
+            JBatch.log.info("Stop: " + 'Stop');
+            if(action.toString() === 'Stop'){
+                $scope.stopExecution(executionId);
+                JBatch.log.info("Stopping execution with id: " + executionId);
+            }
+            else if(action === "Restart"){
+                $scope.restartExecution(executionId);
+            }
+            else if(action === "Abandon"){
+                $scope.abandonExecution(executionId);
+            }
+            else{
+                JBatch.log.info("Invalid action: " + action);
+            }
         };
         
         //        Init
