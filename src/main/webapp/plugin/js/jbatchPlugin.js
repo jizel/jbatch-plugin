@@ -254,24 +254,19 @@ var JBatch = (function (JBatch) {
              $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/abandon/" + executioId).then(function(resp){
               JBatch.log.info("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
               $scope.executionsTable.reload();
+              $scope.refresh();
+              alert("Abandoned");
           });
         };
         
         $scope.actionCalledOnExec = function(executionId, action){
-//            $scope.selectedAaction = action;
-            JBatch.log.info("Action passed type: " + Object.prototype.toString.call(action));
-            JBatch.log.info("compare: " + action.localeCompare('Stop'));
-            JBatch.log.info("compare2: " + action.toString() === 'Stop');
-            JBatch.log.info("action: " + action.toString());
-            JBatch.log.info("Stop: " + 'Stop');
-            if(action.toString() === 'Stop'){
-                $scope.stopExecution(executionId);
-                JBatch.log.info("Stopping execution with id: " + executionId);
+            if(action === "stop"){
+                $scope.stopExecution(executionId);                
             }
-            else if(action === "Restart"){
+            else if(action === "restart"){
                 $scope.restartExecution(executionId);
             }
-            else if(action === "Abandon"){
+            else if(action === "abandon"){
                 $scope.abandonExecution(executionId);
             }
             else{

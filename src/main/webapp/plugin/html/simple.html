@@ -56,12 +56,12 @@
             <tbody>
                 <tr ng-repeat="instance in selected_instances|orderBy: '-jobInstanceId'" ng-click="setSelectedExecutions(instance.jobInstanceId)" >
                     <td class="int">ID: {{instance.jobInstanceId}}</td>
-                    <td><button ng-value="Restart" ng-click="restartExecution(selected_executions[selected_executions.length-1].jobExecutionId); setSelectedExecutions(instance.jobInstanceId)">Restart last</button></td>                    
+                    <td><button disabled="true" ng-value="Restart" ng-click="restartExecution(selected_executions[selected_executions.length-1].jobExecutionId); setSelectedExecutions(instance.jobInstanceId)">Restart last</button></td>                    
                 </tr>
             </tbody>                
         </table>   
         
-        <table class="jobs" ng-table="executionsTable">
+        <table class="jobs" ng-table="executionsTable" ng-model="executionsTable">
             <thead>
                 <tr>
                     <th>Job Execution ID</th>               
@@ -81,8 +81,7 @@
                         <select ng-name="actionSelect" ng-options="action for action in actions" ng-model="selectedAction" ng-change="actionCalledOnExec(execution.jobExecutionId, selectedAction)"> 
                             <!--<option ng-repeat="action in actions">{{action}}</option>-->                           
                         </select>
-                    </td>
-                    <td>{{selectedAction}}</td>
+                    </td>                    
                 </tr>              
             </tbody>                
         </table>  
