@@ -63,10 +63,7 @@ var JBatch = (function (JBatch) {
                         });
             });
             
-//            Doesn't seem to help
-//    JBatch.module.factory('Entry', function ($resource) {
-//        return $resource('http://localhost:8080/jbatch-plugin/rest/jobs/names'); // Note the full endpoint address
-//    });
+
     /**
      * Here we define any initialization to be done when this angular
      * module is bootstrapped.  In here we do a number of things:
@@ -160,7 +157,8 @@ var JBatch = (function (JBatch) {
         $scope.selected_depl="";
         $scope.run_job="";
         $scope.actions=['restart','stop','abandon'];  
-        $scope.selectedAction = {};         
+        $scope.selectedAction = {};  
+        $scope.response_data = new String ("");
 
         
 //        Functions
@@ -190,7 +188,7 @@ var JBatch = (function (JBatch) {
            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname).then(function (resp) {
            $scope.selected_instances = resp.data;
            $scope.selected_jobname = jobname;
-           JBatch.log.info($scope.selected_instances);
+//           JBatch.log.info($scope.selected_instances);
         });
         };
         
@@ -218,12 +216,15 @@ var JBatch = (function (JBatch) {
         });
         };
         
-        $scope.restartExecution = function(execId){
+        $scope.restartExecution = function(execId){            
              $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/restart/" + execId).then(function (resp) {
-                 JBatch.log.info("Restarting execution #" + execId);
-                 JBatch.log.info(resp);
+                 $scope.response_data = new String (resp.data); 
+                 JBatch.log.info("Restarting execution #" + execId + ", getting id: " + resp.data);                  
              });
+//             JBatch.log.warn($scope.response_data);
+//             $scope.response_data = "";
         };
+        
         $scope.restartLastExecutionOf = function(instanceId){
            $scope.getLastExecution(instanceId);
            $scope.restartExecution($scope.last_execution_id);
@@ -245,18 +246,19 @@ var JBatch = (function (JBatch) {
         
         $scope.stopExecution = function(executioId){
              $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/stop/" + executioId).then(function(resp){
-              JBatch.log.info("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
-              $scope.executionsTable.reload();
+              JBatch.log.info("Execution with id: " + executioId + " was stopped. Result: " + resp.data);             
           });
         };
         
         $scope.abandonExecution = function(executioId){
              $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/abandon/" + executioId).then(function(resp){
               JBatch.log.info("Execution with id: " + executioId + " was stopped. Result: " + resp.data);
-              $scope.executionsTable.reload();
-              $scope.refresh();
-              alert("Abandoned");
+//                          
           });
+//          $scope.executionsTable.reload();
+          $scope.refresh;
+//          JBatch.log.warn("Waringin!");
+          JBatch.log.error("Error");
         };
         
         $scope.actionCalledOnExec = function(executionId, action){
@@ -282,7 +284,15 @@ var JBatch = (function (JBatch) {
         
         
         
-        //test methods                     
+        //test methods        
+//        function renderAndLog(){            
+//        }  
+        
+        $scope.$watch('response_data', function(){
+//            JBatch.log.warn("value changed from: " + oldVal + " to: " + newVal);
+            JBatch.log.warn("Resp cahnged: " + $scope.response_data);
+        });
+        
 //        $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/tst").then(function (resp) {
 //           $scope.allInstances = resp.data; 
 //        });
