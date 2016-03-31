@@ -7,6 +7,9 @@
     display: inline-block;
     margin-left: 40px;    
 }
+.active {
+    background-color: greenyellow;
+}
 table.depl td{
     border: 1px solid #000;    
 }
@@ -19,6 +22,7 @@ table.jobs {
     overflow-y: scroll;
 }
 table.jobs tr:nth-child(even) {background: lightblue}
+table.jobs tr.active:nth-child(even) {background: greenyellow}
 table.jobs tr:hover {background-color: aqua}
 table.jobs th {
     text-align: center;
