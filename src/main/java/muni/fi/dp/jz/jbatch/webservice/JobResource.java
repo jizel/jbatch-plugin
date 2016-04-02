@@ -37,6 +37,7 @@ import javax.ws.rs.core.Response;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
+import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 import muni.fi.dp.jz.jbatch.service.JobService;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -59,23 +60,35 @@ public class JobResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("names")
     public Response getJobNames() {
+        try {
 		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
-                return Response.ok(jobNameList, MediaType.APPLICATION_JSON).build();		                   
+                return Response.ok(jobNameList, MediaType.APPLICATION_JSON).build();
+        }catch(BatchExecutionException e){
+            LOG.error("Exception when calling job service" + e);
+            return Response.serverError().build();
+        }
 	}
     
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("jobexec/{execid}")
-    public Response getJobExecution(@PathParam("execid") long executionId){
+    public Response getJobExecution(@PathParam("execid") Long executionId){
+        if(executionId == null){
+            return Response.serverError().entity("Execution id is empty").build();
+        }
         try{
 		JobExecution jobExec =  jobService.getJobExecution(executionId);
                 return Response.ok(jobExec.toString(), MediaType.APPLICATION_JSON).build();
 //                TODO - don't catch the low level exception, do that in service or batchExec class'
-        }catch(EJBTransactionRolledbackException ex){
-//            TODO - what to do here? :-)
-            LOG.error("Exception" + ex);
-            System.out.println("exceptiona");
-           return null; 
+//        }catch(EJBTransactionRolledbackException ex){
+////            TODO - what to do here? :-)
+//            LOG.error("Exception" + ex);
+//            System.out.println("exceptiona");
+//           return null; 
+//        }
+            }catch(BatchExecutionException e){
+            LOG.error("Exception when calling job service" + e);
+            return Response.serverError().build();
         }
 	}
     
@@ -83,15 +96,18 @@ public class JobResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("count/{jobname}")
     public Response getJobInstanceCount(@PathParam("jobname") String jobName){
+         if(jobName == null){
+            return Response.serverError().entity("Jobname is empty").build();
+        }
         try{
 		int instanceCount =  jobService.getJobInstanceCount(jobName);
                 return Response.ok(instanceCount, MediaType.APPLICATION_JSON).build();
-//                TODO - don't catch the low level exception, do that in service or batchExec class'
         }catch(EJBTransactionRolledbackException ex){
-//            TODO - what to do here? :-)
-            LOG.error("Exception" + ex);
-            System.out.println("exceptiona");
-           return null; 
+            LOG.error("Transaction rollback exception" + ex);
+           return Response.serverError().build();
+        }catch (BatchExecutionException e){
+            LOG.error("Exception when calling job service" + e);
+            return Response.serverError().build();
         }
 	}
     
@@ -99,74 +115,128 @@ public class JobResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("counts")
     public Response getJobCounts() {
+        try{
 		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
                 Map<String, Integer> jobCounts = new HashMap<>();
                 for (String job:jobNameList) jobCounts.put(job,jobService.getJobInstanceCount(job));
-                return Response.ok(jobCounts, MediaType.APPLICATION_JSON).build();		                   
+                return Response.ok(jobCounts, MediaType.APPLICATION_JSON).build();
+         }catch (BatchExecutionException e){
+         LOG.error("Exception when calling job service" + e);
+         return Response.serverError().build();
+        }
 	}
     
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}")
     public Response getJobInstances(@PathParam("jobname") String jobName) {
-	List<JobInstanceDto> jobInstances = jobService.getJobInstances(jobName);
-//        This all works and results in standalone/log/server.log
-        System.out.println("Instances: ");
-        System.out.println(jobInstances);        
-        LOG.error("hajajaj");
-        LOG.info(jobName);
-        LOG.warn("Warning!!!");
-        return Response.ok(jobInstances, MediaType.APPLICATION_JSON).build();		                   
+        if(jobName == null){
+            return Response.serverError().entity("Jobname is empty").build();
+        }
+        try {
+            List<JobInstanceDto> jobInstances = jobService.getJobInstances(jobName);        
+            return Response.ok(jobInstances, MediaType.APPLICATION_JSON).build();		                   
+        }catch (BatchExecutionException e){
+         LOG.error("Exception when calling job service" + e);
+         return Response.serverError().build();
+        }
 	}
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("inst/{jobname}/{instId}/executions")
-    public Response getJobExecutionsFromInstance(@PathParam("instId") long instanceId, @PathParam("jobname") String jobName){
-        List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
-        return Response.ok(jobExecutions, MediaType.APPLICATION_JSON).build();
+    @Path("inst/{jobname}/{instId}/executions")    
+    public Response getJobExecutionsFromInstance(@PathParam("instId") Long instanceId, @PathParam("jobname") String jobName){
+        if(jobName == null || instanceId == null){
+            return Response.serverError().entity("Job name or instance id is empty").build();
+        }
+        try {
+            List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
+            return Response.ok(jobExecutions, MediaType.APPLICATION_JSON).build();
+        }catch (BatchExecutionException e){
+         LOG.error("Exception when calling job service" + e);
+         return Response.serverError().build();
+        }
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}/{instId}/executions/last")
-    public Response getLastJobExecutionFromInstance(@PathParam("instId") long instanceId, @PathParam("jobname") String jobName){
-        List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
-        JobExecutionDto lastInstanceExecution = jobExecutions.get(jobExecutions.size()-1);
-        return Response.ok(lastInstanceExecution.getJobExecutionId(), MediaType.APPLICATION_JSON).build();
+    public Response getLastJobExecutionFromInstance(@PathParam("instId") Long instanceId, @PathParam("jobname") String jobName){
+        if(jobName == null || instanceId == null){
+            return Response.serverError().entity("Job name or instance id is empty").build();
+        }
+        try {
+            List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
+            JobExecutionDto lastInstanceExecution = jobExecutions.get(jobExecutions.size()-1);
+            return Response.ok(lastInstanceExecution.getJobExecutionId(), MediaType.APPLICATION_JSON).build();
+        }catch (BatchExecutionException e){
+         LOG.error("Exception when calling job service" + e);
+         return Response.serverError().build();
+        }
     }
     
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("steps/{execId}")
-    public Response getStepExecutions(@PathParam("execId") long executionId) {
-	List<StepExecutionDto> stepExecutions = jobService.getStepExecutions(executionId);
-//        This all works and results in standalone/log/server.log        
-        return Response.ok(stepExecutions, MediaType.APPLICATION_JSON).build();		                   
+    public Response getStepExecutions(@PathParam("execId") Long executionId) {
+        if(executionId == null){
+            return Response.serverError().entity("Execution id is empty").build();
+        }
+        try {
+            List<StepExecutionDto> stepExecutions = jobService.getStepExecutions(executionId);      
+            return Response.ok(stepExecutions, MediaType.APPLICATION_JSON).build();		                   
+         }catch (BatchExecutionException e){
+         LOG.error("Exception when calling job service" + e);
+         return Response.serverError().build();
+        } 
 	}
     
     @GET
     @Path("restart/{execId}")
-    public Response restartJob(@PathParam("execId") long executionId){
-        long id = jobService.restartJob(executionId);        
-        LOG.info("\nJob with id: " + executionId + " restarted\n");        
-        return Response.ok(id, MediaType.APPLICATION_JSON).build();
+    public Response restartJob(@PathParam("execId") Long executionId){
+        if(executionId == null){
+            return Response.serverError().entity("Execution id is empty").build();
+        }
+        try {
+            long id = jobService.restartJob(executionId);                
+            LOG.info("\nJob with id: " + executionId + " restarted\n");        
+            return Response.ok(id, MediaType.APPLICATION_JSON).build();
+        }catch (BatchExecutionException e){
+         LOG.error("Exception when calling job service" + e);
+         return Response.serverError().build();
+        }
     }
     
     @GET
     @Path("stop/{execId}")
-    public Response stopExecution(@PathParam("execId") long executionId){
-        jobService.stop(executionId);
-        LOG.info("\nJob with id: " + executionId + " stopped\n"); 
-        return Response.ok("Execution with id: " + executionId + " stopped", MediaType.APPLICATION_JSON).build();
+    public Response stopExecution(@PathParam("execId") Long executionId){
+        if(executionId == null){
+            return Response.serverError().entity("Execution id is empty").build();
+        }
+        try {
+            jobService.stop(executionId);
+            LOG.info("\nJob with id: " + executionId + " stopped\n"); 
+            return Response.ok("Execution with id: " + executionId + " stopped", MediaType.APPLICATION_JSON).build();
+         }catch (BatchExecutionException e){
+         LOG.error("Exception when calling job service" + e);
+         return Response.serverError().build();
+        }
     }
     
     @GET
     @Path("abandon/{execId}")
-    public Response abandonExecution(@PathParam("execId") long executionId){
-        jobService.abandon(executionId);
-        LOG.info("\nJob with id: " + executionId + " abandoned\n"); 
-        return Response.ok("Execution with id: " + executionId + " abandoned", MediaType.APPLICATION_JSON).build();
-    }
+    public Response abandonExecution(@PathParam("execId") Long executionId){
+        if(executionId == null){
+            return Response.serverError().entity("Execution id is empty").build();
+        }
+        try {
+            jobService.abandon(executionId);
+            LOG.info("\nJob with id: " + executionId + " abandoned\n"); 
+            return Response.ok("Execution with id: " + executionId + " abandoned", MediaType.APPLICATION_JSON).build();
+         }catch (BatchExecutionException e){
+         LOG.error("Exception when calling job service" + e);
+         return Response.serverError().build();
+        }
+        }
         
 }

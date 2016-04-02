@@ -30,6 +30,7 @@ import muni.fi.dp.jz.jbatch.batchapi.BatchExecutionBean;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
+import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 import muni.fi.dp.jz.jbatch.service.JobService;
 import muni.fi.dp.jz.jbatch.util.JobExecutionToDto;
 import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
@@ -49,37 +50,37 @@ public class JobServiceImpl implements JobService{
 //    TODO - catch exceptions
     
     @Override
-    public long submitJob(String jobName) {
+    public long submitJob(String jobName) throws BatchExecutionException{
         return batchExecutor.submitJob(jobName);
     }
 
     @Override
-    public JobExecution getJobExecution(long executionId) {
+    public JobExecution getJobExecution(long executionId) throws BatchExecutionException {
         return batchExecutor.getJobExecution(executionId);
     }
 
     @Override
-    public long restartJob(long executionId) {
+    public long restartJob(long executionId) throws BatchExecutionException {
         return batchExecutor.restartJob(executionId);
     }
 
     @Override
-    public Set<String> getJobNames() {
+    public Set<String> getJobNames() throws BatchExecutionException {
         return batchExecutor.getJobNames();
     }
 
     @Override
-    public int getJobInstanceCount(String jobName) {
+    public int getJobInstanceCount(String jobName) throws BatchExecutionException {
         return batchExecutor.getJobInstanceCount(jobName);
     }
 
     @Override
-    public List<Long> getRunningExecutions(String jobName) {
+    public List<Long> getRunningExecutions(String jobName) throws BatchExecutionException{
         return batchExecutor.getRunningExecutions(jobName);
     }
 
     @Override
-    public List<JobInstanceDto> getJobInstances(String jobName) {
+    public List<JobInstanceDto> getJobInstances(String jobName) throws BatchExecutionException{
         List<JobInstance> jobInstances = batchExecutor.getJobInstances(jobName);
         List<JobInstanceDto> jobInstanceDtos = new ArrayList<>();
         for(JobInstance jobInstance:jobInstances){
@@ -89,7 +90,7 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public List<JobExecutionDto> getJobExecutions(JobInstance instance) {
+    public List<JobExecutionDto> getJobExecutions(JobInstance instance) throws BatchExecutionException{
         //TODO: implement with Dtos and catch NoSuchJobException
 //        List<JobInstance> jobInstances = batchExecutor.getJobInstances(instance.getJobName(), (int) instance.getJobInstanceId(), 1);        
 //        List<JobExecution> executions = batchExecutor.getJobExecutions(jobInstances.get(0));
@@ -102,7 +103,7 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public List<JobExecutionDto> getJobExecutions(String jobName, long instanceId) {
+    public List<JobExecutionDto> getJobExecutions(String jobName, long instanceId) throws BatchExecutionException{
 //TODO: make this work with dtos (after previous method!)
 //       List<JobInstanceDto> allJobInstanceDtos = getJobInstances(jobName);       
 //       JobInstanceDto jobInstance = null;
@@ -123,7 +124,7 @@ public class JobServiceImpl implements JobService{
     }
     
     @Override
-    public List<StepExecutionDto> getStepExecutions(long jobExecutionId) {
+    public List<StepExecutionDto> getStepExecutions(long jobExecutionId) throws BatchExecutionException{
         List<StepExecutionDto> stepExecutionDtos = new ArrayList<>();        
         List<StepExecution> stepExecutions = batchExecutor.getStepExecutions(jobExecutionId);
         for(StepExecution stepExec:stepExecutions){
@@ -133,7 +134,7 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public Map<String,List<JobInstanceDto>> getAllJobInstances() {
+    public Map<String,List<JobInstanceDto>> getAllJobInstances() throws BatchExecutionException{
         Set<String> allJobs = getJobNames();
         
         Map<String,List<JobInstanceDto>> allJobInstances = new HashMap<>();
@@ -149,7 +150,7 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public List<JobInstanceDto> getAllInstances() {
+    public List<JobInstanceDto> getAllInstances() throws BatchExecutionException{
        Set<String> allJobs = getJobNames();  
        List<JobInstanceDto> jobInstances = new ArrayList<>();
         for(String job:allJobs){
@@ -160,12 +161,12 @@ public class JobServiceImpl implements JobService{
     }    
 
     @Override
-    public void stop(long executionId) {
+    public void stop(long executionId) throws BatchExecutionException{
         batchExecutor.stop(executionId);
     }
 
     @Override
-    public void abandon(long executionId) {
+    public void abandon(long executionId) throws BatchExecutionException{
         batchExecutor.abandon(executionId);
     }
 

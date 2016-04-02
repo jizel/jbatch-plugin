@@ -50,17 +50,17 @@
         </dependency>
         
         <dependency>
-                <groupId>org.wildfly.core</groupId>
-                <artifactId>wildfly-cli</artifactId>
-                <version>2.0.10.Final</version>            
-<!--                <exclusions>
-                    <exclusion>
-                        <artifactId>jconsole</artifactId>
-                        <groupId>sun.jdk</groupId>
-                    </exclusion>
-                </exclusions>-->
-                <scope>provided</scope>
-            </dependency>   
+            <groupId>org.wildfly.core</groupId>
+            <artifactId>wildfly-cli</artifactId>
+            <version>2.0.10.Final</version>            
+            <!--                <exclusions>
+                <exclusion>
+                    <artifactId>jconsole</artifactId>
+                    <groupId>sun.jdk</groupId>
+                </exclusion>
+            </exclusions>-->
+            <scope>provided</scope>
+        </dependency>   
         
         <!--Needs to be added because of an issue - viz poznamky-->
         <dependency>
@@ -123,14 +123,34 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
             <type>jar</type>
             <scope>provided</scope>
-        </dependency>               
+        </dependency>        
+        
+        <!--Tests-->
+        <dependency>
+            <groupId>org.glassfish.main.ejb</groupId>
+            <artifactId>ejb-container</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+       
                              
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>io.hawt</groupId>
             <artifactId>hawtio-web</artifactId>
             <version>2.0.0</version>
@@ -172,7 +192,7 @@
                 <executions>
 
                     <execution>
-<!--                         we run this early in the build process before
+                        <!--                         we run this early in the build process before
                         maven-resources-plugin is run.  We're exporting the
                         plugin-scripts property from here, so we need to
                         use maven-antrun-plugin 1.6 or up -->
@@ -184,12 +204,12 @@
                         <configuration>
                             <target>
                                 <echo>Building plugin javascript file list</echo>
-                                 javascript-files will contain all of the javascript in
+                                javascript-files will contain all of the javascript in
                                 our project 
                                 <fileset id="javascript-files" dir="${basedir}/src/main/webapp">
                                     <include name="**/*.js" />
                                 </fileset>
-                                 we need to strip out the top level path which is
+                                we need to strip out the top level path which is
                                 our source directory and be sure to change the directory
                                 separators to forward slashes 
                                 <pathconvert pathsep="," dirsep="/" property="plugin-scripts" refid="javascript-files">
@@ -202,7 +222,7 @@
                                 <copy file="src/main/resources/log4j.properties" todir="target/classes" />
 
                             </target>
-                             this exports plugin-scripts to the maven build, without
+                            this exports plugin-scripts to the maven build, without
                             this line ${plugin-scripts} in the web.xml file won't be
                             replaced 
                             <exportAntProperties>true</exportAntProperties>
@@ -217,7 +237,7 @@
                 <!--<version>2.7</version>-->
                 <executions>
                     <execution>
-<!--                         defining this maven plugin in the same phase as the
+                        <!--                         defining this maven plugin in the same phase as the
                         maven-antrun-plugin but *after* we've configured the
                         maven-antrun-plugin ensures we filter resources *after*
                         we've discovered the plugin .js files. -->
