@@ -1,4 +1,4 @@
-Hawtio plugin for managing JSR352 batch jobs. Optimized for Wildfly 10.
+## Hawtio plugin for managing JSR352 batch jobs. Optimized for Wildfly 10.
 
 Requirements: 
  - Running instance of hawtio-web on server (https://github.com/hawtio/hawtio/tree/master/hawtio-web)
