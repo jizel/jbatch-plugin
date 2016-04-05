@@ -45,7 +45,7 @@
             <groupId>javax.batch</groupId>
             <artifactId>javax.batch-api</artifactId>
             <version>1.0.1</version>
-            <type>jar</type>
+            <!--<type>jar</type>-->
             <scope>provided</scope>
         </dependency>
         
@@ -87,6 +87,8 @@
             <version>${servlet-api-version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!--AngularJS-->
         <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>angular-resource</artifactId>
@@ -122,12 +124,7 @@
             <version>20140107</version>
             <type>jar</type>
         </dependency>
-        <!--        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>-->
+
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
@@ -150,6 +147,7 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        
         <!-- Arquillian-->
         <dependency>
             <groupId>org.jboss.arquillian</groupId>
@@ -171,22 +169,7 @@
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
             <version>1.1.11.Final</version>
-        </dependency>
-        
-        <!-- this is the wildfly emb.container - BUT eventually it is not a fully blown emb.container-->
-<!--        <dependency>
-            <groupId>org.wildfly</groupId>
-            <artifactId>wildfly-embedded</artifactId>
-            <version>10.0.0.Alpha6</version>
-        </dependency>   -->
-        
-        <!--Cannot find executorService-->
-<!--        <dependency>
-            <groupId>org.jboss.arquillian.core</groupId>
-            <artifactId>arquillian-core-api</artifactId>
-            <version>1.1.11.Final</version>
-            <scope>test</scope>
-        </dependency>-->
+        </dependency>        
         
         
                              
@@ -206,7 +189,7 @@
 
         <!-- Hawti.io - we want to ensure src/main/resources/WEB-INF/web.xml is being filtered
         so that it picks up all of our javascript files -->
-        <resources>
+<!--        <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -214,7 +197,7 @@
                     <include>**/*.xml</include>
                 </includes>
             </resource>
-        </resources>
+        </resources>-->
 
         <plugins>
             
@@ -252,15 +235,16 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.19.1</version>
             <configuration>
-               <forkMode>always</forkMode>
+               <!--<forkMode>always</forkMode>-->
                 <systemPropertyVariables>
                     <!--<arquillian.launch>wildfly-embedded</arquillian.launch>-->
                     <!--<arquillian.launch></arquillian.launch>-->
                     <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                    <jboss.home>.\target\wildfly-10.0.0.Final</jboss.home>
-                    <module.path>.\target\wildfly-10.0.0.Final\modules</module.path>
-                    <!--<jboss.home>c:\wildfly\wildfly-10.0.0.Final</jboss.home>-->
-                </systemPropertyVariables>                
+<!--                    <jboss.home>.\target\wildfly-10.0.0.Final</jboss.home>
+                    <module.path>.\target\wildfly-10.0.0.Final\modules</module.path>-->
+                    <jboss.home>c:\wildfly\wildfly-10.0.0.Final</jboss.home>                    
+                </systemPropertyVariables> 
+                <redirectTestOutputToFile>true</redirectTestOutputToFile>               
             </configuration>
         </plugin>
             

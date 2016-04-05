@@ -58,6 +58,19 @@ public class JobResource {
     
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("submit/{jobname}")
+    public Response getJobExecution(@PathParam("jobname") String jobName){       
+        try{
+		long execId = jobService.submitJob(jobName);
+                return Response.ok(execId, MediaType.APPLICATION_JSON).build();
+            }catch(BatchExecutionException e){
+            LOG.error("Exception when calling job service" + e);
+            return Response.serverError().build();
+        }
+	}
+    
+    @GET    
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("names")
     public Response getJobNames() {
         try {
@@ -79,13 +92,6 @@ public class JobResource {
         try{
 		JobExecution jobExec =  jobService.getJobExecution(executionId);
                 return Response.ok(jobExec.toString(), MediaType.APPLICATION_JSON).build();
-//                TODO - don't catch the low level exception, do that in service or batchExec class'
-//        }catch(EJBTransactionRolledbackException ex){
-////            TODO - what to do here? :-)
-//            LOG.error("Exception" + ex);
-//            System.out.println("exceptiona");
-//           return null; 
-//        }
             }catch(BatchExecutionException e){
             LOG.error("Exception when calling job service" + e);
             return Response.serverError().build();
