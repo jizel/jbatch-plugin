@@ -259,6 +259,7 @@
                     <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                     <jboss.home>.\target\wildfly-10.0.0.Final</jboss.home>
                     <module.path>.\target\wildfly-10.0.0.Final\modules</module.path>
+                    <!--<jboss.home>c:\wildfly\wildfly-10.0.0.Final</jboss.home>-->
                 </systemPropertyVariables>                
             </configuration>
         </plugin>

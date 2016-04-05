@@ -74,8 +74,8 @@ public class BatchExecutionBeanTest {
     public void testSubmitJob() throws Exception {
         System.out.println("submitJob");
         long expected = 1;
-        String jobName = "abc";
-//       Assert.assertEquals(expected, batchExecutor.submitJob(jobName));        
+        String jobName = "example-batch-job";
+       Assert.assertEquals(expected, batchExecutor.submitJob(jobName));        
         Assert.assertEquals("true","true");
     }
 //
