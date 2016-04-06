@@ -48,6 +48,9 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
     }
     
     public long submitJob(String jobName) throws BatchExecutionException {
+        if(jobName == null){
+            throw new IllegalArgumentException("Cannot start job with jobname null");
+        }
         try {
         Properties jobPropertis = new Properties();
         long executionId = jobOperator.start(jobName, jobPropertis);
@@ -58,17 +61,23 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
         }
     }
         
-    public JobExecution getJobExecution(Long executionId)throws BatchExecutionException {
+    public JobExecution getJobExecution(long executionId)throws BatchExecutionException {
+        if(executionId < 1){
+            throw new IllegalArgumentException("Execution id cannot be less than 1");
+        }
         try{
         JobExecution jobExecution = jobOperator.getJobExecution(executionId);
         return jobExecution;
-         }catch(NoSuchJobInstanceException|JobSecurityException e){
-             LOG.log(Level.SEVERE, "Exception raised while getting job execution id: " + executionId +"\n" + e);
+         }catch(NoSuchJobInstanceException|JobSecurityException|NoSuchJobExecutionException e){
+             LOG.log(Level.SEVERE, "Exception raised while getting job execution id: {0}\n{1}", new Object[]{executionId, e});
             throw new BatchExecutionException("Exception raised while getting job execution id: " + executionId,e);
         }
     }
      
-    public long restartJob(long executionId) throws BatchExecutionException {       
+    public long restartJob(long executionId) throws BatchExecutionException { 
+         if(executionId < 1){
+            throw new IllegalArgumentException("Execution id cannot be less than 1");
+        }
         try {
         long newExecutionId = jobOperator.restart(executionId,jobOperator.getJobExecution(executionId).getJobParameters());
         return newExecutionId;
@@ -89,7 +98,10 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
         return jobNames;
     }
     
-    public int getJobInstanceCount(String jobName) throws BatchExecutionException{       
+    public int getJobInstanceCount(String jobName) throws BatchExecutionException{   
+        if(jobName == null){
+            throw new IllegalArgumentException("Cannot get instance count for jobname null");
+        }
        try{
         int jobInstanceCount = jobOperator.getJobInstanceCount(jobName);
         return jobInstanceCount;
@@ -100,6 +112,9 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
     }
     
     public List<Long> getRunningExecutions(String jobName) throws BatchExecutionException {
+        if(jobName == null){
+            throw new IllegalArgumentException("Cannot get Running Executions for jobname null");
+        }
     	try {
         return jobOperator.getRunningExecutions(jobName);      
        }catch(JobSecurityException | NoSuchJobException e){
@@ -109,6 +124,9 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
     }
     
     public List<JobInstance> getJobInstances(String jobName) throws BatchExecutionException {
+        if(jobName == null){
+            throw new IllegalArgumentException("Cannot get job instances for jobname null");
+        }
     	try {
         return jobOperator.getJobInstances(jobName, 0, 100);
         }catch(JobSecurityException | NoSuchJobException e){
@@ -118,6 +136,9 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
     }
     
     public List<JobInstance> getJobInstances(String jobName, int start, int count) throws BatchExecutionException {
+        if(jobName == null || start < 0){
+            throw new IllegalArgumentException("Cannot get job instances for jobname null");
+        }
     	try {
         return jobOperator.getJobInstances(jobName, start, count);
         }catch(JobSecurityException e){
@@ -126,6 +147,9 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
         } 
     }    
     public List<JobExecution> getJobExecutions(JobInstance instance) throws BatchExecutionException {
+        if(instance == null){
+            throw new IllegalArgumentException("Cannot get job executions for null");
+        }
     	try {
         return jobOperator.getJobExecutions(instance);
         }catch(JobSecurityException|NoSuchJobInstanceException e){
@@ -135,6 +159,9 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
     }
      
     public List<StepExecution> getStepExecutions(long jobExecutionId) throws BatchExecutionException{
+        if(jobExecutionId < 1){
+            throw new IllegalArgumentException("Execution id cannot be less than 1");
+        }
     	try{
         return jobOperator.getStepExecutions(jobExecutionId);
         }catch(JobSecurityException|NoSuchJobExecutionException e){
@@ -145,6 +172,9 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
     
     //Gets parent instance for job execution not instance by id!!!
     public JobInstance getJobInstance(long executionId) throws BatchExecutionException {
+        if(executionId < 1){
+            throw new IllegalArgumentException("Execution id cannot be less than 1");
+        }
         try {
         JobInstance jobInstance = jobOperator.getJobInstance(executionId);
         return jobInstance;
@@ -156,9 +186,12 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
     
     
     public void stop(long executionId) throws BatchExecutionException {
+        if(executionId < 1){
+            throw new IllegalArgumentException("Execution id cannot be less than 1");
+        }
         try{
         jobOperator.stop(executionId);
-        }catch(JobSecurityException | NoSuchJobExecutionException | JobExecutionIsRunningException e) {
+        }catch(JobSecurityException | NoSuchJobExecutionException | JobExecutionNotRunningException e) {
              LOG.log(Level.SEVERE, "Exception raised while getting job names: " + e);
              throw new BatchExecutionException("Exception raised while stopping job id: " + executionId,e);
         }

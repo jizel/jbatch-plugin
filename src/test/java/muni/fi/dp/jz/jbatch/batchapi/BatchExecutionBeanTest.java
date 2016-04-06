@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.transaction.Transactional;
 import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -85,7 +86,7 @@ public class BatchExecutionBeanTest {
      */
     @Test
     @InSequence(1)
-    public void testSubmitJob() throws Exception {        
+    public void testSubmitJob() throws Exception {
         System.out.println("submitJob");
         long expected = 1;
         String jobName = "example-batch-job";
@@ -112,7 +113,7 @@ public class BatchExecutionBeanTest {
     public void testRestartJob() throws Exception {
         System.out.println("restartJob");
         long newJobId = batchExecutor.restartJob(1);
-         Assert.assertEquals(2, newJobId);
+        Assert.assertEquals(2, newJobId);
     }
 
     /**
@@ -124,7 +125,7 @@ public class BatchExecutionBeanTest {
         System.out.println("getJobNames");
         Set<String> expectedJobNames = new HashSet<>();
         expectedJobNames.add("simple-batchlet-job");
-         Assert.assertEquals(expectedJobNames, batchExecutor.getJobNames());
+        Assert.assertEquals(expectedJobNames, batchExecutor.getJobNames());
     }
 
     /**
@@ -148,8 +149,8 @@ public class BatchExecutionBeanTest {
 //        Get some batch with endless running state!
 //        expectedExecutions.add((long)1);
 //        expectedExecutions.add((long)2);
-        
-        Assert.assertEquals(expectedExecutions, batchExecutor.getRunningExecutions("simple-batchlet-job"));       
+
+        Assert.assertEquals(expectedExecutions, batchExecutor.getRunningExecutions("simple-batchlet-job"));
     }
 
     /**
@@ -162,7 +163,7 @@ public class BatchExecutionBeanTest {
         String jobName = "simple-batchlet-job";
         String expected = "org.jberet.runtime.JobInstanceImpl@1";
         Assert.assertEquals(expected, batchExecutor.getJobInstances(jobName).get(0).toString());
-       
+
     }
 
     /**
@@ -174,9 +175,9 @@ public class BatchExecutionBeanTest {
         System.out.println("getJobInstances");
         String jobName = "simple-batchlet-job";
         int start = 0;
-        int count = 2;
+        int count = 1;
         String expected = "org.jberet.runtime.JobInstanceImpl@1";
-       Assert.assertEquals(expected, batchExecutor.getJobInstances(jobName,start,count).get(0).toString());
+        Assert.assertEquals(expected, batchExecutor.getJobInstances(jobName, start, count).get(0).toString());
     }
 
     /**
@@ -187,9 +188,9 @@ public class BatchExecutionBeanTest {
     @Transactional
     public void testGetJobExecutions() throws Exception {
         System.out.println("getJobExecutions");
-        JobInstance tstInstance = batchExecutor.getJobInstances("simple-batchlet-job").get(0);                
+        JobInstance tstInstance = batchExecutor.getJobInstances("simple-batchlet-job").get(0);
         String expected = "[org.jberet.runtime.JobExecutionImpl@1, org.jberet.runtime.JobExecutionImpl@2]";
-        
+
         Assert.assertEquals(expected, batchExecutor.getJobExecutions(tstInstance).toString());
     }
 
@@ -202,8 +203,8 @@ public class BatchExecutionBeanTest {
         System.out.println("getStepExecutions");
         long jobExecutionId = 1L;
         String expected = "[org.jberet.runtime.StepExecutionImpl@f9aff64a]";
-        
-        Assert.assertEquals(expected, batchExecutor.getStepExecutions(jobExecutionId).toString());        
+
+        Assert.assertEquals(expected, batchExecutor.getStepExecutions(jobExecutionId).toString());
     }
 
     /**
@@ -215,47 +216,215 @@ public class BatchExecutionBeanTest {
         System.out.println("getJobInstance");
         long executionId = 1L;
         String expected = "org.jberet.runtime.JobInstanceImpl@1";
-       
-        Assert.assertEquals(expected, (batchExecutor.getJobInstance(executionId)).toString()); 
+
+        Assert.assertEquals(expected, (batchExecutor.getJobInstance(executionId)).toString());
     }
-    
+
+    /**
+     * Test of getParameters method, of class BatchExecutionBean.
+     */
     @Test
     @InSequence(4)
     public void testGetParameters() throws Exception {
         System.out.println("getParameters");
         long execId = 1L;
         String expected = "{jberet.jobXmlName=example-batch-job}";
-       
-        Assert.assertEquals(expected, (batchExecutor.getParameters(execId)).toString()); 
-    }
-//
-//    /**
-//     * Test of stop method, of class BatchExecutionBean.
-//     */
-//    @Test
-//    public void testStop() throws Exception {
-//        System.out.println("stop");
-//        long executionId = 0L;
-//       
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of abandon method, of class BatchExecutionBean.
-//     */
-//    @Test
-//    public void testAbandon() throws Exception {
-//        System.out.println("abandon");
-//        long executionId = 0L;
-//       
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-    /**
-     * Test of getParameters method, of class BatchExecutionBean.
-     */
-    
 
+        Assert.assertEquals(expected, (batchExecutor.getParameters(execId)).toString());
+    }
+
+    /**
+     * Test of abandon method, of class BatchExecutionBean.
+     */
+    @Test
+    @InSequence(4)
+    @Transactional
+    public void testAbandon() throws Exception {
+        System.out.println("abandon");
+        long executionId = 1L;
+        String expectedStatus = "ABANDONED";
+        batchExecutor.abandon(executionId);
+
+        Assert.assertEquals(expectedStatus, (batchExecutor.getJobExecution(executionId).getBatchStatus()).toString());
+    }
+    
+    /**
+     * Test of stop method, of class BatchExecutionBean.
+     * TODO: make testStop of running batch job (find/write job that never stops or at least waits long enough) 
+     */
+    @Test
+    @InSequence(5)
+    @Transactional
+    public void testStop() {
+        System.out.println("stop");
+        long executionId = 1L;
+        try{
+        batchExecutor.stop(executionId);
+        //Cannot restart abandoned exception
+        fail("Exception was not thrown when restarting an abandoned execution");
+        }catch(BatchExecutionException e){
+            Assert.assertTrue(true);
+        }catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }        
+    }
+        
+//    Illegal argument tests
+    
+    @Test
+    public void testSubmitNullJob() throws Exception {
+        System.out.println("submitNullJob");
+//        EJB exception wrapping causes EJBException when IllegalArgumentException is thrown
+        String expectedException ="javax.ejb.EJBException: java.lang.IllegalArgumentException: Cannot start job with jobname null";
+        try{
+        batchExecutor.submitJob(null);
+        fail("JobName cannot be null");
+       }catch(EJBException e){
+            Assert.assertEquals(expectedException,e.toString());
+        }
+        catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }   
+    }
+    
+    @Test(expected = BatchExecutionException.class)
+    public void testSubmitInvalidJobName() throws Exception {
+        batchExecutor.submitJob("invalid-job");           
+    }
+    
+    @Test
+    public void testStopNegativeExucitonId() throws Exception {
+//        EJB exception wrapping causes EJBException when IllegalArgumentException is thrown
+        String expectedException ="javax.ejb.EJBException: java.lang.IllegalArgumentException: Execution id cannot be less than 1";
+        try{
+        batchExecutor.stop(-2L);
+        fail("JobName cannot be null");
+       }catch(EJBException e){
+            Assert.assertEquals(expectedException,e.toString());
+        }
+        catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }   
+    }
+    
+    @Test(expected = BatchExecutionException.class)
+    public void testStopInvalidId() throws Exception {
+        batchExecutor.stop(50L);           
+    }
+    
+    @Test
+    public void testRestartExucitonIdZero() throws Exception {
+//        EJB exception wrapping causes EJBException when IllegalArgumentException is thrown
+        String expectedException ="javax.ejb.EJBException: java.lang.IllegalArgumentException: Execution id cannot be less than 1";
+        try{
+        batchExecutor.restartJob(0L);
+        fail("JobName cannot be null");
+       }catch(EJBException e){
+            Assert.assertEquals(expectedException,e.toString());
+        }
+        catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }   
+    }
+    
+    @Test(expected = BatchExecutionException.class)
+    public void testRestartInvalidId() throws Exception {
+        batchExecutor.restartJob(50L);           
+    }
+    
+    @Test
+    public void testGetExecutionExucitonIdZero() throws Exception {
+//        EJB exception wrapping causes EJBException when IllegalArgumentException is thrown
+        String expectedException ="javax.ejb.EJBException: java.lang.IllegalArgumentException: Execution id cannot be less than 1";
+        try{
+        batchExecutor.getJobExecution(0L);
+        fail("JobName cannot be null");
+       }catch(EJBException e){
+            Assert.assertEquals(expectedException,e.toString());
+        }
+        catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }   
+    }
+    
+    @Test(expected = BatchExecutionException.class)
+    public void testGetExecutionInvalidId() throws Exception {
+        batchExecutor.getJobExecution(50L);           
+    }
+    
+    @Test
+    public void testGetJobInstanceCountNullJob() throws Exception {
+//        EJB exception wrapping causes EJBException when IllegalArgumentException is thrown
+        String expectedException ="javax.ejb.EJBException: java.lang.IllegalArgumentException: Cannot get instance count for jobname null";
+        try{
+        batchExecutor.getJobInstanceCount(null);
+        fail("JobName cannot be null");
+       }catch(EJBException e){
+            Assert.assertEquals(expectedException,e.toString());
+        }
+        catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }   
+    }
+    
+    @Test(expected = BatchExecutionException.class)
+    public void testGetInstanceCountInvalidJob() throws Exception {
+        batchExecutor.getJobInstanceCount("invalid-job");           
+    }
+    
+    @Test
+    public void testGetJobInstancesNullJob() throws Exception {
+//        EJB exception wrapping causes EJBException when IllegalArgumentException is thrown
+        String expectedException ="javax.ejb.EJBException: java.lang.IllegalArgumentException: Cannot get job instances for jobname null";
+        try{
+        batchExecutor.getJobInstances(null);
+        fail("JobName cannot be null");
+       }catch(EJBException e){
+            Assert.assertEquals(expectedException,e.toString());
+        }
+        catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }   
+    }
+    
+    @Test(expected = BatchExecutionException.class)
+    public void testGetJobInstancesInvalidJob() throws Exception {
+        batchExecutor.getJobInstances("Invalid");           
+    }
+    
+    @Test
+    public void testGetJobExecutionsNullJob() throws Exception {
+//        EJB exception wrapping causes EJBException when IllegalArgumentException is thrown
+        String expectedException ="javax.ejb.EJBException: java.lang.IllegalArgumentException: Cannot get job executions for null";
+        try{
+        batchExecutor.getJobExecutions(null);
+        fail("JobName cannot be null");
+       }catch(EJBException e){
+            Assert.assertEquals(expectedException,e.toString());
+        }
+        catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }   
+    }
+    
+    @Test
+    public void testGetStepExucitonNegative() throws Exception {
+//        EJB exception wrapping causes EJBException when IllegalArgumentException is thrown
+        String expectedException ="javax.ejb.EJBException: java.lang.IllegalArgumentException: Execution id cannot be less than 1";
+        try{
+        batchExecutor.getStepExecutions(-5L);
+        fail("JobName cannot be null");
+       }catch(EJBException e){
+            Assert.assertEquals(expectedException,e.toString());
+        }
+        catch(Exception e){
+            fail("Wrong exception thrown: " + e);
+        }   
+    }    
+    
+    @Test(expected = BatchExecutionException.class)
+    public void testGetStepExucitonInvalidId() throws Exception {
+        batchExecutor.getStepExecutions(50L);           
+    }
+    
 }
