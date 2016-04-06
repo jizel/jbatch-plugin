@@ -173,9 +173,9 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
         }
     }    
     
-    public Properties getParameters(long l) throws BatchExecutionException {
+    public Properties getParameters(long execId) throws BatchExecutionException {
         try{
-            return jobOperator.getParameters(l);
+            return jobOperator.getParameters(execId);
         }catch(JobSecurityException | NoSuchJobExecutionException e) {
             LOG.log(Level.SEVERE, "Exception raised while getting job params" + e);
              throw new BatchExecutionException("Exception raised while getting job params: ",e);
