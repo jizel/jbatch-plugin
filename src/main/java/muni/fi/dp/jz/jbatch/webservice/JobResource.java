@@ -59,7 +59,7 @@ public class JobResource {
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("submit/{jobname}")
-    public Response getJobExecution(@PathParam("jobname") String jobName){       
+    public Response submitJob(@PathParam("jobname") String jobName){       
         try{
 		long execId = jobService.submitJob(jobName);
                 return Response.ok(execId, MediaType.APPLICATION_JSON).build();

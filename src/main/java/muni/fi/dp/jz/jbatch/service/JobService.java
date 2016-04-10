@@ -17,6 +17,7 @@ package muni.fi.dp.jz.jbatch.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
@@ -34,6 +35,8 @@ import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 public interface JobService {
 
     public long submitJob(String jobName) throws BatchExecutionException;
+    
+    public long submitJob(String jobName, Properties propertis) throws BatchExecutionException;
 
     public JobExecution getJobExecution(long executionId) throws BatchExecutionException;         
 

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.webservice.JobResource;
 import org.apache.log4j.Logger;
@@ -48,7 +49,13 @@ public class CliBatchManagerBean {
         String startJobCli = "/deployment=" + deploymentName + "/subsystem=batch-jberet:start-job(job-xml-name=" + jobName + ")";
 //        TODO - if runCommand == null throw exception and return null;
         return runCommand(startJobCli);
-	}        
+	}     
+    
+    public String startJobCli(String deploymentName, String jobName, Properties properties) {	
+        String startJobCli = "/deployment=" + deploymentName + "/subsystem=batch-jberet:start-job(job-xml-name=" + jobName + ",properties={" + properties + "})";
+//        TODO - if runCommand == null throw exception and return null;
+        return runCommand(startJobCli);
+	}     
     
     public String getDeploymentInfo(){
        String getInfo = "deployment-info";

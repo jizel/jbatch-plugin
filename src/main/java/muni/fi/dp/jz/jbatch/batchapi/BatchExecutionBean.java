@@ -60,6 +60,19 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
             throw new BatchExecutionException("Exception raised while starting new job: ",e);
         }
     }
+    
+    public long submitJob(String jobName, Properties properties) throws BatchExecutionException {
+        if(jobName == null){
+            throw new IllegalArgumentException("Cannot start job with jobname null");
+        }
+        try {        
+        long executionId = jobOperator.start(jobName, properties);
+        return executionId;
+        }catch(JobSecurityException | JobStartException e){
+            LOG.log(Level.SEVERE, "Exception raised while starting new job: " + e);
+            throw new BatchExecutionException("Exception raised while starting new job: ",e);
+        }
+    }
         
     public JobExecution getJobExecution(long executionId)throws BatchExecutionException {
         if(executionId < 1){

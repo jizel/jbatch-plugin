@@ -1,36 +1,17 @@
 
 <div class="simple-controller" ng-controller="JBatch.BatchJobController">
+     <ul class="nav nav-tabs" ng-controller="Core.NavBarController"> 
+        <li ng-class='{active : isActive("#/jbatch_plugin/startJob")}'>
+            <a ng-href="{{link('#/jbatch_plugin/startJob')}}">Start a new Job</a>
+        </li>
+        <li ng-class='{active : isActive("#/jbatch_plugin/jobs")}'>
+            <a ng-href="{{link('#/jbatch_plugin/jobs')}}">Jobs on Server</a>
+        </li>
+    </ul>
 
 
     <div class="row-fluid">
-        <div class="row">
-        <table class="row depl">
-            <thead>
-                <tr>
-                    <th>Deployments with <i>batch-jberet</i> subsystem</th>
-                    <th>Jobs Available</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="(name,jobs) in batchDeployments">
-                    <td>{{name}}</td>
-                    <td >
-                        <ul ng-repeat="(i,jobname) in jobs">
-                            <li ng-click="setJob2run(name, jobname)">{{jobname}}     
-                        </ul>                        
-                    </td>
-                </tr>             
-            </tbody>
-        </table>
                         
-        <input class="row" type="text" ng-model="run_job"/>                
-        <button ng-click="startJobCli(selected_depl,run_job)">Run Job</button>
-        <p class="row"><b>Be careful</b> - the job name from deployments table does not have to match the xml name of the job which is needed to run it. Check your job xml names!</p>
-        </div>
-        
-        <br>
-        <br>
-        <br>
         <table class="jobs">
             <thead>
                 <tr>
@@ -39,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="(jobname,count) in jobCounts track by $index" ng-class="{active: jobname === selected_jobname}">
+                <tr ng-repeat="(jobname,count) in jobCounts track by $index" ng-class="{activeJob: jobname === selected_jobname}">
                     <td ng-click="setSelectedInstances(jobname)">{{jobname}}</td>
                     <td class="int">{{count}}</td>                    
                 </tr>               
@@ -54,7 +35,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="instance in selected_instances|orderBy: '-jobInstanceId'" ng-click="setSelectedExecutions(instance.jobInstanceId)" ng-class="{active: instance.jobInstanceId === selected_instance_id}" >
+                <tr ng-repeat="instance in selected_instances|orderBy: '-jobInstanceId'" ng-click="setSelectedExecutions(instance.jobInstanceId)" ng-class="{activeJob: instance.jobInstanceId === selected_instance_id}" >
                     <td class="int">ID: {{instance.jobInstanceId}}</td>
                     <td><button disabled="true" ng-value="Restart" ng-click="restartExecution(selected_executions[selected_executions.length-1].jobExecutionId); setSelectedExecutions(instance.jobInstanceId)">Restart last</button></td>                    
                 </tr>
@@ -72,7 +53,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="execution in selected_executions|orderBy: '-jobExecutionId'" ng-click="setSelectedSteps(execution.jobExecutionId)" ng-class="{active: execution.jobExecutionId === selected_execution_id}" >
+                <tr ng-repeat="execution in selected_executions|orderBy: '-jobExecutionId'" ng-click="setSelectedSteps(execution.jobExecutionId)" ng-class="{activeJob: execution.jobExecutionId === selected_execution_id}" >
                     <td>{{execution.jobExecutionId}}</td>
                     <td>{{execution.batchStatus}}</td>
                     <td>{{execution.exitStatus}}</td>

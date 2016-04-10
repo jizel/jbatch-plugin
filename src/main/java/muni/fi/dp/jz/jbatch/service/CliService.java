@@ -15,6 +15,7 @@
  */
 package muni.fi.dp.jz.jbatch.service;
 
+import java.util.Properties;
 import javax.ejb.Stateless;
 
 /**
@@ -25,6 +26,8 @@ import javax.ejb.Stateless;
 public interface CliService {
     
     public String startJobCli(String deploymentName, String jobName);
+    
+    public String startJobCli(String deploymentName, String jobName, Properties properties);
     
     public String getDeploymentInfo();
      

@@ -15,6 +15,7 @@
  */
 package muni.fi.dp.jz.jbatch.service.impl;
 
+import java.util.Properties;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.cli.CliBatchManagerBean;
@@ -34,14 +35,10 @@ public class CliServiceImpl implements CliService {
     public String startJobCli(String deploymentName, String jobName) {
           String resp = cliManager.startJobCli(deploymentName,jobName);
           return resp;
-//        long id = batchExecutor.submitJob(jobName);
-//        return id;
     }
     @Override
      public String getDeploymentInfo(){
          String resp = cliManager.getDeploymentInfo();
-//         JSONObject json = new JSONObject(resp);         
-//         JSONObject result = json.getJSONObject("result");
           return resp;
      }
      
@@ -55,5 +52,11 @@ public class CliServiceImpl implements CliService {
      public String getJobsFromDeployment(String deployment){
          return cliManager.getJobsFromDeployment(deployment);
      }
+
+    @Override
+    public String startJobCli(String deploymentName, String jobName, Properties properties) {
+        String resp = cliManager.startJobCli(deploymentName,jobName,properties);
+        return resp;
+    }
     
 }

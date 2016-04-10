@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.JobInstance;
@@ -52,6 +53,11 @@ public class JobServiceImpl implements JobService{
     @Override
     public long submitJob(String jobName) throws BatchExecutionException{
         return batchExecutor.submitJob(jobName);
+    }
+    
+    @Override
+    public long submitJob(String jobName, Properties propertis) throws BatchExecutionException {
+        return batchExecutor.submitJob(jobName, propertis);
     }
 
     @Override
@@ -168,7 +174,7 @@ public class JobServiceImpl implements JobService{
     @Override
     public void abandon(long executionId) throws BatchExecutionException{
         batchExecutor.abandon(executionId);
-    }
+    }    
 
     
     

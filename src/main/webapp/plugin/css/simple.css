@@ -7,7 +7,7 @@
     display: inline-block;
     margin-left: 40px;    
 }
-.active {
+.activeJob {
     background-color: greenyellow;
 }
 table.depl td{

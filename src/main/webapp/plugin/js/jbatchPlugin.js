@@ -58,8 +58,11 @@ var JBatch = (function (JBatch) {
                  * routeProvider has been configured with.
                  */
                 $routeProvider.
-                        when('/jbatch_plugin', {
+                        when('/jbatch_plugin/jobs', {
                             templateUrl: JBatch.templatePath + 'simple.html'
+                        })
+                                .when('/jbatch_plugin/startJob', {
+                            templateUrl: JBatch.templatePath + 'startJob.html'
                         });
             });
             
@@ -117,10 +120,10 @@ var JBatch = (function (JBatch) {
                 return true;
             },
             href: function () {
-                return "#/jbatch_plugin";
+                return "#/jbatch_plugin/jobs";
             },
             isActive: function (workspace) {
-                return workspace.isLinkActive("jbatch_plugin");
+                return workspace.isLinkActive("jbatch_plugin/jobs");
             }
 
         });
@@ -239,6 +242,13 @@ var JBatch = (function (JBatch) {
         $scope.startJobCli = function(deploymentName, jobName) {
           $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName +"/" + jobName).then(function(resp){
               JBatch.log.info("Job started: " + jobName + "with id: " + resp.data);
+              $scope.getJobCounts();
+          });
+        };
+        
+        $scope.startJobCli = function(deploymentName, jobName, properties) {
+          $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName + "/" + properties).then(function(resp){
+              JBatch.log.info("Job started: " + jobName + "with id: " + resp.data + "and properties: " + properties);
               $scope.getJobCounts();
           });
         };

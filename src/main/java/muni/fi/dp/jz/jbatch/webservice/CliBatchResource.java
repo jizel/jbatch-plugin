@@ -15,6 +15,10 @@
  */
 package muni.fi.dp.jz.jbatch.webservice;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Properties;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -47,7 +51,22 @@ public class CliBatchResource {
         String resp = cliService.startJobCli(deploymentName, jobName);
         LOG.info("Job " + jobName + " started via cli! Server response returned.\n");
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();        
-    }            
+    }   
+    
+    @GET
+    @Path("start/{deployment}/{jobName}/{properties}")
+    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @PathParam("properties") String properties){
+        Properties props = new Properties();
+        try {
+            props.load(new StringReader(properties));
+        } catch (IOException ex) {
+            LOG.error("Invalid job properties caused an exception: " + ex.toString());
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+        String resp = cliService.startJobCli(deploymentName, jobName, props);
+        LOG.info("Job " + jobName + " started via cli! Server response returned.\n");
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();        
+    }   
     
     @GET        
     @Path("deployments")
