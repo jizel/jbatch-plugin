@@ -19,10 +19,11 @@
         <tbody>
             <tr ng-repeat="(name,jobs) in batchDeployments">
                 <td>{{name}}</td>
-                <td >                        
-                    <ul ng-repeat="(i,jobname) in jobs">
-                        <li ng-click="setJob2run(name, jobname)">{{jobname}}     
-                    </ul>                                                
+                <td >  
+                    
+                    <ul ng-repeat="(i,jobname) in jobs">                        
+                            <li ng-href="" ng-click="setJob2run(name, jobname)">{{jobname}} </li>                        
+                    </ul>                                                                    
                 </td>
             </tr>             
         </tbody>
@@ -33,8 +34,8 @@
     <br>
     <div class="row">                               
         <input class="row" type="text" ng-model="run_job"/>                
-        <input class="row" type="text" ng-model="properties"/>                
-        <button ng-click="startJobCli(selected_depl, run_job,properties)">Run Job</button>
+        <input class="row" type="text" ng-model="properties"/>        
+        <button ng-click="startJobCli(selected_depl, run_job,properties)">Run Job</button>        
         <p class="row"><b>Be careful</b> - the job name from deployments table does not have to match the xml name of the job which is needed to run it. Check your job xml names!</p>
     </div>
 
