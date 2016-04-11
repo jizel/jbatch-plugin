@@ -261,7 +261,7 @@ public class BatchExecutionBeanTest {
         try{
         batchExecutor.stop(executionId);
         //Cannot restart abandoned exception
-        fail("Exception was not thrown when restarting an abandoned execution");
+        fail("Exception was not thrown when stopping an abandoned execution");
         }catch(BatchExecutionException e){
             Assert.assertTrue(true);
         }catch(Exception e){

@@ -220,16 +220,22 @@ var JBatch = (function (JBatch) {
         };
 
         $scope.restartExecution = function (execId) {
-//            var lastExecId = $scope.getLastExecution($scope.selected_instance_id);            
-//            if(execId !== lastExecId){
-//                JBatch.log.warn("You can only restart last execution of every instance. Last execution id is: " + lastExecId + ", not " + execId);
-//            }
             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/restart/" + execId).then(function (resp) {
-                $scope.executionsWatcher = new String(resp.data);
-                JBatch.log.warn("Restarting execution #" + execId + ", getting id: " + resp.data);
+//                Using watcher to to refresh executions table when the value changes
+//                $scope.executionsWatcher = new String(resp.data);
+                var jsonResp = resp.data;
+                if (jsonResp['outcome'] == "failed") {
+                        JBatch.log.error("Restarting job with id: " + execId + " failed. Failure description: " + jsonResp['description']);
+                        $scope.logAndToastSuccess("fail");
+                    } else {
+//                    JBatch.log.info("Job started: " + jobName + "with id: " + jsonResp.result);                        
+                        $scope.logAndToastSuccess("Job with id: " + execId + " restarted. New id:" + jsonResp.result);
+                        $scope.refreshSelectedExecutions();
+                    }
+//                JBatch.log.warn("Restarting execution #" + execId + ", getting id: " + resp.data);
             });
 //              $scope.setSelectedExecutions($scope.selected_instance_id);
-//                refreshSelectedExecutions();
+               
         };
 
 //        Not used
@@ -285,7 +291,7 @@ var JBatch = (function (JBatch) {
                 JBatch.log.info("Stop execution with id: " + executioId + " . Result: " + resp.data);
             });
 //           $scope.setSelectedExecutions($scope.selected_instance_id); 
-            refreshSelectedExecutions();
+            $scope.refreshSelectedExecutions();
         };
 
         $scope.abandonExecution = function (executioId) {
@@ -295,7 +301,7 @@ var JBatch = (function (JBatch) {
             });
 //          $scope.refresh;
 //          $scope.setSelectedExecutions($scope.selected_instance_id);        
-            refreshSelectedExecutions();
+           $scope.refreshSelectedExecutions();
         };
 
 //        Actions called from dropdown on each execution
@@ -317,12 +323,12 @@ var JBatch = (function (JBatch) {
         $scope.getBatchDeployments();
 
 //        Help methods
-        refreshSelectedExecutions = function () {
+        $scope.refreshSelectedExecutions = function () {
             $scope.setSelectedExecutions($scope.selected_instance_id);
         };
 
         $scope.$watch('executionsWatcher', function () {
-            refreshSelectedExecutions();
+            $scope.refreshSelectedExecutions();
             JBatch.log.info("Last execution id updated. New id: " + $scope.executionsWatcher);
         });
 

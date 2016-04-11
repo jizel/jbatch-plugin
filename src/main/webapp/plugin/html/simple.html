@@ -30,14 +30,12 @@
         <table class="jobs" >
             <thead>
                 <tr>
-                    <th>Job Instances</th>    
-                    <th>Restart last execution</th>
+                    <th>Job Instance ID</th>    
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="instance in selected_instances|orderBy: '-jobInstanceId'" ng-click="setSelectedExecutions(instance.jobInstanceId)" ng-class="{activeJob: instance.jobInstanceId === selected_instance_id}" >
-                    <td class="int">ID: {{instance.jobInstanceId}}</td>
-                    <td><button disabled="true" ng-value="Restart" ng-click="restartExecution(selected_executions[selected_executions.length-1].jobExecutionId); setSelectedExecutions(instance.jobInstanceId)">Restart last</button></td>                    
+                    <td class="int">ID: {{instance.jobInstanceId}}</td>                    
                 </tr>
             </tbody>                
         </table>   

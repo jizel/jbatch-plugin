@@ -41,6 +41,7 @@ import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 import muni.fi.dp.jz.jbatch.service.JobService;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -200,16 +201,23 @@ public class JobResource {
     @GET
     @Path("restart/{execId}")
     public Response restartJob(@PathParam("execId") Long executionId){
+        JSONObject resp = new JSONObject();
         if(executionId == null){
-            return Response.serverError().entity("Execution id is empty").build();
+            resp.put("outcome","failed");
+            resp.put("description","Execution id is empty");
+            return Response.serverError().entity(resp.toString()).build();
         }
         try {
             long id = jobService.restartJob(executionId);                
-            LOG.info("\nJob with id: " + executionId + " restarted\n");        
-            return Response.ok(id, MediaType.APPLICATION_JSON).build();
+            LOG.info("\nJob with id: " + executionId + " restarted\n"); 
+            resp.put("outcome","success");
+            resp.put("result",id);
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
         }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);
-         return Response.serverError().build();
+         LOG.error("Exception when calling job service" + e);          
+          resp.put("description","BatchExecutionException thrown: " + e.toString());
+          resp.put("outcome","failed");
+         return Response.serverError().entity(resp.toString()).build();
         }
     }
     
