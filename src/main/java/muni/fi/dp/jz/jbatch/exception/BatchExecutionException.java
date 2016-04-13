@@ -22,7 +22,10 @@ import java.util.logging.Logger;
  * @author Zorz
  */
 public class BatchExecutionException extends Exception {
-
+    
+    private String msg;
+    private Throwable cause;
+    
     /**
      * Creates a new instance of <code>NewException</code> without detail
      * message.
@@ -41,5 +44,17 @@ public class BatchExecutionException extends Exception {
     }
     public BatchExecutionException(String msg,Throwable cause) {
         super(msg,cause);
+        this.msg = msg;
+        this.cause = cause;
     }
+
+    @Override
+    public String toString() {
+        return "BatchExecutionException{" + "Message= " + msg + ", cause= " + cause + '}';
+    }
+
+    
+    
+    
+    
 }

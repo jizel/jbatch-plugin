@@ -21,14 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.batch.runtime.JobExecution;
-import javax.batch.runtime.JobInstance;
-import javax.batch.runtime.StepExecution;
 import javax.ejb.EJB;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -40,7 +37,6 @@ import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 import muni.fi.dp.jz.jbatch.service.JobService;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -205,7 +201,8 @@ public class JobResource {
         if(executionId == null){
             resp.put("outcome","failed");
             resp.put("description","Execution id is empty");
-            return Response.serverError().entity(resp.toString()).build();
+//            return Response.serverError().entity(resp.toString()).build();
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
         }
         try {
             long id = jobService.restartJob(executionId);                
@@ -214,10 +211,11 @@ public class JobResource {
             resp.put("result",id);
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
         }catch (BatchExecutionException e){
-            LOG.error("Exception when calling job service" + e);          
-            resp.put("description","BatchExecutionException thrown: " + e.toString());
+            LOG.error("Exception when calling job service" + e);                      
             resp.put("outcome","failed");
-            return Response.serverError().entity(resp.toString()).build();
+            resp.put("description","BatchExecutionException thrown: " + e.toString());
+//            return Response.serverError().entity(resp.toString()).build();
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
         }
     }
     
@@ -228,7 +226,8 @@ public class JobResource {
         if(executionId == null){
             resp.put("outcome","failed");
             resp.put("description","Execution id is empty");
-            return Response.serverError().entity("Execution id is empty").build();
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
+//            return Response.serverError().entity("Execution id is empty").build();
         }
         try {
             jobService.stop(executionId);
@@ -240,7 +239,8 @@ public class JobResource {
             LOG.error("Exception when calling job service" + e);
             resp.put("description","BatchExecutionException thrown: " + e.toString());
             resp.put("outcome","failed");
-            return Response.serverError().entity(resp.toString()).build();
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
+//            return Response.serverError().entity(resp.toString()).build();
         }
     }
     
@@ -251,7 +251,8 @@ public class JobResource {
         if(executionId == null){
             resp.put("outcome","failed");
             resp.put("description","Execution id is empty");
-            return Response.serverError().entity("Execution id is empty").build();
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
+//            return Response.serverError().entity("Execution id is empty").build();
         }
         try {
             jobService.abandon(executionId);
@@ -263,7 +264,8 @@ public class JobResource {
             LOG.error("Exception when calling job service" + e);
             resp.put("description","BatchExecutionException thrown: " + e.toString());
             resp.put("outcome","failed");
-            return Response.serverError().entity(resp.toString()).build();
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
+//            return Response.serverError().entity(resp.toString()).build();
         }
         }
         

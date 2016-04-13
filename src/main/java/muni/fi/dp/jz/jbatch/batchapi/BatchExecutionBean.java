@@ -214,8 +214,8 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
         try {
             jobOperator.abandon(executionId);
          }catch(JobSecurityException | NoSuchJobExecutionException | JobExecutionIsRunningException e) {
-             LOG.log(Level.SEVERE, "Exception raised while abandoning execution id: " +executionId + "\n" + e);
-             throw new BatchExecutionException("Exception raised while getting job names: ",e);
+             LOG.log(Level.SEVERE, "Exception raised while abandoning execution id: " +executionId + "\n" + e.toString());
+             throw new BatchExecutionException("Exception raised trying to abandon execution: ",e);
         }
     }    
     

@@ -222,31 +222,15 @@ var JBatch = (function (JBatch) {
         $scope.restartExecution = function (execId) {
             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/restart/" + execId).then(function (resp) {
                 var jsonResp = resp.data;
-//                JBatch.log.error(jsonResp);
                if (jsonResp.outcome.toString() === "failed") {
-                        JBatch.log.error("Restarting job with id: " + execId + " failed. Failure description: " + jsonResp['description']);
-                        $scope.logAndToastSuccess("fail");
+                        JBatch.log.error("Restarting job with id: " + execId + " failed. Failure description: " + jsonResp['description']);                        
                     } else {              
                         $scope.logAndToastSuccess("Job with id: " + execId + " restarted. New id:" + jsonResp.result);
                         $scope.refreshSelectedExecutions();
                     }
             });               
-        };
-
-//        Not used
-        $scope.restartLastExecutionOf = function (instanceId) {
-            $scope.getLastExecution(instanceId);
-            $scope.restartExecution($scope.last_execution_id);
-            $scope.setSelectedExecutions(instanceId);
-        };
-//       Not used
-        $scope.startJobCli = function (deploymentName, jobName) {
-            $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName).then(function (resp) {
-                JBatch.log.info("Job started: " + jobName + "with id: " + resp.data);
-                $scope.getJobCounts();
-            });
-        };
-
+        };        
+        
         $scope.startJobCli = function (deploymentName, jobName, properties) {
             var propertiesStr = new String(properties);
             if (propertiesStr == "undefined" || propertiesStr.length == 0) {
@@ -287,7 +271,6 @@ var JBatch = (function (JBatch) {
                 var jsonResp = resp.data;
                 if (jsonResp['outcome'] == "failed") {
                         JBatch.log.error("Stopping job with id: " + executionId + " failed. Failure description: " + jsonResp['description']);
-                        $scope.logAndToastSuccess("fail");
                     } else {                   
                         $scope.logAndToastSuccess("Job with id: " + executionId + " stopped.");
                         $scope.refreshSelectedExecutions();
@@ -305,7 +288,6 @@ var JBatch = (function (JBatch) {
                 var jsonResp = resp.data;
                 if (jsonResp['outcome'] == "failed") {
                         JBatch.log.error("Restarting job with id: " + executionId + " failed. Failure description: " + jsonResp['description']);
-                        $scope.logAndToastSuccess("fail");
                     } else {                   
                         $scope.logAndToastSuccess("Job with id: " + executionId + " abandoned.");
                         $scope.refreshSelectedExecutions();
@@ -350,9 +332,22 @@ var JBatch = (function (JBatch) {
         };
 
 
-        //test methods        
-
-
+        //test methods     
+        
+        //        Not used
+        $scope.restartLastExecutionOf = function (instanceId) {
+            $scope.getLastExecution(instanceId);
+            $scope.restartExecution($scope.last_execution_id);
+            $scope.setSelectedExecutions(instanceId);
+        };
+//       Not used
+//        $scope.startJobCli = function (deploymentName, jobName) {
+//            $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName).then(function (resp) {
+//                JBatch.log.info("Job started: " + jobName + "with id: " + resp.data);
+//                $scope.getJobCounts();
+//            });
+//        };
+        
 //        $scope.$watch('executionsWatcher', function() {
 //            $scope.setSelectedExecutions($scope.selected_instance_id);
 //            JBatch.log.info("Last execution restarted. New id: " + $scope.executionsWatcher);                
