@@ -214,42 +214,56 @@ public class JobResource {
             resp.put("result",id);
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
         }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);          
-          resp.put("description","BatchExecutionException thrown: " + e.toString());
-          resp.put("outcome","failed");
-         return Response.serverError().entity(resp.toString()).build();
+            LOG.error("Exception when calling job service" + e);          
+            resp.put("description","BatchExecutionException thrown: " + e.toString());
+            resp.put("outcome","failed");
+            return Response.serverError().entity(resp.toString()).build();
         }
     }
     
     @GET
     @Path("stop/{execId}")
     public Response stopExecution(@PathParam("execId") Long executionId){
+        JSONObject resp = new JSONObject();
         if(executionId == null){
+            resp.put("outcome","failed");
+            resp.put("description","Execution id is empty");
             return Response.serverError().entity("Execution id is empty").build();
         }
         try {
             jobService.stop(executionId);
+            resp.put("outcome","success");
+            resp.put("result",executionId);
             LOG.info("\nJob with id: " + executionId + " stopped\n"); 
-            return Response.ok("Execution with id: " + executionId + " stopped", MediaType.APPLICATION_JSON).build();
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
          }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);
-         return Response.serverError().build();
+            LOG.error("Exception when calling job service" + e);
+            resp.put("description","BatchExecutionException thrown: " + e.toString());
+            resp.put("outcome","failed");
+            return Response.serverError().entity(resp.toString()).build();
         }
     }
     
     @GET
     @Path("abandon/{execId}")
     public Response abandonExecution(@PathParam("execId") Long executionId){
+        JSONObject resp = new JSONObject();
         if(executionId == null){
+            resp.put("outcome","failed");
+            resp.put("description","Execution id is empty");
             return Response.serverError().entity("Execution id is empty").build();
         }
         try {
             jobService.abandon(executionId);
             LOG.info("\nJob with id: " + executionId + " abandoned\n"); 
-            return Response.ok("Execution with id: " + executionId + " abandoned", MediaType.APPLICATION_JSON).build();
+            resp.put("outcome","success");
+            resp.put("result",executionId);
+            return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
          }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);
-         return Response.serverError().build();
+            LOG.error("Exception when calling job service" + e);
+            resp.put("description","BatchExecutionException thrown: " + e.toString());
+            resp.put("outcome","failed");
+            return Response.serverError().entity(resp.toString()).build();
         }
         }
         

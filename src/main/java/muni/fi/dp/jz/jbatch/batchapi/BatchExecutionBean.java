@@ -141,7 +141,7 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
             throw new IllegalArgumentException("Cannot get job instances for jobname null");
         }
     	try {
-        return jobOperator.getJobInstances(jobName, 0, 100);
+        return jobOperator.getJobInstances(jobName, 0, 200);
         }catch(JobSecurityException | NoSuchJobException e){
              LOG.log(Level.SEVERE, "Exception raised while getting job instances of: " + e);
             throw new BatchExecutionException("Exception raised while getting job instances of: " + jobName,e);
@@ -203,7 +203,7 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
             throw new IllegalArgumentException("Execution id cannot be less than 1");
         }
         try{
-        jobOperator.stop(executionId);
+            jobOperator.stop(executionId);
         }catch(JobSecurityException | NoSuchJobExecutionException | JobExecutionNotRunningException e) {
              LOG.log(Level.SEVERE, "Exception raised while getting job names: " + e);
              throw new BatchExecutionException("Exception raised while stopping job id: " + executionId,e);
@@ -212,7 +212,7 @@ public class BatchExecutionBean { //implements JobOperator{ - causes weldClassIn
     
     public void abandon(long executionId) throws BatchExecutionException {
         try {
-        jobOperator.abandon(executionId);
+            jobOperator.abandon(executionId);
          }catch(JobSecurityException | NoSuchJobExecutionException | JobExecutionIsRunningException e) {
              LOG.log(Level.SEVERE, "Exception raised while abandoning execution id: " +executionId + "\n" + e);
              throw new BatchExecutionException("Exception raised while getting job names: ",e);

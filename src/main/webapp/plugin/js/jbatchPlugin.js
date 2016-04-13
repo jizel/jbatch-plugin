@@ -221,21 +221,16 @@ var JBatch = (function (JBatch) {
 
         $scope.restartExecution = function (execId) {
             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/restart/" + execId).then(function (resp) {
-//                Using watcher to to refresh executions table when the value changes
-//                $scope.executionsWatcher = new String(resp.data);
                 var jsonResp = resp.data;
-                if (jsonResp['outcome'] == "failed") {
+//                JBatch.log.error(jsonResp);
+               if (jsonResp.outcome.toString() === "failed") {
                         JBatch.log.error("Restarting job with id: " + execId + " failed. Failure description: " + jsonResp['description']);
                         $scope.logAndToastSuccess("fail");
-                    } else {
-//                    JBatch.log.info("Job started: " + jobName + "with id: " + jsonResp.result);                        
+                    } else {              
                         $scope.logAndToastSuccess("Job with id: " + execId + " restarted. New id:" + jsonResp.result);
                         $scope.refreshSelectedExecutions();
                     }
-//                JBatch.log.warn("Restarting execution #" + execId + ", getting id: " + resp.data);
-            });
-//              $scope.setSelectedExecutions($scope.selected_instance_id);
-               
+            });               
         };
 
 //        Not used
@@ -257,7 +252,7 @@ var JBatch = (function (JBatch) {
             if (propertiesStr == "undefined" || propertiesStr.length == 0) {
                 $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName).then(function (resp) {
                     var jsonResp = resp.data;
-                    if (jsonResp.outcome == "failed") {
+                    if (jsonResp.outcome.toString() === "failed") {
                         JBatch.log.error("Job " + jobName + " start failed. Failure description: " + jsonResp['failure-description']);
                     } else {
 //                    JBatch.log.info("Job started: " + jobName + "with id: " + jsonResp.result);                        
@@ -267,8 +262,8 @@ var JBatch = (function (JBatch) {
                 });
             } else {
                 $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName + "/" + properties).then(function (resp) {
-                    var jsonResp = resp;
-                    if (jsonResp.outcome == "failed") {
+                    var jsonResp = resp.data;
+                    if (jsonResp.outcome.toString() === "failed") {
                         JBatch.log.error("Job " + jobName + " start failed. Failure description: " + jsonResp['failure-description']);
                     } else {
 //                    JBatch.log.info("Job started: " + jobName + "with id: " + jsonResp.result);                        
@@ -285,20 +280,37 @@ var JBatch = (function (JBatch) {
             JBatch.log.info("Job selected: " + jobName + "from: " + deploymentName);
         };
 
-        $scope.stopExecution = function (executioId) {
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/stop/" + executioId).then(function (resp) {
-                $scope.executionsWatcher = new String(resp.data);
-                JBatch.log.info("Stop execution with id: " + executioId + " . Result: " + resp.data);
-            });
+        $scope.stopExecution = function (executionId) {
+            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/stop/" + executionId).then(function (resp) {
+//                $scope.executionsWatcher = new String(resp.data);
+//                JBatch.log.info("Stop execution with id: " + executioId + " . Result: " + resp.data);
+                var jsonResp = resp.data;
+                if (jsonResp['outcome'] == "failed") {
+                        JBatch.log.error("Stopping job with id: " + executionId + " failed. Failure description: " + jsonResp['description']);
+                        $scope.logAndToastSuccess("fail");
+                    } else {                   
+                        $scope.logAndToastSuccess("Job with id: " + executionId + " stopped.");
+                        $scope.refreshSelectedExecutions();
+                    }
+            });         
+            
 //           $scope.setSelectedExecutions($scope.selected_instance_id); 
-            $scope.refreshSelectedExecutions();
+//            $scope.refreshSelectedExecutions();
         };
 
-        $scope.abandonExecution = function (executioId) {
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/abandon/" + executioId).then(function (resp) {
-                $scope.executionsWatcher = new String(resp.data);
-                JBatch.log.info("Abandon execution with id: " + executioId + " . Result: " + resp.data);
-            });
+        $scope.abandonExecution = function (executionId) {
+            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/abandon/" + executionId).then(function (resp) {
+//                $scope.executionsWatcher = new String(resp.data);
+//                JBatch.log.info("Abandon execution with id: " + executioId + " . Result: " + resp.data);
+                var jsonResp = resp.data;
+                if (jsonResp['outcome'] == "failed") {
+                        JBatch.log.error("Restarting job with id: " + executionId + " failed. Failure description: " + jsonResp['description']);
+                        $scope.logAndToastSuccess("fail");
+                    } else {                   
+                        $scope.logAndToastSuccess("Job with id: " + executionId + " abandoned.");
+                        $scope.refreshSelectedExecutions();
+                    }
+            });         
 //          $scope.refresh;
 //          $scope.setSelectedExecutions($scope.selected_instance_id);        
            $scope.refreshSelectedExecutions();
@@ -334,8 +346,8 @@ var JBatch = (function (JBatch) {
 
         $scope.logAndToastSuccess = function (msg) {
             JBatch.log.info(msg);
-            toastr.success('test : ' + msg);
-        }
+            toastr.success(msg);
+        };
 
 
         //test methods        
