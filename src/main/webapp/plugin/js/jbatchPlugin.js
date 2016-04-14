@@ -222,15 +222,15 @@ var JBatch = (function (JBatch) {
         $scope.restartExecution = function (execId) {
             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/restart/" + execId).then(function (resp) {
                 var jsonResp = resp.data;
-               if (jsonResp.outcome.toString() === "failed") {
-                        JBatch.log.error("Restarting job with id: " + execId + " failed. Failure description: " + jsonResp['description']);                        
-                    } else {              
-                        $scope.logAndToastSuccess("Job with id: " + execId + " restarted. New id:" + jsonResp.result);
-                        $scope.refreshSelectedExecutions();
-                    }
-            });               
-        };        
-        
+                if (jsonResp.outcome.toString() === "failed") {
+                    JBatch.log.error("Restarting job with id: " + execId + " failed. Failure description: " + jsonResp['description']);
+                } else {
+                    $scope.logAndToastSuccess("Job with id: " + execId + " restarted. New id:" + jsonResp.result);
+                    $scope.refreshSelectedExecutions();
+                }
+            });
+        };
+
         $scope.startJobCli = function (deploymentName, jobName, properties) {
             var propertiesStr = new String(properties);
             if (propertiesStr == "undefined" || propertiesStr.length == 0) {
@@ -270,13 +270,17 @@ var JBatch = (function (JBatch) {
 //                JBatch.log.info("Stop execution with id: " + executioId + " . Result: " + resp.data);
                 var jsonResp = resp.data;
                 if (jsonResp['outcome'] == "failed") {
+                    if (jsonResp.description.toString().includes("is not running")) {
+                        JBatch.log.error("Cannot stop execution that is not running!");
+                    } else {
                         JBatch.log.error("Stopping job with id: " + executionId + " failed. Failure description: " + jsonResp['description']);
-                    } else {                   
-                        $scope.logAndToastSuccess("Job with id: " + executionId + " stopped.");
-                        $scope.refreshSelectedExecutions();
                     }
-            });         
-            
+                } else {
+                    $scope.logAndToastSuccess("Job with id: " + executionId + " stopped.");
+                    $scope.refreshSelectedExecutions();
+                }
+            });
+
 //           $scope.setSelectedExecutions($scope.selected_instance_id); 
 //            $scope.refreshSelectedExecutions();
         };
@@ -287,15 +291,19 @@ var JBatch = (function (JBatch) {
 //                JBatch.log.info("Abandon execution with id: " + executioId + " . Result: " + resp.data);
                 var jsonResp = resp.data;
                 if (jsonResp['outcome'] == "failed") {
+                    if (jsonResp.description.toString().includes("running and cannot be abandoned")) {
+                        JBatch.log.error("Cannot abandon running execution!");
+                    } else {
                         JBatch.log.error("Restarting job with id: " + executionId + " failed. Failure description: " + jsonResp['description']);
-                    } else {                   
-                        $scope.logAndToastSuccess("Job with id: " + executionId + " abandoned.");
-                        $scope.refreshSelectedExecutions();
                     }
-            });         
+                } else {
+                    $scope.logAndToastSuccess("Job with id: " + executionId + " abandoned.");
+                    $scope.refreshSelectedExecutions();
+                }
+            });
 //          $scope.refresh;
 //          $scope.setSelectedExecutions($scope.selected_instance_id);        
-           $scope.refreshSelectedExecutions();
+            $scope.refreshSelectedExecutions();
         };
 
 //        Actions called from dropdown on each execution
@@ -333,7 +341,7 @@ var JBatch = (function (JBatch) {
 
 
         //test methods     
-        
+
         //        Not used
         $scope.restartLastExecutionOf = function (instanceId) {
             $scope.getLastExecution(instanceId);
@@ -347,7 +355,7 @@ var JBatch = (function (JBatch) {
 //                $scope.getJobCounts();
 //            });
 //        };
-        
+
 //        $scope.$watch('executionsWatcher', function() {
 //            $scope.setSelectedExecutions($scope.selected_instance_id);
 //            JBatch.log.info("Last execution restarted. New id: " + $scope.executionsWatcher);                
