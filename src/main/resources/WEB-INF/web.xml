@@ -7,34 +7,99 @@
 
   <description>Hawtio plugin for managing batch jobs using jsr352</description>
   <display-name>hawt.io jbatch plugin</display-name>
+  
+  <!-- This must be in hawtio-web
+  <env-entry>
+    <description>Enable/disable hawtio's authentication filter, value is really a boolean</description>
+    <env-entry-name>hawtio/authenticationEnabled</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>true</env-entry-value>
+  </env-entry>
+  
+  <env-entry>
+    <description>Authorized user role, empty string disables authorization</description>
+    <env-entry-name>hawtio/role</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>    
+    <env-entry-value>*</env-entry-value>
+  </env-entry>
+  
+  <env-entry>
+    <description>JAAS realm used to authenticate users</description>
+    <env-entry-name>hawtio/realm</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>*</env-entry-value>
+  </env-entry>
+  
+    <env-entry>
+      <description>JAAS classname that would contain the role principal, empty string disables authorization</description>
+      <env-entry-name>hawtio/rolePrincipalClasses</env-entry-name>
+      <env-entry-type>java.lang.String</env-entry-type>
+      <env-entry-value>org.jboss.security.SimplePrincipal</env-entry-value>
+    </env-entry>
+    -->
 
-  <context-param>
-    <description>Plugin's path on the server</description>
-    <param-name>plugin-context</param-name>
-    <param-value>${plugin-context}</param-value>
-  </context-param>
+    <!--authorization-->
+    <context-param>
+        <param-name>resteasy.role.based.security</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    
+    <security-role>
+        <description/>
+        <role-name>user</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>admin</role-name>
+    </security-role>
+    <security-role>
+        <description/>
+        <role-name>supervisor</role-name>
+    </security-role>
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>All resources</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>jboss-web-policy</realm-name>
+    </login-config>
 
-  <context-param>
-    <description>Plugin's path on the server</description>
-    <param-name>plugin-name</param-name>
-    <param-value>${project.artifactId}</param-value>
-  </context-param>
 
-  <context-param>
-    <description>Plugin's path on the server</description>
-    <param-name>plugin-domain</param-name>
-    <param-value>${plugin-domain}</param-value>
-  </context-param>
+    <context-param>
+        <description>Plugin's path on the server</description>
+        <param-name>plugin-context</param-name>
+        <param-value>${plugin-context}</param-value>
+    </context-param>
 
-  <context-param>
-    <description>Plugin's path on the server</description>
-    <param-name>plugin-scripts</param-name>
-    <param-value>${plugin-scripts}</param-value>
-  </context-param>
+    <context-param>
+        <description>Plugin's path on the server</description>
+        <param-name>plugin-name</param-name>
+        <param-value>${project.artifactId}</param-value>
+    </context-param>
 
-  <listener>
-    <listener-class>muni.fi.dp.jz.jbatch.hawtio.PluginContextListener</listener-class>
-  </listener>
+    <context-param>
+        <description>Plugin's path on the server</description>
+        <param-name>plugin-domain</param-name>
+        <param-value>${plugin-domain}</param-value>
+    </context-param>
+
+    <context-param>
+        <description>Plugin's path on the server</description>
+        <param-name>plugin-scripts</param-name>
+        <param-value>${plugin-scripts}</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>muni.fi.dp.jz.jbatch.hawtio.PluginContextListener</listener-class>
+    </listener>
 
 
 </web-app>

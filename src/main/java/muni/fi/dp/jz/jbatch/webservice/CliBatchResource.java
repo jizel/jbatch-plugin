@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Properties;
 import java.util.logging.Level;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -30,6 +33,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import muni.fi.dp.jz.jbatch.service.CliService;
 import org.apache.log4j.Logger;
+import org.jboss.security.annotation.SecurityDomain;
+import org.jboss.ws.api.annotation.WebContext;
 
 /**
  *
@@ -39,6 +44,9 @@ import org.apache.log4j.Logger;
 @Path("cli")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@DeclareRoles({"admin", "supervisor", "user"})
+@SecurityDomain("jboss-web-policy")
+@WebContext(contextRoot="/*", urlPattern="/*", authMethod="BASIC", transportGuarantee="NONE", secureWSDLAccess=false)
 public class CliBatchResource {
     
     @EJB
@@ -47,6 +55,7 @@ public class CliBatchResource {
     
     @GET
     @Path("start/{deployment}/{jobName}")
+    @RolesAllowed("admin")
     public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName){
         String resp = cliService.startJobCli(deploymentName, jobName);
         LOG.info("Job " + jobName + " started via cli! Server response returned.\n");
@@ -55,6 +64,7 @@ public class CliBatchResource {
     
     @GET
     @Path("start/{deployment}/{jobName}/{properties}")
+    @RolesAllowed("admin")
     public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @PathParam("properties") String properties){
         Properties props = new Properties();
         try {
@@ -70,6 +80,7 @@ public class CliBatchResource {
     
     @GET        
     @Path("deployments")
+    @PermitAll
     public Response getDeploymentInfo(){
        String resp = cliService.getDeploymentInfo();        
         LOG.info("\nDeployments from server requested\n");                
@@ -78,6 +89,7 @@ public class CliBatchResource {
     
     @GET        
     @Path("batchDepl")
+    @PermitAll
     public Response getBatchDeployments(){
        String resp = cliService.getBatchDeploymentsWithJobs();        
         LOG.info("\nBatch deployments only requested from server\n");                
@@ -86,6 +98,7 @@ public class CliBatchResource {
     
     @GET        
     @Path("deploymentJobs/{deployment}")
+    @PermitAll
     public Response getBatchDeployments(@PathParam("deployment") String deployment){
        String deploymentJobs = cliService.getJobsFromDeployment(deployment);
 //       TODO: Take just the job part from resp??
