@@ -183,7 +183,16 @@
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
             <version>1.1.11.Final</version>
-        </dependency>        
+        </dependency>   
+        
+        <!--Security-->
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-security</artifactId>
+            <version>7.2.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
+     
         
         
                              
@@ -254,7 +263,7 @@
                         <!--<arquillian.launch>wildfly-embedded</arquillian.launch>-->
                         <!--<arquillian.launch></arquillian.launch>-->
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-<!--                        <jboss.home>.${file.separator}target${file.separator}wildfly-10.0.0.Final</jboss.home>
+                        <!--                        <jboss.home>.${file.separator}target${file.separator}wildfly-10.0.0.Final</jboss.home>
                         <module.path>.${file.separator}target${file.separator}wildfly-10.0.0.Final${file.separator}modules</module.path>-->
                         <jboss.home>.\target\wildfly-10.0.0.Final</jboss.home>
                         <module.path>.\target\wildfly-10.0.0.Final\modules</module.path>

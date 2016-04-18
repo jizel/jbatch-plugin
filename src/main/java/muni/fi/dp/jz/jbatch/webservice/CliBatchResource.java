@@ -46,7 +46,7 @@ import org.jboss.ws.api.annotation.WebContext;
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles({"admin", "supervisor", "user"})
 @SecurityDomain("jboss-web-policy")
-@WebContext(contextRoot="/*", urlPattern="/*", authMethod="BASIC", transportGuarantee="NONE", secureWSDLAccess=false)
+@WebContext(contextRoot="/jbatch_plugin", urlPattern="*/jbatch_plugin/*", authMethod="BASIC", transportGuarantee="NONE", secureWSDLAccess=false)
 public class CliBatchResource {
     
     @EJB

@@ -73,11 +73,12 @@ public class BatchExecutionBeanTest {
     @Deployment
     public static WebArchive createDeployment() {
         WebArchive war = ShrinkWrap.create(WebArchive.class);
-        war.addPackage("muni.fi.dp.jz.batchapi");
+        war.addPackage("muni.fi.dp.jz.jbatch.batchapi");
+        war.addPackage("muni.fi.dp.jz.jbatch.exception");
         war.addClass(BatchExecutionBean.class);
         war.addClass(BatchExecutionException.class);
         war.addAsResource("META-INF/batch.xml");
-        war.addAsResource("META-INF/batch-jobs/example-batch-job.xml");
+        war.addAsResource("META-INF/batch-jobs/simple-batchlet-job.xml");
         return war;
     }
 
@@ -89,7 +90,7 @@ public class BatchExecutionBeanTest {
     public void testSubmitJob() throws Exception {
         System.out.println("submitJob");
         long expected = 1;
-        String jobName = "example-batch-job";
+        String jobName = "simple-batchlet-job";
 
         Assert.assertEquals(expected, batchExecutor.submitJob(jobName));
     }
@@ -228,7 +229,7 @@ public class BatchExecutionBeanTest {
     public void testGetParameters() throws Exception {
         System.out.println("getParameters");
         long execId = 1L;
-        String expected = "{jberet.jobXmlName=example-batch-job}";
+        String expected = "{}";
 
         Assert.assertEquals(expected, (batchExecutor.getParameters(execId)).toString());
     }
