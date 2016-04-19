@@ -37,13 +37,23 @@
       <env-entry-value>org.jboss.security.SimplePrincipal</env-entry-value>
     </env-entry>
     -->
+    
+    <!--    <env-entry>
+    <description>Enable/disable Keycloak integration. Value is really a boolean</description>
+    <env-entry-name>hawtio/keycloakEnabled</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>true</env-entry-value>
+    </env-entry>-->
 
     <!--authorization-->
-    <context-param>
+    
+    <!--Zbytec-->
+    <!--    <context-param>
         <param-name>resteasy.role.based.security</param-name>
         <param-value>true</param-value>
-    </context-param>
+    </context-param>-->
     
+    <!--Zbytec-->
     <security-role>
         <description/>
         <role-name>user</role-name>
@@ -57,22 +67,58 @@
         <role-name>supervisor</role-name>
     </security-role>
     
-    <security-constraint>
+    <!--    <security-constraint>
         <web-resource-collection>
             <web-resource-name>All resources</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
+    </security-constraint>-->
+    
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>io.hawt.web.AuthenticationFilter</filter-class>
+    </filter>
+<!--    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>         
+    </filter-mapping>-->
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>JBatch</web-resource-name>
+            <url-pattern>/rest/cli/start/*</url-pattern>
+            <url-pattern>/rest/jobs/restart/*</url-pattern>
+            <url-pattern>/rest/jobs/stop/*</url-pattern>
+            <url-pattern>/rest/jobs/abandon/*</url-pattern>            
+<!--            <http-method>GET</http-method>
+            <http-method>POST</http-method>-->
+        </web-resource-collection>
         <auth-constraint>
+            <!--Listing all roles here and doing the actual mapping with @RolesAllowed annotations in webservice package-->
             <role-name>admin</role-name>
+            <role-name>user</role-name>
+            <role-name>supervisor</role-name>
         </auth-constraint>
     </security-constraint>
     
+    <!--Must-->
     <login-config>
         <auth-method>BASIC</auth-method>
-        <realm-name>jboss-web-policy</realm-name>
+        <!--<realm-name>ApplicationRealm</realm-name>-->
+        <realm-name>*</realm-name>
     </login-config>
+    
+    <!--Redirect to hawtio's login page with using login.jsp-->
+    <!--    <login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/login.jsp</form-login-page>   
+            <form-error-page>/fail_login.html</form-error-page>         
+        </form-login-config>
+    </login-config>-->
 
 
+    <!--Hawt.io-->
     <context-param>
         <description>Plugin's path on the server</description>
         <param-name>plugin-context</param-name>

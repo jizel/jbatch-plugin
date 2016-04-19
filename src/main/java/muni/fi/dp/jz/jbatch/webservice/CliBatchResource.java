@@ -34,7 +34,9 @@ import javax.ws.rs.core.Response;
 import muni.fi.dp.jz.jbatch.service.CliService;
 import org.apache.log4j.Logger;
 import org.jboss.security.annotation.SecurityDomain;
+import javax.ws.rs.ForbiddenException;
 import org.jboss.ws.api.annotation.WebContext;
+import org.json.JSONObject;
 
 /**
  *
@@ -45,8 +47,8 @@ import org.jboss.ws.api.annotation.WebContext;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles({"admin", "supervisor", "user"})
-@SecurityDomain("jboss-web-policy")
-@WebContext(contextRoot="/jbatch_plugin", urlPattern="*/jbatch_plugin/*", authMethod="BASIC", transportGuarantee="NONE", secureWSDLAccess=false)
+//@SecurityDomain("ApplicationRealm")
+//@WebContext(contextRoot="/*", urlPattern="/*", authMethod="BASIC", transportGuarantee="NONE", secureWSDLAccess=false)
 public class CliBatchResource {
     
     @EJB
@@ -67,11 +69,17 @@ public class CliBatchResource {
     @RolesAllowed("admin")
     public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @PathParam("properties") String properties){
         Properties props = new Properties();
+        JSONObject jsonResp = new JSONObject();
         try {
             props.load(new StringReader(properties));
         } catch (IOException ex) {
             LOG.error("Invalid job properties caused an exception: " + ex.toString());
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        } catch(ForbiddenException ex) {
+            jsonResp.put("outcome","failed");
+            jsonResp.put("description","User not allowed to start the job: " + ex.toString());
+             LOG.error("Unauthorized operation: start job via cli: " + ex.toString());
+            return Response.ok(jsonResp, MediaType.APPLICATION_JSON).build();
         }
         String resp = cliService.startJobCli(deploymentName, jobName, props);
         LOG.info("Job " + jobName + " started via cli! Server response returned.\n");

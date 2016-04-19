@@ -40,6 +40,7 @@ import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 import muni.fi.dp.jz.jbatch.service.JobService;
 import org.apache.log4j.Logger;
+import org.jboss.security.annotation.SecurityDomain;
 import org.json.JSONObject;
 
 /**
@@ -51,6 +52,7 @@ import org.json.JSONObject;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @DeclareRoles({"admin", "supervisor", "user"})
+//@SecurityDomain("ApplicationRealm")
 public class JobResource {    
     
     @EJB

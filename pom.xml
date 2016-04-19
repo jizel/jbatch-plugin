@@ -79,6 +79,13 @@
             <artifactId>hawtio-plugin-mbean</artifactId>
             <version>${project.version}</version>            
         </dependency>
+        
+        <!--Hawtio Authentication filter-->
+        <dependency>
+            <groupId>io.hawt</groupId>
+            <artifactId>hawtio-system</artifactId>
+            <version>1.4.2</version>
+        </dependency> 
 
         <!-- servlet API is provided by the container -->
         <dependency>
