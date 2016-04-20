@@ -2,12 +2,13 @@
 ### Hawtio plugin for managing JSR352 batch jobs. Optimized for Wildfly 10.
 
 **Requirements:**
- - Running instance of hawtio-wildfly on Wildfly 10 server (https://github.com/hawtio/hawtio/tree/master/hawtio-wildfly)
+ - Running instance of hawtio-wildfly on a Wildfly 10 server (https://github.com/hawtio/hawtio/tree/master/hawtio-wildfly)
 
  ### Authentication
  - Create user(s) in ApplicationRealm on your server (i.e. via add-user.sh or add-user.bat)
  - There are 3 supported roles - admin (all rights), supervisor(cannot start new jobs) and user(read only). Assign one of these roles to your user.
- - If you are using hawtio-wildfly instance then all config is done. Else (hawtio-web or anything other) you need to copy following to your standalone.xml:
+ - If you are using a *hawtio-wildfly* instance then all config is done. 
+ - Else (hawtio-web or anything other) you need to copy following to your standalone.xml:
  
  ```
     <system-properties>
@@ -27,4 +28,4 @@
  - Java 1.8 is supported
 
 
-Plugin is discovered automatically by hawtio using Jolokia. Rest api with json message format is implemented.
+Plugin is discovered automatically by hawtio using Jolokia. REST api with json message format is implemented.
