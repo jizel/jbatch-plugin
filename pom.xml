@@ -270,10 +270,10 @@
                         <!--<arquillian.launch>wildfly-embedded</arquillian.launch>-->
                         <!--<arquillian.launch></arquillian.launch>-->
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
-                        <!--                        <jboss.home>.${file.separator}target${file.separator}wildfly-10.0.0.Final</jboss.home>
-                        <module.path>.${file.separator}target${file.separator}wildfly-10.0.0.Final${file.separator}modules</module.path>-->
-                        <jboss.home>.\target\wildfly-10.0.0.Final</jboss.home>
-                        <module.path>.\target\wildfly-10.0.0.Final\modules</module.path>
+                        <jboss.home>.${file.separator}target${file.separator}wildfly-10.0.0.Final</jboss.home>
+                        <module.path>.${file.separator}target${file.separator}wildfly-10.0.0.Final${file.separator}modules</module.path>
+<!--                        <jboss.home>.\target\wildfly-10.0.0.Final</jboss.home>
+                        <module.path>.\target\wildfly-10.0.0.Final\modules</module.path>-->
                     
                         <!--                    <jboss.home>c:\wildfly\wildfly-10.0.0.Final</jboss.home> 
                         <property name="managementAddress">127.0.0.1</property>
