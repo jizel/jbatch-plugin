@@ -16,8 +16,7 @@ Requirements:
         <property name="hawtio.rolePrincipalClasses" value="org.jboss.security.SimplePrincipal"/>
     </system-properties>
 ```
-    
-  - Now you can login to hawtio on your server and use the same credentials for REST authentication (TBD: Unify authentication with Hawtio so only one login is needed in one session)
+ - Now you can login to hawtio on your server and use the same credentials for REST authentication (TBD: Unify authentication with Hawtio so only one login is needed in one session)
   
   ### Build
   - Build project with mvn clean install
