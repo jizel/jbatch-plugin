@@ -21,7 +21,7 @@ Requirements:
  - Now you can login to hawtio on your server and use the same credentials for REST authentication (TBD: Unify authentication with Hawtio so only one login is needed in one session)
   
   ### Build
-  - Build project with mvn clean install
+  - Build project with *mvn clean install*
   - Wildfly 10 instance for arquillian unit tests is automatically downloaded into ./target directory (takes about 130 MB of disk space)
   - If everything ends correctly, deploy the created war on your server together with the hawtio instance
   - Java 1.8 is supported
