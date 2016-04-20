@@ -8,6 +8,7 @@ Requirements:
  - Create user(s) in ApplicationRealm on your server (i.e. via add-user.sh or add-user.bat)
  - There are 3 supported roles - admin, supervisor and user. Assign one of these roles to your user.
  - If you are using hawtio-wildfly instance then all config is done. Else (hawtio-web or anything other) you need to copy following to your standalone.xml:
+ 
  ```
     <system-properties>
         <property name="hawtio.authenticationEnabled" value="true"/>
@@ -16,6 +17,7 @@ Requirements:
         <property name="hawtio.rolePrincipalClasses" value="org.jboss.security.SimplePrincipal"/>
     </system-properties>
 ```
+ 
  - Now you can login to hawtio on your server and use the same credentials for REST authentication (TBD: Unify authentication with Hawtio so only one login is needed in one session)
   
   ### Build
