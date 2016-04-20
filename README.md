@@ -6,7 +6,7 @@
 
  ### Authentication
  - Create user(s) in ApplicationRealm on your server (i.e. via add-user.sh or add-user.bat)
- - There are 3 supported roles - admin, supervisor and user. Assign one of these roles to your user.
+ - There are 3 supported roles - admin (all rights), supervisor(cannot start new jobs) and user(read only). Assign one of these roles to your user.
  - If you are using hawtio-wildfly instance then all config is done. Else (hawtio-web or anything other) you need to copy following to your standalone.xml:
  
  ```
