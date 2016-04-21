@@ -24,6 +24,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.jws.WebService;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -44,10 +45,11 @@ import org.json.JSONObject;
  */
 @Stateless
 @Path("cli")
+//@WebService
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles({"admin", "supervisor", "user"})
-//@SecurityDomain("ApplicationRealm")
+@SecurityDomain("jboss-web-policy")
 //@WebContext(contextRoot="/*", urlPattern="/*", authMethod="BASIC", transportGuarantee="NONE", secureWSDLAccess=false)
 public class CliBatchResource {
     
