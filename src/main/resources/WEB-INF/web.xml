@@ -105,7 +105,7 @@
     <!--Must-->
     <login-config>
         <auth-method>BASIC</auth-method>
-        <realm-name>jboss-web-policy</realm-name>
+        <realm-name>ApplicationRealm</realm-name>
     </login-config>
     
     <!--Redirect to hawtio's login page with using login.jsp-->

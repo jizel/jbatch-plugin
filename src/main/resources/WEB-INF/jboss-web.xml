@@ -1,0 +1,3 @@
+<jboss-web> 
+    <security-domain>jboss-web-policy</security-domain>
+</jboss-web>

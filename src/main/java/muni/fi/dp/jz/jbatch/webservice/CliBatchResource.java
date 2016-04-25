@@ -17,15 +17,19 @@ package muni.fi.dp.jz.jbatch.webservice;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.jws.WebService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -36,7 +40,9 @@ import muni.fi.dp.jz.jbatch.service.CliService;
 import org.apache.log4j.Logger;
 import org.jboss.security.annotation.SecurityDomain;
 import javax.ws.rs.ForbiddenException;
-import org.jboss.ws.api.annotation.WebContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.HttpHeaders;
 import org.json.JSONObject;
 
 /**
@@ -70,6 +76,7 @@ public class CliBatchResource {
     @Path("start/{deployment}/{jobName}/{properties}")
     @RolesAllowed("admin")
     public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @PathParam("properties") String properties){
+       
         Properties props = new Properties();
         JSONObject jsonResp = new JSONObject();
         try {
@@ -100,10 +107,21 @@ public class CliBatchResource {
     @GET        
     @Path("batchDepl")
     @PermitAll
-    public Response getBatchDeployments(){
+    public Response getBatchDeployments(@Context HttpHeaders headers, @Context HttpServletRequest request, @CookieParam("JSESSIONID") String jsessionId){
+//         Map<String, Cookie> existingCookies = headers.getCookies();
+//            HttpSession session = request.getSession();
+//            Enumeration foo = session.getAttributeNames();
+//            ArrayList<String> values = new ArrayList<>();
+//            while(foo.hasMoreElements()){
+//               String element = (String) foo.nextElement();
+//               values.add(element);
+//            }
+//            String id = session.getId();   
+//                Object foo2 = session.getAttribute("WELD_S_HASH");
+         
        String resp = cliService.getBatchDeploymentsWithJobs();        
         LOG.info("\nBatch deployments only requested from server\n");                
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+        return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
     }
     
     @GET        
