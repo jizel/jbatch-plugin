@@ -91,9 +91,9 @@ var JBatch = (function (JBatch) {
         viewRegistry["jbatch_plugin"] = layoutFull;
         
 //        var id = document.cookie.split(';')[0].split('=')[1];
-//        $http.defaults.headers.common.Authorization = id ;
+//        $http.defaults.headers.common.Authorization = document.cookie ;
 //        //or try this 
-//        $http.defaults.headers.common['Auth-Token'] = id;
+//        $http.defaults.headers.common['Auth-Token'] = document.cookie;
 
         /* Set up top-level link to our plugin.  Requires an object
          with the following attributes:
@@ -139,6 +139,8 @@ var JBatch = (function (JBatch) {
      * @function JBatchController
      * @param $scope
      * @param jolokia
+     * @param $http
+     * @param toastr
      *
      * The controller for simple.html, only requires the jolokia
      * service from hawtioCore
@@ -190,7 +192,8 @@ var JBatch = (function (JBatch) {
 
         $scope.getBatchDeployments = function () {
             $http.get("http://localhost:8080/jbatch-plugin/rest/cli/batchDepl/", {
-                headers: {'Authorization': 'Basic'}
+//                headers: {'Authorization': 'Basic'}
+                headers: {'Auth-Token': document.cookie}
             }).then(function (resp) {
                 $scope.batchDeployments = resp.data;
             });
@@ -241,16 +244,17 @@ var JBatch = (function (JBatch) {
         $scope.startJobCli = function (deploymentName, jobName, properties) {
             var propertiesStr = new String(properties);
             if (propertiesStr == "undefined" || propertiesStr.length == 0) {
-                $http.post("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName, {
+                $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName, {
 //                   headers: {'Authorization': 'Basic ' + document.cookie}
-                    headers: {'Cookie': document.cookie}
+                    headers: {'Auth-Token': document.cookie}                    
                 }).then(function (resp) {
                     var jsonResp = resp.data;
+//                    $scope.logAndToastSuccess("token: " + document.cookie);
                     if (jsonResp.outcome.toString() === "failed") {
                         JBatch.log.error("Job " + jobName + " start failed. Failure description: " + jsonResp['failure-description']);
                     } else {
 //                    JBatch.log.info("Job started: " + jobName + "with id: " + jsonResp.result);                        
-                        $scope.logAndToastSuccess("Job started: " + jobName + "with id: " + jsonResp.result);
+                        $scope.logAndToastSuccess("Job started: " + jobName + " with id: " + jsonResp.result);
                         $scope.getJobCounts();
                     }
                 });

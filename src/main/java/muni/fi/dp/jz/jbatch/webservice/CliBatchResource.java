@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.annotation.security.DeclareRoles;
@@ -26,6 +27,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.servlet.http.Cookie;
 //import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -41,9 +43,9 @@ import muni.fi.dp.jz.jbatch.service.CliService;
 import org.apache.log4j.Logger;
 import org.jboss.security.annotation.SecurityDomain;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import org.json.JSONObject;
 
@@ -67,19 +69,27 @@ public class CliBatchResource {
     private static final java.util.logging.Logger LOG1 = java.util.logging.Logger.getLogger(CliBatchResource.class.getName());
     
     
-    @POST
+    @GET
     @Path("start/{deployment}/{jobName}")
 //    @RolesAllowed("admin")
     @PermitAll
-    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @Context HttpHeaders headers, @CookieParam("JSESSIONID") String jsessionId){
+    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @Context HttpHeaders headers, @HeaderParam("Auth-Token") String authToken){
         String resp = cliService.startJobCli(deploymentName, jobName);
 //            String resp = jsessionId;
-            Map<String, Cookie> existingCookies = headers.getCookies();
-            JSONObject cookieMap = new JSONObject(existingCookies);
-        LOG1.info("Job " + jobName + " started via cli! Server response returned.\n");
+//            Map<String, Cookie> existingCookies = headers.getCookies();
+//            JSONObject cookieMap = new JSONObject(existingCookies);
+                List<String> jsid = headers.getRequestHeader("Auth-Token");
+//                JSONObject jsonJsid = new JSONObject(jsid);
+        LOG1.warning("Job " + jobName + " started via cli! Server response returned.\n");
         System.out.println("Job " + jobName + " started via cli! Server response returned.\n");
-        System.out.println("Cookies: " + cookieMap.toString());
-        System.out.println("CookiesPar: " + jsessionId);
+//        System.out.println("Cookies: " + cookieMap.toString());
+//        System.out.println("CookiesPar: " + jsessionId);
+        System.out.println("Req headers: " + jsid.toString());
+        System.out.println("Auth token header param: " + authToken);
+        
+        for(String header : headers.getRequestHeaders().keySet()){
+        LOG1.warning("Header: " + header);
+            }
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();        
     }   
     
@@ -118,11 +128,11 @@ public class CliBatchResource {
     @GET        
     @Path("batchDepl")
     @PermitAll
-    public Response getBatchDeployments(@Context HttpHeaders headers){
+    public Response getBatchDeployments(@Context HttpHeaders headers, @Context HttpServletRequest request){
 //        @Context HttpHeaders headers, @Context HttpServletRequest request, @CookieParam("JSESSIONID") String jsessionId, 
                     ArrayList<String> values = new ArrayList<>();
-         Map<String, Cookie> existingCookies = headers.getCookies();//                 
-//                 Cookie[] cookies = request.getCookies();
+//         Map<String, Cookie> existingCookies = headers.getCookies();//                 
+                 Cookie[] cookies = request.getCookies();
 //                 for(Cookie cookie:cookies){
 //                     values.add(cookie.toString());
 //                     values.add(cookie.getName());
@@ -138,7 +148,13 @@ public class CliBatchResource {
 
          
        String resp = cliService.getBatchDeploymentsWithJobs();        
-        LOG.info("\nBatch deployments only requested from server\n");                
+        LOG.info("\nBatch deployments only requested from server\n");  
+        for(Cookie cookie : cookies){
+            LOG.info("\nget cookies: " + cookie.getName() + "val: " + cookie.getValue()); 
+        }
+        for(String header : headers.getRequestHeaders().keySet()){
+        LOG1.warning("Header: " + header);
+        }
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();
     }
     
