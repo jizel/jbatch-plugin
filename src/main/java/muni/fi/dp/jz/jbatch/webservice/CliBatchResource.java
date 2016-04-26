@@ -26,6 +26,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+//import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
@@ -40,6 +41,7 @@ import muni.fi.dp.jz.jbatch.service.CliService;
 import org.apache.log4j.Logger;
 import org.jboss.security.annotation.SecurityDomain;
 import javax.ws.rs.ForbiddenException;
+import javax.ws.rs.POST;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -55,27 +57,36 @@ import org.json.JSONObject;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles({"admin", "supervisor", "user"})
-@SecurityDomain("jboss-web-policy")
+//@SecurityDomain("jboss-web-policy")
 //@WebContext(contextRoot="/*", urlPattern="/*", authMethod="BASIC", transportGuarantee="NONE", secureWSDLAccess=false)
 public class CliBatchResource {
     
     @EJB
     private CliService cliService;
-    private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );
+    private static final Logger LOG = Logger.getLogger( CliBatchResource.class.getName() );
+    private static final java.util.logging.Logger LOG1 = java.util.logging.Logger.getLogger(CliBatchResource.class.getName());
     
-    @GET
+    
+    @POST
     @Path("start/{deployment}/{jobName}")
-    @RolesAllowed("admin")
-    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName){
+//    @RolesAllowed("admin")
+    @PermitAll
+    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @Context HttpHeaders headers, @CookieParam("JSESSIONID") String jsessionId){
         String resp = cliService.startJobCli(deploymentName, jobName);
-        LOG.info("Job " + jobName + " started via cli! Server response returned.\n");
+//            String resp = jsessionId;
+            Map<String, Cookie> existingCookies = headers.getCookies();
+            JSONObject cookieMap = new JSONObject(existingCookies);
+        LOG1.info("Job " + jobName + " started via cli! Server response returned.\n");
+        System.out.println("Job " + jobName + " started via cli! Server response returned.\n");
+        System.out.println("Cookies: " + cookieMap.toString());
+        System.out.println("CookiesPar: " + jsessionId);
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();        
     }   
     
     @GET
     @Path("start/{deployment}/{jobName}/{properties}")
     @RolesAllowed("admin")
-    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @PathParam("properties") String properties){
+    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @PathParam("properties") String properties, @CookieParam("JSESSIONID") String jsessionId){
        
         Properties props = new Properties();
         JSONObject jsonResp = new JSONObject();
@@ -107,27 +118,34 @@ public class CliBatchResource {
     @GET        
     @Path("batchDepl")
     @PermitAll
-    public Response getBatchDeployments(@Context HttpHeaders headers, @Context HttpServletRequest request, @CookieParam("JSESSIONID") String jsessionId){
-//         Map<String, Cookie> existingCookies = headers.getCookies();
-//            HttpSession session = request.getSession();
+    public Response getBatchDeployments(@Context HttpHeaders headers){
+//        @Context HttpHeaders headers, @Context HttpServletRequest request, @CookieParam("JSESSIONID") String jsessionId, 
+                    ArrayList<String> values = new ArrayList<>();
+         Map<String, Cookie> existingCookies = headers.getCookies();//                 
+//                 Cookie[] cookies = request.getCookies();
+//                 for(Cookie cookie:cookies){
+//                     values.add(cookie.toString());
+//                     values.add(cookie.getName());
+//                 }
+//            HttpSession session = request.getSession(false);
 //            Enumeration foo = session.getAttributeNames();
-//            ArrayList<String> values = new ArrayList<>();
 //            while(foo.hasMoreElements()){
 //               String element = (String) foo.nextElement();
 //               values.add(element);
 //            }
 //            String id = session.getId();   
 //                Object foo2 = session.getAttribute("WELD_S_HASH");
+
          
        String resp = cliService.getBatchDeploymentsWithJobs();        
         LOG.info("\nBatch deployments only requested from server\n");                
-        return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
+        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
     }
     
     @GET        
     @Path("deploymentJobs/{deployment}")
     @PermitAll
-    public Response getBatchDeployments(@PathParam("deployment") String deployment){
+    public Response getDeploymentJobs(@PathParam("deployment") String deployment){
        String deploymentJobs = cliService.getJobsFromDeployment(deployment);
 //       TODO: Take just the job part from resp??
         LOG.info("\nAll possible jobs for deployment" + deployment + "returned via rest\n");                

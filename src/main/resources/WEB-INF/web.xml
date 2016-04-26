@@ -87,7 +87,7 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>JBatch</web-resource-name>
-            <url-pattern>/rest/cli/start/*</url-pattern>
+            <!--<url-pattern>/rest/cli/start/*</url-pattern>-->
             <url-pattern>/rest/jobs/restart/*</url-pattern>
             <url-pattern>/rest/jobs/stop/*</url-pattern>
             <url-pattern>/rest/jobs/abandon/*</url-pattern>            

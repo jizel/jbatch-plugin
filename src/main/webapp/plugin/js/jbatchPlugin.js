@@ -89,6 +89,11 @@ var JBatch = (function (JBatch) {
         // tell the app to use the full layout, also could use layoutTree
         // to get the JMX tree or provide a URL to a custom layout
         viewRegistry["jbatch_plugin"] = layoutFull;
+        
+//        var id = document.cookie.split(';')[0].split('=')[1];
+//        $http.defaults.headers.common.Authorization = id ;
+//        //or try this 
+//        $http.defaults.headers.common['Auth-Token'] = id;
 
         /* Set up top-level link to our plugin.  Requires an object
          with the following attributes:
@@ -184,7 +189,9 @@ var JBatch = (function (JBatch) {
         };
 
         $scope.getBatchDeployments = function () {
-            $http.get("http://localhost:8080/jbatch-plugin/rest/cli/batchDepl/").then(function (resp) {
+            $http.get("http://localhost:8080/jbatch-plugin/rest/cli/batchDepl/", {
+                headers: {'Authorization': 'Basic'}
+            }).then(function (resp) {
                 $scope.batchDeployments = resp.data;
             });
         };
@@ -234,7 +241,10 @@ var JBatch = (function (JBatch) {
         $scope.startJobCli = function (deploymentName, jobName, properties) {
             var propertiesStr = new String(properties);
             if (propertiesStr == "undefined" || propertiesStr.length == 0) {
-                $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName).then(function (resp) {
+                $http.post("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName, {
+//                   headers: {'Authorization': 'Basic ' + document.cookie}
+                    headers: {'Cookie': document.cookie}
+                }).then(function (resp) {
                     var jsonResp = resp.data;
                     if (jsonResp.outcome.toString() === "failed") {
                         JBatch.log.error("Job " + jobName + " start failed. Failure description: " + jsonResp['failure-description']);
@@ -244,6 +254,8 @@ var JBatch = (function (JBatch) {
                         $scope.getJobCounts();
                     }
                 });
+                
+//                Start Job with properties
             } else {
                 $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName + "/" + properties).then(function (resp) {
                     var jsonResp = resp.data;
