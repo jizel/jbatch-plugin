@@ -71,8 +71,7 @@ public class CliBatchResource {
     
     @GET
     @Path("start/{deployment}/{jobName}")
-//    @RolesAllowed("admin")
-    @PermitAll
+//    @RolesAllowed("admin")    
     public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @Context HttpHeaders headers, @HeaderParam("Auth-Token") String authToken){
         String resp = cliService.startJobCli(deploymentName, jobName);
 //            String resp = jsessionId;
@@ -118,7 +117,7 @@ public class CliBatchResource {
     
     @GET        
     @Path("deployments")
-    @PermitAll
+//    @PermitAll
     public Response getDeploymentInfo(){
        String resp = cliService.getDeploymentInfo();        
         LOG.info("\nDeployments from server requested\n");                
@@ -127,12 +126,12 @@ public class CliBatchResource {
     
     @GET        
     @Path("batchDepl")
-    @PermitAll
+//    @PermitAll
     public Response getBatchDeployments(@Context HttpHeaders headers, @Context HttpServletRequest request){
 //        @Context HttpHeaders headers, @Context HttpServletRequest request, @CookieParam("JSESSIONID") String jsessionId, 
                     ArrayList<String> values = new ArrayList<>();
 //         Map<String, Cookie> existingCookies = headers.getCookies();//                 
-                 Cookie[] cookies = request.getCookies();
+//                 Cookie[] cookies = request.getCookies();
 //                 for(Cookie cookie:cookies){
 //                     values.add(cookie.toString());
 //                     values.add(cookie.getName());
@@ -149,9 +148,9 @@ public class CliBatchResource {
          
        String resp = cliService.getBatchDeploymentsWithJobs();        
         LOG.info("\nBatch deployments only requested from server\n");  
-        for(Cookie cookie : cookies){
-            LOG.info("\nget cookies: " + cookie.getName() + "val: " + cookie.getValue()); 
-        }
+//        for(Cookie cookie : cookies){
+//            LOG.info("\nget cookies: " + cookie.getName() + "val: " + cookie.getValue()); 
+//        }
         for(String header : headers.getRequestHeaders().keySet()){
         LOG1.warning("Header: " + header);
         }
@@ -160,7 +159,7 @@ public class CliBatchResource {
     
     @GET        
     @Path("deploymentJobs/{deployment}")
-    @PermitAll
+//    @PermitAll
     public Response getDeploymentJobs(@PathParam("deployment") String deployment){
        String deploymentJobs = cliService.getJobsFromDeployment(deployment);
 //       TODO: Take just the job part from resp??
