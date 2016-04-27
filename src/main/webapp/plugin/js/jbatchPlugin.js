@@ -49,10 +49,8 @@ var JBatch = (function (JBatch) {
      * run function
      */
     JBatch.module = angular.module('jbatch_plugin', ['hawtioCore'])
-            .config(function ($routeProvider) {
-                
-//                $httpProvider.defaults.withCredentials = true;
-
+            .config(function ($routeProvider, $httpProvider) {               
+                    $httpProvider.defaults.withCredentials = true;
                 /**
                  * Here we define the route for our plugin.  One note is
                  * to avoid using 'otherwise', as hawtio has a handler
@@ -67,7 +65,6 @@ var JBatch = (function (JBatch) {
                             templateUrl: JBatch.templatePath + 'startJob.html'
                         });
             });              
-
 
     /**
      * Here we define any initialization to be done when this angular
@@ -96,8 +93,8 @@ var JBatch = (function (JBatch) {
 //        $http.defaults.headers.common.Authorization = document.cookie ;
 //        //or try this 
 //        $http.defaults.headers.common['Cookie'] = document.cookie;
-        $http.defaults.headers.common['Auth-Token'] = document.cookie;
-        
+//        $http.defaults.headers.common['Auth-Token'] = document.cookie;
+//        $http.defaults.withCredentials = true;
 
         /* Set up top-level link to our plugin.  Requires an object
          with the following attributes:
@@ -198,8 +195,8 @@ var JBatch = (function (JBatch) {
             $http.get("http://localhost:8080/jbatch-plugin/rest/cli/batchDepl/", {
 //                headers: {'Authorization': 'Basic'}
 //                headers: [{'Auth-Token': document.cookie}]               
-//                  headers: {'Cookie':document.cookie} 
-                    withCredentials: true
+//                  headers: {'Cookie':document.cookie.split(";")[0]}
+//                  withCredentials: true  
             }).then(function (resp) {
                 $scope.batchDeployments = resp.data;
             });

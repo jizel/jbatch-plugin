@@ -117,7 +117,7 @@ public class CliBatchResource {
     
     @GET        
     @Path("deployments")
-//    @PermitAll
+    @PermitAll
     public Response getDeploymentInfo(){
        String resp = cliService.getDeploymentInfo();        
         LOG.info("\nDeployments from server requested\n");                
@@ -126,7 +126,7 @@ public class CliBatchResource {
     
     @GET        
     @Path("batchDepl")
-//    @PermitAll
+    @PermitAll
     public Response getBatchDeployments(@Context HttpHeaders headers, @Context HttpServletRequest request){
 //        @Context HttpHeaders headers, @Context HttpServletRequest request, @CookieParam("JSESSIONID") String jsessionId, 
                     ArrayList<String> values = new ArrayList<>();
@@ -154,12 +154,18 @@ public class CliBatchResource {
         for(String header : headers.getRequestHeaders().keySet()){
         LOG1.warning("Header: " + header);
         }
-        return Response.ok(resp, MediaType.APPLICATION_JSON).build();
+        return Response.ok(resp, MediaType.APPLICATION_JSON)
+                .header("Access-Control-Allow-Origin", "http://localhost:8080/")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+                .header("Access-Control-Allow-Headers", "Cookie")
+                .header("Access-Control-Expose-Headers", "Cookie")
+                .header("Access-Control-Allow-Credentials", "true")
+                .build();
     }
     
     @GET        
     @Path("deploymentJobs/{deployment}")
-//    @PermitAll
+    @PermitAll
     public Response getDeploymentJobs(@PathParam("deployment") String deployment){
        String deploymentJobs = cliService.getJobsFromDeployment(deployment);
 //       TODO: Take just the job part from resp??
