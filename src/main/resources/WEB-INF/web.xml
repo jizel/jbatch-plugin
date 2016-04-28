@@ -83,14 +83,15 @@
         <url-pattern>/rest/*</url-pattern>         
     </filter-mapping>-->
     
-<!--    <filter>
+    <filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>muni.fi.dp.jz.jbatch.webservice.AuthFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/rest/*</url-pattern>         
-    </filter-mapping>-->
+    </filter-mapping>
+    
     
     <!-- Common JAX-RS Servlet Definition -->
 <!--    <servlet>
@@ -104,9 +105,9 @@
     </servlet-mapping>-->
     
     <!--To use cookie based session-tracking if available and URL based session-tracking as a fallback-->
-    <session-config>
+<!--    <session-config>
         <tracking-mode>COOKIE</tracking-mode>        
-    </session-config>
+    </session-config>-->
 
     
 <!--    <security-constraint>
@@ -128,10 +129,10 @@
     </security-constraint>-->
     
     <!--Must-->
-    <login-config>
+<!--    <login-config>
         <auth-method>BASIC</auth-method>
         <realm-name>ApplicationRealm</realm-name>
-    </login-config>
+    </login-config>-->
     
     <!--Redirect to hawtio's login page with using login.jsp-->
     <!--    <login-config>
@@ -172,9 +173,9 @@
         <listener-class>muni.fi.dp.jz.jbatch.hawtio.PluginContextListener</listener-class>        
     </listener>
         
-<!--    <listener>
+    <listener>
         <listener-class>muni.fi.dp.jz.jbatch.hawtio.SessionWatcher</listener-class>
-    </listener>-->
+    </listener>
 
 </web-app>
 

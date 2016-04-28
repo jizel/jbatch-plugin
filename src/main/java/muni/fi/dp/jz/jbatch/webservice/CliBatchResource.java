@@ -72,30 +72,30 @@ public class CliBatchResource {
     @GET
     @Path("start/{deployment}/{jobName}")
 //    @RolesAllowed("admin")    
-    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @Context HttpHeaders headers, @HeaderParam("Auth-Token") String authToken){
+    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName){
         String resp = cliService.startJobCli(deploymentName, jobName);
 //            String resp = jsessionId;
 //            Map<String, Cookie> existingCookies = headers.getCookies();
 //            JSONObject cookieMap = new JSONObject(existingCookies);
-                List<String> jsid = headers.getRequestHeader("Auth-Token");
+//                List<String> jsid = headers.getRequestHeader("Auth-Token");
 //                JSONObject jsonJsid = new JSONObject(jsid);
         LOG1.warning("Job " + jobName + " started via cli! Server response returned.\n");
         System.out.println("Job " + jobName + " started via cli! Server response returned.\n");
 //        System.out.println("Cookies: " + cookieMap.toString());
 //        System.out.println("CookiesPar: " + jsessionId);
-        System.out.println("Req headers: " + jsid.toString());
-        System.out.println("Auth token header param: " + authToken);
+//        System.out.println("Req headers: " + jsid.toString());
+//        System.out.println("Auth token header param: " + authToken);
         
-        for(String header : headers.getRequestHeaders().keySet()){
-        LOG1.warning("Header: " + header);
-            }
+//        for(String header : headers.getRequestHeaders().keySet()){
+//        LOG1.warning("Header: " + header);
+            
         return Response.ok(resp, MediaType.APPLICATION_JSON).build();        
     }   
     
     @GET
     @Path("start/{deployment}/{jobName}/{properties}")
     @RolesAllowed("admin")
-    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @PathParam("properties") String properties, @CookieParam("JSESSIONID") String jsessionId){
+    public Response startJobCli(@PathParam("deployment") String deploymentName, @PathParam("jobName") String jobName, @PathParam("properties") String properties){
        
         Properties props = new Properties();
         JSONObject jsonResp = new JSONObject();
@@ -127,7 +127,7 @@ public class CliBatchResource {
     @GET        
     @Path("batchDepl")
     @PermitAll
-    public Response getBatchDeployments(@Context HttpHeaders headers, @Context HttpServletRequest request){
+    public Response getBatchDeployments(){
 //        @Context HttpHeaders headers, @Context HttpServletRequest request, @CookieParam("JSESSIONID") String jsessionId, 
                     ArrayList<String> values = new ArrayList<>();
 //         Map<String, Cookie> existingCookies = headers.getCookies();//                 
@@ -151,15 +151,15 @@ public class CliBatchResource {
 //        for(Cookie cookie : cookies){
 //            LOG.info("\nget cookies: " + cookie.getName() + "val: " + cookie.getValue()); 
 //        }
-        for(String header : headers.getRequestHeaders().keySet()){
-        LOG1.warning("Header: " + header);
-        }
+//        for(String header : headers.getRequestHeaders().keySet()){
+//        LOG1.warning("Header: " + header);
+//        }
         return Response.ok(resp, MediaType.APPLICATION_JSON)
-                .header("Access-Control-Allow-Origin", "http://localhost:8080/")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-                .header("Access-Control-Allow-Headers", "Cookie")
-                .header("Access-Control-Expose-Headers", "Cookie")
-                .header("Access-Control-Allow-Credentials", "true")
+//                .header("Access-Control-Allow-Origin", "http://localhost:8080/")
+//                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+//                .header("Access-Control-Allow-Headers", "Cookie")
+//                .header("Access-Control-Expose-Headers", "Cookie")
+//                .header("Access-Control-Allow-Credentials", "true")
                 .build();
     }
     

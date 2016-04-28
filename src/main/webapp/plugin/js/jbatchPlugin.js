@@ -49,7 +49,7 @@ var JBatch = (function (JBatch) {
      * run function
      */
     JBatch.module = angular.module('jbatch_plugin', ['hawtioCore'])
-            .config(function ($routeProvider, $httpProvider) {               
+            .config(function ($httpProvider, $routeProvider) {               
                     $httpProvider.defaults.withCredentials = true;
                 /**
                  * Here we define the route for our plugin.  One note is
@@ -175,14 +175,70 @@ var JBatch = (function (JBatch) {
 
 
 //        Methods consuming the REST resources
-        $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/names").then(function (resp) {
+        $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/names", {
+//            headers: {'Cookie' : document.cookie.split(";")[0]}
+        }).then(function (resp) {
             $scope.jobs = resp.data;
         });
 
         $scope.getJobCounts = function () {
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/counts").then(function (resp) {
-                $scope.jobCounts = resp.data;
-            });
+//            $http.post("http://localhost:8080/jbatch-plugin/rest/jobs/counts", {
+////                withCredentials: true 
+//            }).then(function (resp) {
+//                $scope.jobCounts = resp.data;
+//            });
+            
+////            Try it with not so simple XMLHttpRequest directly...
+            var url = 'http://localhost:8080/jbatch-plugin/rest/jobs/counts';
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader(
+                'Cookie', document.cookie.split(";")[0]);
+            xhr.withCredentials = true;
+            xhr.send();
+
+//                Try it with ajax...
+//                $.ajax({
+//                    type: 'GET',
+//
+//                    // The URL to make the request to.
+//                    url: 'http://localhost:8080/jbatch-plugin/rest/jobs/counts',
+//
+//                    // The 'contentType' property sets the 'Content-Type' header.
+//                    // The JQuery default for this property is
+//                    // 'application/x-www-form-urlencoded; charset=UTF-8', which does not trigger
+//                    // a preflight. If you set this value to anything other than
+//                    // application/x-www-form-urlencoded, multipart/form-data, or text/plain,
+//                    // you will trigger a preflight request.
+////                    contentType: 'json',
+//
+//                    xhrFields: {
+//                      // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+//                      // This can be used to set the 'withCredentials' property.
+//                      // Set the value to 'true' if you'd like to pass cookies to the server.
+//                      // If this is enabled, your server must respond with the header
+//                      // 'Access-Control-Allow-Credentials: true'.
+//                      withCredentials: true
+//                    },
+//
+//                    headers: {
+//                      // Set any custom headers here.
+//                      // If you set any non-simple headers, your server must include these
+//                      // headers in the 'Access-Control-Allow-Headers' response header.
+//                      'Cookie' : document.cookie.split(";")[0]
+//                    },
+//
+//                    success: function() {
+////                     $scope.jobCounts = resp.data;
+//                    },
+//
+//                    error: function() {
+//                      // Here's where you handle an error response.
+//                      // Note that if the error was due to a CORS issue,
+//                      // this function will still fire, but there won't be any additional
+//                      // information about the error.
+//                    }
+//                  });
         };
 
         $scope.getDeployments = function () {
@@ -195,15 +251,17 @@ var JBatch = (function (JBatch) {
             $http.get("http://localhost:8080/jbatch-plugin/rest/cli/batchDepl/", {
 //                headers: {'Authorization': 'Basic'}
 //                headers: [{'Auth-Token': document.cookie}]               
-//                  headers: {'Cookie':document.cookie.split(";")[0]}
-//                  withCredentials: true  
+//                  headers: {'Cookie' : document.cookie.split(";")[0]},
+                  withCredentials: true  
             }).then(function (resp) {
                 $scope.batchDeployments = resp.data;
             });
         };
 
         $scope.setSelectedInstances = function (jobname) {
-            $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname).then(function (resp) {
+            $http.post("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname, {
+                withCredentials: true  
+            }).then(function (resp) {
                 $scope.selected_instances = resp.data;
                 $scope.selected_jobname = jobname;
 //           JBatch.log.info($scope.selected_instances);
