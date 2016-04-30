@@ -321,7 +321,7 @@
                 <executions>
 
                     <execution>
-                        <!--                         we run this early in the build process before
+                        <!--we run this early in the build process before
                         maven-resources-plugin is run.  We're exporting the
                         plugin-scripts property from here, so we need to
                         use maven-antrun-plugin 1.6 or up -->

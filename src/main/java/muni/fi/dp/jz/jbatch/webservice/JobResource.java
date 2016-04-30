@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
 
 import javax.batch.runtime.JobExecution;
 import javax.ejb.EJB;
@@ -41,7 +38,6 @@ import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 import muni.fi.dp.jz.jbatch.service.JobService;
 import org.apache.log4j.Logger;
-import org.jboss.security.annotation.SecurityDomain;
 import org.json.JSONObject;
 
 /**
@@ -52,8 +48,6 @@ import org.json.JSONObject;
 @Path("jobs")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@DeclareRoles({"admin", "supervisor", "user"})
-//@SecurityDomain("ApplicationRealm")
 public class JobResource {    
     
     @EJB
@@ -63,7 +57,6 @@ public class JobResource {
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("submit/{jobname}")
-    @RolesAllowed("admin")
     public Response submitJob(@PathParam("jobname") String jobName){       
         try{
 		long execId = jobService.submitJob(jobName);
@@ -77,7 +70,6 @@ public class JobResource {
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("names")
-//    @PermitAll
     public Response getJobNames() {
         try {
 		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
@@ -91,7 +83,6 @@ public class JobResource {
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("jobexec/{execid}")
-//    @PermitAll
     public Response getJobExecution(@PathParam("execid") Long executionId){
         if(executionId == null){
             return Response.serverError().entity("Execution id is empty").build();
@@ -108,7 +99,6 @@ public class JobResource {
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("count/{jobname}")
-//    @PermitAll
     public Response getJobInstanceCount(@PathParam("jobname") String jobName){
          if(jobName == null){
             return Response.serverError().entity("Jobname is empty").build();
@@ -128,7 +118,6 @@ public class JobResource {
     @POST 
     @Produces(MediaType.APPLICATION_JSON)
     @Path("counts")
-//    @PermitAll
     public Response getJobCounts() {
         try{
 		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
@@ -144,7 +133,6 @@ public class JobResource {
     @POST  
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}")
-//    @PermitAll
     public Response getJobInstances(@PathParam("jobname") String jobName) {
         if(jobName == null){
             return Response.serverError().entity("Jobname is empty").build();
@@ -161,7 +149,6 @@ public class JobResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}/{instId}/executions")  
-    @PermitAll
     public Response getJobExecutionsFromInstance(@PathParam("instId") Long instanceId, @PathParam("jobname") String jobName){
         if(jobName == null || instanceId == null){
             return Response.serverError().entity("Job name or instance id is empty").build();
@@ -178,7 +165,6 @@ public class JobResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}/{instId}/executions/last")
-    @PermitAll
     public Response getLastJobExecutionFromInstance(@PathParam("instId") Long instanceId, @PathParam("jobname") String jobName){
         if(jobName == null || instanceId == null){
             return Response.serverError().entity("Job name or instance id is empty").build();
@@ -196,7 +182,6 @@ public class JobResource {
     @GET    
     @Produces(MediaType.APPLICATION_JSON)
     @Path("steps/{execId}")
-    @PermitAll
     public Response getStepExecutions(@PathParam("execId") Long executionId) {
         if(executionId == null){
             return Response.serverError().entity("Execution id is empty").build();
@@ -212,7 +197,6 @@ public class JobResource {
     
     @GET
     @Path("restart/{execId}")
-    @RolesAllowed({"admin","supervisor"})   
     public Response restartJob(@PathParam("execId") Long executionId){
         JSONObject resp = new JSONObject();
         if(executionId == null){
@@ -238,7 +222,6 @@ public class JobResource {
     
     @GET
     @Path("stop/{execId}")
-    @RolesAllowed({"admin","supervisor"})  
     public Response stopExecution(@PathParam("execId") Long executionId){
         JSONObject resp = new JSONObject();
         if(executionId == null){
@@ -264,7 +247,6 @@ public class JobResource {
     
     @GET
     @Path("abandon/{execId}")
-    @RolesAllowed({"admin","supervisor"})  
     public Response abandonExecution(@PathParam("execId") Long executionId){
         JSONObject resp = new JSONObject();
         if(executionId == null){
