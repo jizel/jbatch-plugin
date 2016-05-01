@@ -115,7 +115,7 @@ public class JobResource {
         }
 	}
     
-    @POST 
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("counts")
     public Response getJobCounts() {
@@ -130,7 +130,7 @@ public class JobResource {
         }
 	}
     
-    @POST  
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}")
     public Response getJobInstances(@PathParam("jobname") String jobName) {
