@@ -49,8 +49,8 @@ var JBatch = (function (JBatch) {
      * run function
      */
     JBatch.module = angular.module('jbatch_plugin', ['hawtioCore'])
-            .config(function ($httpProvider, $routeProvider) {               
-                    $httpProvider.defaults.withCredentials = true;
+            .config(function ($httpProvider, $routeProvider) {
+                $httpProvider.defaults.withCredentials = true;
                 /**
                  * Here we define the route for our plugin.  One note is
                  * to avoid using 'otherwise', as hawtio has a handler
@@ -64,7 +64,7 @@ var JBatch = (function (JBatch) {
                         .when('/jbatch_plugin/startJob', {
                             templateUrl: JBatch.templatePath + 'startJob.html'
                         });
-            });              
+            });
 
     /**
      * Here we define any initialization to be done when this angular
@@ -88,7 +88,7 @@ var JBatch = (function (JBatch) {
         // tell the app to use the full layout, also could use layoutTree
         // to get the JMX tree or provide a URL to a custom layout
         viewRegistry["jbatch_plugin"] = layoutFull;
-        
+
 //        var id = document.cookie.split(';')[0].split('=')[1];
 //        $http.defaults.headers.common.Authorization = document.cookie ;
 //        //or try this 
@@ -151,7 +151,7 @@ var JBatch = (function (JBatch) {
 //        return $resource('http://localhost:8080/jbatch-plugin/rest/jobs/names'); // Note the full endpoint address
 //    });
 
-    JBatch.BatchJobController = function ($scope, $http, toastr) {
+    JBatch.BatchJobController = function ($scope, $http, toastr, $timeout) {
         $scope.jobs = "";
         $scope.allInstances = "";
         $scope.allInstances2 = "";
@@ -172,7 +172,8 @@ var JBatch = (function (JBatch) {
         $scope.executionsWatcher = new String("");
         $scope.abandonWatcher = new String("");
         $scope.stopWatcher = new String("");
-
+        seconds2launch = 0;
+//        $scope.$timeout = $timeout; // must be injected in controller.
 
 //        Methods consuming the REST resources
         $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/names", {
@@ -184,7 +185,7 @@ var JBatch = (function (JBatch) {
             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/counts", {
             }).then(function (resp) {
                 $scope.jobCounts = resp.data;
-            });            
+            });
         };
 
         $scope.getDeployments = function () {
@@ -198,7 +199,7 @@ var JBatch = (function (JBatch) {
 //                headers: {'Authorization': 'Basic'}
 //                headers: [{'Auth-Token': document.cookie}]               
 //                  headers: {'Cookie' : document.cookie.split(";")[0]},
-                  withCredentials: true  
+                withCredentials: true
             }).then(function (resp) {
                 $scope.batchDeployments = resp.data;
             });
@@ -206,7 +207,7 @@ var JBatch = (function (JBatch) {
 
         $scope.setSelectedInstances = function (jobname) {
             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/inst/" + jobname
-            ).then(function (resp) {
+                    ).then(function (resp) {
                 $scope.selected_instances = resp.data;
                 $scope.selected_jobname = jobname;
 //           JBatch.log.info($scope.selected_instances);
@@ -261,19 +262,26 @@ var JBatch = (function (JBatch) {
                         $scope.getJobCounts();
                     }
                 });
-                
+
 //                Start Job with properties
             } else {
                 $http.get("http://localhost:8080/jbatch-plugin/rest/cli/start/" + deploymentName + "/" + jobName + "/" + properties).then(function (resp) {
                     var jsonResp = resp.data;
                     if (jsonResp.outcome.toString() === "failed") {
                         JBatch.log.error("Job " + jobName + " start failed. Failure description: " + jsonResp['failure-description']);
-                    } else {                      
+                    } else {
                         $scope.logAndToastSuccess("Job started: " + jobName + "with id: " + jsonResp.result);
                         $scope.getJobCounts();
                     }
                 });
             }
+        };
+
+        $scope.scheduleJobCli = function (deploymentName, jobName, properties) {
+            $scope.getSecondsFromDate();
+            $timeout(function () {
+                $scope.startJobCli(deploymentName, jobName, properties);
+            }, $scope.miliseconds2launch);
         };
 
         $scope.setJob2run = function (deploymentName, jobName) {
@@ -355,6 +363,21 @@ var JBatch = (function (JBatch) {
         $scope.logAndToastSuccess = function (msg) {
             JBatch.log.info(msg);
             toastr.success(msg);
+        };
+        $scope.getSecondsFromDate = function () {
+//            $scope.datetime
+            var currDate = new Date();
+            var offset = currDate.getTimezoneOffset();
+            var launchDate = new Date($scope.datetime);
+            launchDate.setHours(launchDate.getHours() + offset / 60);
+            var delay = launchDate.getTime() - currDate.getTime();
+//            JBatch.log.error("Launch date: " + launchDate + ", currdate: " + currDate + ", datetime: " + $scope.datetime + ", offset: " + offset); 
+            if (delay > 0) {
+                $scope.miliseconds2launch = delay;
+            } else {
+                JBatch.log.error("Time of launch must take place in the future!");
+            }
+            return delay;
         };
 
 
