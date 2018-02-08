@@ -115,10 +115,7 @@ public class StepExecutionDto {
         if (this.stepExecutionId != other.stepExecutionId) {
             return false;
         }
-        if (!Objects.equals(this.stepName, other.stepName)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.stepName, other.stepName);
     }
 
     @Override

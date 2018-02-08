@@ -15,18 +15,6 @@
  */
 package muni.fi.dp.jz.jbatch.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import javax.batch.runtime.JobExecution;
-import javax.batch.runtime.JobInstance;
-import javax.batch.runtime.StepExecution;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import muni.fi.dp.jz.jbatch.batchapi.BatchExecutionBean;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
@@ -37,24 +25,35 @@ import muni.fi.dp.jz.jbatch.util.JobExecutionToDto;
 import muni.fi.dp.jz.jbatch.util.JobInstanceToDto;
 import muni.fi.dp.jz.jbatch.util.StepExecutionToDto;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.batch.runtime.JobExecution;
+import javax.batch.runtime.JobInstance;
+import javax.batch.runtime.StepExecution;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
 /**
- *
  * @author Zorz
  */
 @Stateless
-public class JobServiceImpl implements JobService{
+public class JobServiceImpl implements JobService {
 
     @EJB
-//    @Inject
-    BatchExecutionBean batchExecutor;        
-    
+    BatchExecutionBean batchExecutor;
+
 //    TODO - catch exceptions
-    
+
     @Override
-    public long submitJob(String jobName) throws BatchExecutionException{
+    public long submitJob(String jobName) throws BatchExecutionException {
         return batchExecutor.submitJob(jobName);
     }
-    
+
     @Override
     public long submitJob(String jobName, Properties propertis) throws BatchExecutionException {
         return batchExecutor.submitJob(jobName, propertis);
@@ -81,74 +80,62 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public List<Long> getRunningExecutions(String jobName) throws BatchExecutionException{
+    public List<Long> getRunningExecutions(String jobName) throws BatchExecutionException {
         return batchExecutor.getRunningExecutions(jobName);
     }
 
     @Override
-    public List<JobInstanceDto> getJobInstances(String jobName) throws BatchExecutionException{
+    public List<JobInstanceDto> getJobInstances(String jobName) throws BatchExecutionException {
         List<JobInstance> jobInstances = batchExecutor.getJobInstances(jobName);
         List<JobInstanceDto> jobInstanceDtos = new ArrayList<>();
-        for(JobInstance jobInstance:jobInstances){
-                jobInstanceDtos.add(JobInstanceToDto.createDtoFromJobInstace(jobInstance));
-            }
+        for (JobInstance jobInstance : jobInstances) {
+            jobInstanceDtos.add(JobInstanceToDto.createDtoFromJobInstace(jobInstance));
+        }
         return jobInstanceDtos;
     }
 
     @Override
-    public List<JobExecutionDto> getJobExecutions(JobInstance instance) throws BatchExecutionException{
-        //TODO: implement with Dtos and catch NoSuchJobException
-//        List<JobInstance> jobInstances = batchExecutor.getJobInstances(instance.getJobName(), (int) instance.getJobInstanceId(), 1);        
-//        List<JobExecution> executions = batchExecutor.getJobExecutions(jobInstances.get(0));
+    public List<JobExecutionDto> getJobExecutions(JobInstance instance) throws BatchExecutionException {
+        // TODO: implement with Dtos and catch NoSuchJobException
         List<JobExecution> executions = batchExecutor.getJobExecutions(instance);
-        List<JobExecutionDto> jobExecutionDtos = new ArrayList<>();        
-        for(JobExecution jobExec:executions){
+        List<JobExecutionDto> jobExecutionDtos = new ArrayList<>();
+        for (JobExecution jobExec : executions) {
             jobExecutionDtos.add(JobExecutionToDto.createDtoFromJobExecution(jobExec));
         }
         return jobExecutionDtos;
     }
 
     @Override
-    public List<JobExecutionDto> getJobExecutions(String jobName, long instanceId) throws BatchExecutionException{
-//TODO: make this work with dtos (after previous method!)
-//       List<JobInstanceDto> allJobInstanceDtos = getJobInstances(jobName);       
-//       JobInstanceDto jobInstance = null;
-//       for(JobInstanceDto instance:allJobInstanceDtos){
-//           if(instance.getJobInstanceId() == instanceId){
-//               jobInstance = instance;
-//           }
-//       }
-        
+    public List<JobExecutionDto> getJobExecutions(String jobName, long instanceId) throws BatchExecutionException {
+        // TODO: make this work with dtos (after previous method!)
         List<JobInstance> allInstances = batchExecutor.getJobInstances(jobName);
         JobInstance jobInstance = null;
-        for(JobInstance inst: allInstances){
-            if(inst.getInstanceId() == instanceId){
+        for (JobInstance inst : allInstances) {
+            if (inst.getInstanceId() == instanceId) {
                 jobInstance = inst;
             }
         }
         return getJobExecutions(jobInstance);
     }
-    
+
     @Override
-    public List<StepExecutionDto> getStepExecutions(long jobExecutionId) throws BatchExecutionException{
-        List<StepExecutionDto> stepExecutionDtos = new ArrayList<>();        
+    public List<StepExecutionDto> getStepExecutions(long jobExecutionId) throws BatchExecutionException {
+        List<StepExecutionDto> stepExecutionDtos = new ArrayList<>();
         List<StepExecution> stepExecutions = batchExecutor.getStepExecutions(jobExecutionId);
-        for(StepExecution stepExec:stepExecutions){
+        for (StepExecution stepExec : stepExecutions) {
             stepExecutionDtos.add(StepExecutionToDto.createDtoFromStepExecution(stepExec));
         }
         return stepExecutionDtos;
     }
 
     @Override
-    public Map<String,List<JobInstanceDto>> getAllJobInstances() throws BatchExecutionException{
+    public Map<String, List<JobInstanceDto>> getAllJobInstances() throws BatchExecutionException {
         Set<String> allJobs = getJobNames();
-        
-        Map<String,List<JobInstanceDto>> allJobInstances = new HashMap<>();
-        
-        
-        for(String job:allJobs){
+        Map<String, List<JobInstanceDto>> allJobInstances = new HashMap<>();
+
+        for (String job : allJobs) {
             List<JobInstanceDto> jobInstances = getJobInstances(job);
-            
+
             allJobInstances.put(job, jobInstances);
         }
         System.out.println(allJobInstances);
@@ -156,26 +143,24 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public List<JobInstanceDto> getAllInstances() throws BatchExecutionException{
-       Set<String> allJobs = getJobNames();  
-       List<JobInstanceDto> jobInstances = new ArrayList<>();
-        for(String job:allJobs){
-            jobInstances = getJobInstances(job);            
-                        
-        }        
+    public List<JobInstanceDto> getAllInstances() throws BatchExecutionException {
+        Set<String> allJobs = getJobNames();
+        List<JobInstanceDto> jobInstances = new ArrayList<>();
+        for (String job : allJobs) {
+            jobInstances = getJobInstances(job);
+
+        }
         return jobInstances;
-    }    
+    }
 
     @Override
-    public void stop(long executionId) throws BatchExecutionException{
+    public void stop(long executionId) throws BatchExecutionException {
         batchExecutor.stop(executionId);
     }
 
     @Override
-    public void abandon(long executionId) throws BatchExecutionException{
+    public void abandon(long executionId) throws BatchExecutionException {
         batchExecutor.abandon(executionId);
-    }    
+    }
 
-    
-    
 }

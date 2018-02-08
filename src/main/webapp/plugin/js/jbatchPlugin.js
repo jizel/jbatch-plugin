@@ -173,7 +173,6 @@ var JBatch = (function (JBatch) {
         $scope.abandonWatcher = new String("");
         $scope.stopWatcher = new String("");
         seconds2launch = 0;
-//        $scope.$timeout = $timeout; // must be injected in controller.
 
 //        Methods consuming the REST resources
         $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/names", {
@@ -196,9 +195,6 @@ var JBatch = (function (JBatch) {
 
         $scope.getBatchDeployments = function () {
             $http.get("http://localhost:8080/jbatch-plugin/rest/cli/batchDepl/", {
-//                headers: {'Authorization': 'Basic'}
-//                headers: [{'Auth-Token': document.cookie}]               
-//                  headers: {'Cookie' : document.cookie.split(";")[0]},
                 withCredentials: true
             }).then(function (resp) {
                 $scope.batchDeployments = resp.data;
@@ -292,8 +288,6 @@ var JBatch = (function (JBatch) {
 
         $scope.stopExecution = function (executionId) {
             $http.get("http://localhost:8080/jbatch-plugin/rest/jobs/stop/" + executionId).then(function (resp) {
-//                $scope.executionsWatcher = new String(resp.data);
-//                JBatch.log.info("Stop execution with id: " + executioId + " . Result: " + resp.data);
                 var jsonResp = resp.data;
                 if (jsonResp['outcome'] == "failed") {
                     if (jsonResp.description.toString().includes("is not running")) {
@@ -306,9 +300,6 @@ var JBatch = (function (JBatch) {
                     $scope.refreshSelectedExecutions();
                 }
             });
-
-//           $scope.setSelectedExecutions($scope.selected_instance_id); 
-//            $scope.refreshSelectedExecutions();
         };
 
         $scope.abandonExecution = function (executionId) {
@@ -327,8 +318,6 @@ var JBatch = (function (JBatch) {
                     $scope.refreshSelectedExecutions();
                 }
             });
-//          $scope.refresh;
-//          $scope.setSelectedExecutions($scope.selected_instance_id);        
             $scope.refreshSelectedExecutions();
         };
 
@@ -380,15 +369,6 @@ var JBatch = (function (JBatch) {
             return delay;
         };
 
-
-        //test methods     
-
-        //        Not used
-//        $scope.restartLastExecutionOf = function (instanceId) {
-//            $scope.getLastExecution(instanceId);
-//            $scope.restartExecution($scope.last_execution_id);
-//            $scope.setSelectedExecutions(instanceId);
-//        };
     };
 
     return JBatch;

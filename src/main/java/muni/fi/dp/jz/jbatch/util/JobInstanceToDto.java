@@ -15,32 +15,21 @@
  */
 package muni.fi.dp.jz.jbatch.util;
 
-import java.util.List;
-import javax.batch.runtime.JobExecution;
-import javax.batch.runtime.JobInstance;
-import javax.ejb.EJB;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
-import muni.fi.dp.jz.jbatch.service.JobService;
+
+import javax.batch.runtime.JobInstance;
 
 /**
- *
  * @author Zorz
  */
 public class JobInstanceToDto {
-    
-    public static JobInstanceDto createDtoFromJobInstace(JobInstance jobInstance){
+
+    public static JobInstanceDto createDtoFromJobInstace(JobInstance jobInstance) {
         JobInstanceDto jobInstanceDto = new JobInstanceDto();
         jobInstanceDto.setJobName(jobInstance.getJobName());
-        jobInstanceDto.setJobInstanceId(jobInstance.getInstanceId());       
-//        Get list of instance's jobexecutions'        
-//        List<JobExecution> jobExecutions = jobService.getJobExecutions(jobInstance);
-//        long[] jobInstanceExecutionsIds = null;
-//        int i = 0;
-//        for(JobExecution jobExec:jobExecutions){
-//            jobInstanceExecutionsIds[i] = jobExec.getExecutionId();
-//            i++;
-//        }
-//        jobInstanceDto.setJobInstanceExecutionsIds(jobInstanceExecutionsIds);
+        jobInstanceDto.setJobInstanceId(jobInstance.getInstanceId());
+
         return jobInstanceDto;
     }
+
 }

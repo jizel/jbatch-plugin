@@ -15,6 +15,14 @@
  */
 package muni.fi.dp.jz.jbatch.webservice;
 
+import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
+import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
+import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
+import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
+import muni.fi.dp.jz.jbatch.service.JobService;
+import org.apache.log4j.Logger;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,248 +34,262 @@ import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
-import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
-import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
-import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
-import muni.fi.dp.jz.jbatch.service.JobService;
-import org.apache.log4j.Logger;
-import org.json.JSONObject;
 
 /**
- *
  * @author jzelezny
  */
 @Stateless
 @Path("jobs")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class JobResource {    
-    
+public class JobResource {
+
     @EJB
-    private JobService jobService;    
-    private static final Logger LOG = Logger.getLogger( JobResource.class.getName() );                
-    
-    @GET    
+    private JobService jobService;
+    private static final Logger LOG = Logger.getLogger(JobResource.class.getName());
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("submit/{jobname}")
-    public Response submitJob(@PathParam("jobname") String jobName){       
-        try{
-		long execId = jobService.submitJob(jobName);
-                return Response.ok(execId, MediaType.APPLICATION_JSON).build();
-            }catch(BatchExecutionException e){
+    public Response submitJob(@PathParam("jobname") String jobName) {
+        try {
+            long execId = jobService.submitJob(jobName);
+
+            return Response.ok(execId, MediaType.APPLICATION_JSON).build();
+        } catch (BatchExecutionException e) {
             LOG.error("Exception when calling job service" + e);
+
             return Response.serverError().build();
         }
-	}
-    
-    @GET    
+    }
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("names")
     public Response getJobNames() {
         try {
-		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
-                return Response.ok(jobNameList, MediaType.APPLICATION_JSON).build();
-        }catch(BatchExecutionException e){
+            List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
+
+            return Response.ok(jobNameList, MediaType.APPLICATION_JSON).build();
+        } catch (BatchExecutionException e) {
             LOG.error("Exception when calling job service" + e);
+
             return Response.serverError().build();
         }
-	}
-    
-    @GET    
+    }
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("jobexec/{execid}")
-    public Response getJobExecution(@PathParam("execid") Long executionId){
-        if(executionId == null){
+    public Response getJobExecution(@PathParam("execid") Long executionId) {
+        if (executionId == null) {
             return Response.serverError().entity("Execution id is empty").build();
         }
-        try{
-		JobExecution jobExec =  jobService.getJobExecution(executionId);
-                return Response.ok(jobExec.toString(), MediaType.APPLICATION_JSON).build();
-            }catch(BatchExecutionException e){
+        try {
+            JobExecution jobExec = jobService.getJobExecution(executionId);
+
+            return Response.ok(jobExec.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (BatchExecutionException e) {
             LOG.error("Exception when calling job service" + e);
+
             return Response.serverError().build();
         }
-	}
-    
-    @GET    
+    }
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("count/{jobname}")
-    public Response getJobInstanceCount(@PathParam("jobname") String jobName){
-         if(jobName == null){
+    public Response getJobInstanceCount(@PathParam("jobname") String jobName) {
+        if (jobName == null) {
             return Response.serverError().entity("Jobname is empty").build();
         }
-        try{
-		int instanceCount =  jobService.getJobInstanceCount(jobName);
-                return Response.ok(instanceCount, MediaType.APPLICATION_JSON).build();
-        }catch(EJBTransactionRolledbackException ex){
+        try {
+            int instanceCount = jobService.getJobInstanceCount(jobName);
+
+            return Response.ok(instanceCount, MediaType.APPLICATION_JSON).build();
+        } catch (EJBTransactionRolledbackException ex) {
             LOG.error("Transaction rollback exception" + ex);
-           return Response.serverError().build();
-        }catch (BatchExecutionException e){
+
+            return Response.serverError().build();
+        } catch (BatchExecutionException e) {
             LOG.error("Exception when calling job service" + e);
+
             return Response.serverError().build();
         }
-	}
-    
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("counts")
     public Response getJobCounts() {
-        try{
-		List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
-                Map<String, Integer> jobCounts = new HashMap<>();
-                for (String job:jobNameList) jobCounts.put(job,jobService.getJobInstanceCount(job));
-                return Response.ok(jobCounts, MediaType.APPLICATION_JSON).build();
-         }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);
-         return Response.serverError().build();
+        try {
+            List<String> jobNameList = new ArrayList<>(jobService.getJobNames());
+            Map<String, Integer> jobCounts = new HashMap<>();
+            for (String job : jobNameList) jobCounts.put(job, jobService.getJobInstanceCount(job));
+
+            return Response.ok(jobCounts, MediaType.APPLICATION_JSON).build();
+        } catch (BatchExecutionException e) {
+            LOG.error("Exception when calling job service" + e);
+
+            return Response.serverError().build();
         }
-	}
-    
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}")
     public Response getJobInstances(@PathParam("jobname") String jobName) {
-        if(jobName == null){
+        if (jobName == null) {
+
             return Response.serverError().entity("Jobname is empty").build();
         }
         try {
-            List<JobInstanceDto> jobInstances = jobService.getJobInstances(jobName);        
-            return Response.ok(jobInstances, MediaType.APPLICATION_JSON).build();		                   
-        }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);
-         return Response.serverError().build();
+            List<JobInstanceDto> jobInstances = jobService.getJobInstances(jobName);
+
+            return Response.ok(jobInstances, MediaType.APPLICATION_JSON).build();
+        } catch (BatchExecutionException e) {
+            LOG.error("Exception when calling job service" + e);
+
+            return Response.serverError().build();
         }
-	}
-    
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("inst/{jobname}/{instId}/executions")  
-    public Response getJobExecutionsFromInstance(@PathParam("instId") Long instanceId, @PathParam("jobname") String jobName){
-        if(jobName == null || instanceId == null){
+    @Path("inst/{jobname}/{instId}/executions")
+    public Response getJobExecutionsFromInstance(@PathParam("instId") Long instanceId, @PathParam("jobname") String jobName) {
+        if (jobName == null || instanceId == null) {
             return Response.serverError().entity("Job name or instance id is empty").build();
         }
         try {
-            List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
+            List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName, instanceId);
+
             return Response.ok(jobExecutions, MediaType.APPLICATION_JSON).build();
-        }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);
-         return Response.serverError().build();
+        } catch (BatchExecutionException e) {
+            LOG.error("Exception when calling job service" + e);
+
+            return Response.serverError().build();
         }
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("inst/{jobname}/{instId}/executions/last")
-    public Response getLastJobExecutionFromInstance(@PathParam("instId") Long instanceId, @PathParam("jobname") String jobName){
-        if(jobName == null || instanceId == null){
+    public Response getLastJobExecutionFromInstance(@PathParam("instId") Long instanceId, @PathParam("jobname") String jobName) {
+        if (jobName == null || instanceId == null) {
             return Response.serverError().entity("Job name or instance id is empty").build();
         }
         try {
-            List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName,instanceId);
-            JobExecutionDto lastInstanceExecution = jobExecutions.get(jobExecutions.size()-1);
+            List<JobExecutionDto> jobExecutions = jobService.getJobExecutions(jobName, instanceId);
+            JobExecutionDto lastInstanceExecution = jobExecutions.get(jobExecutions.size() - 1);
+
             return Response.ok(lastInstanceExecution.getJobExecutionId(), MediaType.APPLICATION_JSON).build();
-        }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);
-         return Response.serverError().build();
+        } catch (BatchExecutionException e) {
+            LOG.error("Exception when calling job service" + e);
+
+            return Response.serverError().build();
         }
     }
-    
-    @GET    
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("steps/{execId}")
     public Response getStepExecutions(@PathParam("execId") Long executionId) {
-        if(executionId == null){
+        if (executionId == null) {
             return Response.serverError().entity("Execution id is empty").build();
         }
         try {
-            List<StepExecutionDto> stepExecutions = jobService.getStepExecutions(executionId);      
-            return Response.ok(stepExecutions, MediaType.APPLICATION_JSON).build();		                   
-         }catch (BatchExecutionException e){
-         LOG.error("Exception when calling job service" + e);
-         return Response.serverError().build();
-        } 
-	}
-    
+            List<StepExecutionDto> stepExecutions = jobService.getStepExecutions(executionId);
+
+            return Response.ok(stepExecutions, MediaType.APPLICATION_JSON).build();
+        } catch (BatchExecutionException e) {
+            LOG.error("Exception when calling job service" + e);
+
+            return Response.serverError().build();
+        }
+    }
+
     @GET
     @Path("restart/{execId}")
-    public Response restartJob(@PathParam("execId") Long executionId){
+    public Response restartJob(@PathParam("execId") Long executionId) {
         JSONObject resp = new JSONObject();
-        if(executionId == null){
-            resp.put("outcome","failed");
-            resp.put("description","Execution id is empty");
-//            return Response.serverError().entity(resp.toString()).build();
+        if (executionId == null) {
+            resp.put("outcome", "failed");
+            resp.put("description", "Execution id is empty");
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
         }
         try {
-            long id = jobService.restartJob(executionId);                
-            LOG.info("\nJob with id: " + executionId + " restarted\n"); 
-            resp.put("outcome","success");
-            resp.put("result",id);
+            long id = jobService.restartJob(executionId);
+            LOG.info("\nJob with id: " + executionId + " restarted\n");
+            resp.put("outcome", "success");
+            resp.put("result", id);
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
-        }catch (BatchExecutionException e){
-            LOG.error("Exception when calling job service" + e);                      
-            resp.put("outcome","failed");
-            resp.put("description","BatchExecutionException thrown: " + e.toString());
-//            return Response.serverError().entity(resp.toString()).build();
+        } catch (BatchExecutionException e) {
+            LOG.error("Exception when calling job service" + e);
+            resp.put("outcome", "failed");
+            resp.put("description", "BatchExecutionException thrown: " + e.toString());
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
         }
     }
-    
+
     @GET
     @Path("stop/{execId}")
-    public Response stopExecution(@PathParam("execId") Long executionId){
+    public Response stopExecution(@PathParam("execId") Long executionId) {
         JSONObject resp = new JSONObject();
-        if(executionId == null){
-            resp.put("outcome","failed");
-            resp.put("description","Execution id is empty");
+        if (executionId == null) {
+            resp.put("outcome", "failed");
+            resp.put("description", "Execution id is empty");
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
-//            return Response.serverError().entity("Execution id is empty").build();
         }
         try {
             jobService.stop(executionId);
-            resp.put("outcome","success");
-            resp.put("result",executionId);
-            LOG.info("\nJob with id: " + executionId + " stopped\n"); 
+            resp.put("outcome", "success");
+            resp.put("result", executionId);
+            LOG.info("\nJob with id: " + executionId + " stopped\n");
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
-         }catch (BatchExecutionException e){
+        } catch (BatchExecutionException e) {
             LOG.error("Exception when calling job service" + e);
-            resp.put("description","BatchExecutionException thrown: " + e.toString());
-            resp.put("outcome","failed");
+            resp.put("description", "BatchExecutionException thrown: " + e.toString());
+            resp.put("outcome", "failed");
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
-//            return Response.serverError().entity(resp.toString()).build();
         }
     }
-    
+
     @GET
     @Path("abandon/{execId}")
-    public Response abandonExecution(@PathParam("execId") Long executionId){
+    public Response abandonExecution(@PathParam("execId") Long executionId) {
         JSONObject resp = new JSONObject();
-        if(executionId == null){
-            resp.put("outcome","failed");
-            resp.put("description","Execution id is empty");
+        if (executionId == null) {
+            resp.put("outcome", "failed");
+            resp.put("description", "Execution id is empty");
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
-//            return Response.serverError().entity("Execution id is empty").build();
         }
         try {
             jobService.abandon(executionId);
-            LOG.info("\nJob with id: " + executionId + " abandoned\n"); 
-            resp.put("outcome","success");
-            resp.put("result",executionId);
+            LOG.info("\nJob with id: " + executionId + " abandoned\n");
+            resp.put("outcome", "success");
+            resp.put("result", executionId);
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
-         }catch (BatchExecutionException e){
+        } catch (BatchExecutionException e) {
             LOG.error("Exception when calling job service" + e);
-            resp.put("description","BatchExecutionException thrown: " + e.toString());
-            resp.put("outcome","failed");
+            resp.put("description", "BatchExecutionException thrown: " + e.toString());
+            resp.put("outcome", "failed");
+
             return Response.ok(resp.toString(), MediaType.APPLICATION_JSON).build();
-//            return Response.serverError().entity(resp.toString()).build();
         }
-        }
-        
+    }
+
 }

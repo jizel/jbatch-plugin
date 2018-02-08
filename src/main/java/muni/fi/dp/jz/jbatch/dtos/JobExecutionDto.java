@@ -1,25 +1,22 @@
 package muni.fi.dp.jz.jbatch.dtos;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Properties;
+
 import javax.batch.runtime.BatchStatus;
 
 
 public class JobExecutionDto {
-	private long jobExecutionId;
-	private String jobName;
-//        private JobInstanceDto jobInstance;
-//	private String parameters;
-	private Date createTime;
-	private Date startTime;
-        private Date endTime;
-        private Date lastUpdatedTime;
-	private BatchStatus batchStatus;
-	private String exitStatus;
-//	private boolean stop = false;
-	private Properties jobParameters;
+    private long jobExecutionId;
+    private String jobName;
+    private Date createTime;
+    private Date startTime;
+    private Date endTime;
+    private Date lastUpdatedTime;
+    private BatchStatus batchStatus;
+    private String exitStatus;
+    private Properties jobParameters;
 
     public long getJobExecutionId() {
         return jobExecutionId;
@@ -59,7 +56,7 @@ public class JobExecutionDto {
 
     public void setLastUpdatedTime(Date lastUpdatedTime) {
         this.lastUpdatedTime = lastUpdatedTime;
-    }    
+    }
 
     public BatchStatus getBatchStatus() {
         return batchStatus;
@@ -80,7 +77,7 @@ public class JobExecutionDto {
     public void setJobName(String jobName) {
         this.jobName = jobName;
     }
-    
+
     public void setBatchStatus(BatchStatus batchStatus) {
         this.batchStatus = batchStatus;
     }
@@ -127,5 +124,5 @@ public class JobExecutionDto {
         return "JobExecutionDto{" + "jobExecutionId=" + jobExecutionId + ", jobName=" + jobName + ", createTime=" + createTime + ", startTime=" + startTime + ", endTime=" + endTime + ", lastUpdatedTime=" + lastUpdatedTime + ", batchStatus=" + batchStatus + ", exitStatus=" + exitStatus + ", jobParameters=" + jobParameters + '}';
     }
 
-    	
+
 }

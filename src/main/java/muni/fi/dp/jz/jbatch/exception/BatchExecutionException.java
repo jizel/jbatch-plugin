@@ -15,35 +15,24 @@
  */
 package muni.fi.dp.jz.jbatch.exception;
 
-import java.util.logging.Logger;
-
 /**
- *
  * @author Zorz
  */
 public class BatchExecutionException extends Exception {
-    
+
     private String msg;
     private Throwable cause;
-    
-    /**
-     * Creates a new instance of <code>NewException</code> without detail
-     * message.
-     */
+
+
     public BatchExecutionException() {
     }
 
-    /**
-     * Constructs an instance of <code>NewException</code> with the specified
-     * detail message.
-     *
-     * @param msg the detail message.
-     */
     public BatchExecutionException(String msg) {
         super(msg);
     }
-    public BatchExecutionException(String msg,Throwable cause) {
-        super(msg,cause);
+
+    public BatchExecutionException(String msg, Throwable cause) {
+        super(msg, cause);
         this.msg = msg;
         this.cause = cause;
     }
@@ -53,8 +42,5 @@ public class BatchExecutionException extends Exception {
         return "BatchExecutionException{" + "Message= " + msg + ", cause= " + cause + '}';
     }
 
-    
-    
-    
-    
+
 }

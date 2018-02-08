@@ -15,53 +15,54 @@
  */
 package muni.fi.dp.jz.jbatch.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import javax.batch.runtime.JobExecution;
-import javax.batch.runtime.JobInstance;
-import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
 import muni.fi.dp.jz.jbatch.dtos.JobInstanceDto;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 import muni.fi.dp.jz.jbatch.exception.BatchExecutionException;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.batch.runtime.JobExecution;
+import javax.batch.runtime.JobInstance;
+import javax.ejb.Stateless;
+
 /**
- *
  * @author Zorz
  */
 @Stateless
 public interface JobService {
 
-    public long submitJob(String jobName) throws BatchExecutionException;
-    
-    public long submitJob(String jobName, Properties propertis) throws BatchExecutionException;
+    long submitJob(String jobName) throws BatchExecutionException;
 
-    public JobExecution getJobExecution(long executionId) throws BatchExecutionException;         
+    long submitJob(String jobName, Properties propertis) throws BatchExecutionException;
 
-    public long restartJob(long executionId) throws BatchExecutionException;
+    JobExecution getJobExecution(long executionId) throws BatchExecutionException;
 
-    public Set<String> getJobNames() throws BatchExecutionException;
+    long restartJob(long executionId) throws BatchExecutionException;
 
-    public int getJobInstanceCount(String jobName) throws BatchExecutionException;
+    Set<String> getJobNames() throws BatchExecutionException;
 
-    public List<Long> getRunningExecutions(String jobName) throws BatchExecutionException;
+    int getJobInstanceCount(String jobName) throws BatchExecutionException;
 
-    public List<JobInstanceDto> getJobInstances(String jobName) throws BatchExecutionException;
+    List<Long> getRunningExecutions(String jobName) throws BatchExecutionException;
 
-    public List<JobExecutionDto> getJobExecutions(JobInstance instance) throws BatchExecutionException;
-    
-    public List<JobExecutionDto> getJobExecutions(String jobName, long instanceId) throws BatchExecutionException;
+    List<JobInstanceDto> getJobInstances(String jobName) throws BatchExecutionException;
 
-    public List<StepExecutionDto> getStepExecutions(long jobExecutionId) throws BatchExecutionException;
-    
-    public Map<String,List<JobInstanceDto>> getAllJobInstances() throws BatchExecutionException;
-    
-    public List<JobInstanceDto> getAllInstances() throws BatchExecutionException;   
-    
-    public void stop(long executionId) throws BatchExecutionException;
-    
-    public void abandon(long executionId) throws BatchExecutionException;
-    
+    List<JobExecutionDto> getJobExecutions(JobInstance instance) throws BatchExecutionException;
+
+    List<JobExecutionDto> getJobExecutions(String jobName, long instanceId) throws BatchExecutionException;
+
+    List<StepExecutionDto> getStepExecutions(long jobExecutionId) throws BatchExecutionException;
+
+    Map<String, List<JobInstanceDto>> getAllJobInstances() throws BatchExecutionException;
+
+    List<JobInstanceDto> getAllInstances() throws BatchExecutionException;
+
+    void stop(long executionId) throws BatchExecutionException;
+
+    void abandon(long executionId) throws BatchExecutionException;
+
 }

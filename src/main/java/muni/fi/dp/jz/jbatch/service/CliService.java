@@ -16,22 +16,23 @@
 package muni.fi.dp.jz.jbatch.service;
 
 import java.util.Properties;
+
 import javax.ejb.Stateless;
 
 /**
- *
  * @author Zorz
  */
 @Stateless
 public interface CliService {
-    
-    public String startJobCli(String deploymentName, String jobName);
-    
-    public String startJobCli(String deploymentName, String jobName, Properties properties);
-    
-    public String getDeploymentInfo();
-     
-    public String getBatchDeploymentsWithJobs();
-    
-    public String getJobsFromDeployment(String deployment);
+
+    String startJobCli(String deploymentName, String jobName);
+
+    String startJobCli(String deploymentName, String jobName, Properties properties);
+
+    String getDeploymentInfo();
+
+    String getBatchDeploymentsWithJobs();
+
+    String getJobsFromDeployment(String deployment);
+
 }

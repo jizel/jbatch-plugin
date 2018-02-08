@@ -15,48 +15,46 @@
  */
 package muni.fi.dp.jz.jbatch.service.impl;
 
-import java.util.Properties;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import muni.fi.dp.jz.jbatch.cli.CliBatchManagerBean;
 import muni.fi.dp.jz.jbatch.service.CliService;
 
+import java.util.Properties;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+
 /**
- *
  * @author Zorz
  */
 @Stateless
 public class CliServiceImpl implements CliService {
-    
+
     @EJB
     CliBatchManagerBean cliManager;
-    
+
     @Override
     public String startJobCli(String deploymentName, String jobName) {
-          String resp = cliManager.startJobCli(deploymentName,jobName);
-          return resp;
+        return cliManager.startJobCli(deploymentName, jobName);
     }
+
     @Override
-     public String getDeploymentInfo(){
-         String resp = cliManager.getDeploymentInfo();
-          return resp;
-     }
-     
+    public String getDeploymentInfo() {
+        return cliManager.getDeploymentInfo();
+    }
+
     @Override
-     public String getBatchDeploymentsWithJobs(){
-         String resp = cliManager.getBatchDeploymentsWithJobs();
-         return resp;
-     }
-     
+    public String getBatchDeploymentsWithJobs() {
+        return cliManager.getBatchDeploymentsWithJobs();
+    }
+
     @Override
-     public String getJobsFromDeployment(String deployment){
-         return cliManager.getJobsFromDeployment(deployment);
-     }
+    public String getJobsFromDeployment(String deployment) {
+        return cliManager.getJobsFromDeployment(deployment);
+    }
 
     @Override
     public String startJobCli(String deploymentName, String jobName, Properties properties) {
-        String resp = cliManager.startJobCli(deploymentName,jobName,properties);
-        return resp;
+        return cliManager.startJobCli(deploymentName, jobName, properties);
     }
-    
+
 }

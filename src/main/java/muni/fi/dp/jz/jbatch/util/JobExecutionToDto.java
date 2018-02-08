@@ -15,8 +15,9 @@
  */
 package muni.fi.dp.jz.jbatch.util;
 
-import javax.batch.runtime.JobExecution;
 import muni.fi.dp.jz.jbatch.dtos.JobExecutionDto;
+
+import javax.batch.runtime.JobExecution;
 
 /**
  *
@@ -37,7 +38,6 @@ public class JobExecutionToDto {
         jobExecutionDto.setExitStatus(jobExecution.getExitStatus());
         
         return jobExecutionDto;
-        
     }
     
 }

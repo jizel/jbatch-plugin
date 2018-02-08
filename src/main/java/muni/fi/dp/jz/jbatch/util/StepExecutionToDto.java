@@ -15,26 +15,26 @@
  */
 package muni.fi.dp.jz.jbatch.util;
 
-import javax.batch.runtime.StepExecution;
 import muni.fi.dp.jz.jbatch.dtos.StepExecutionDto;
 
+import javax.batch.runtime.StepExecution;
+
 /**
- *
  * @author Zorz
  */
 public class StepExecutionToDto {
-    
-     public static StepExecutionDto createDtoFromStepExecution(StepExecution stepExecution){
-         StepExecutionDto stepExecutionDto = new StepExecutionDto();
-         stepExecutionDto.setStepExecutionId(stepExecution.getStepExecutionId());
-         stepExecutionDto.setStepName(stepExecution.getStepName());
-         stepExecutionDto.setBatchStatus(stepExecution.getBatchStatus());
-         stepExecutionDto.setExitStatus(stepExecution.getExitStatus());
-         stepExecutionDto.setStartTime(stepExecution.getStartTime());
-         stepExecutionDto.setEndTime(stepExecution.getEndTime());
-         stepExecutionDto.setMetrics(stepExecution.getMetrics());
-         
-         return stepExecutionDto;
-     }
-    
+
+    public static StepExecutionDto createDtoFromStepExecution(StepExecution stepExecution) {
+        StepExecutionDto stepExecutionDto = new StepExecutionDto();
+        stepExecutionDto.setStepExecutionId(stepExecution.getStepExecutionId());
+        stepExecutionDto.setStepName(stepExecution.getStepName());
+        stepExecutionDto.setBatchStatus(stepExecution.getBatchStatus());
+        stepExecutionDto.setExitStatus(stepExecution.getExitStatus());
+        stepExecutionDto.setStartTime(stepExecution.getStartTime());
+        stepExecutionDto.setEndTime(stepExecution.getEndTime());
+        stepExecutionDto.setMetrics(stepExecution.getMetrics());
+
+        return stepExecutionDto;
+    }
+
 }
